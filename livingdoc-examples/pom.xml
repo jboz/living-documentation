@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ch.ifocusit.livingdoc</groupId>
+    <artifactId>livingdoc-example</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Living Documentation example</name>
+    <description>Examples of a real life projects that use living documentation generation tools</description>
+    <url>https://github.com/jboz/living-documentation</url>
+    <inceptionYear>2017</inceptionYear>
+
+    <organization>
+        <name>Focus IT</name>
+        <url>http://ifocusit.ch</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+</project>
