@@ -6,7 +6,7 @@
     <groupId>ch.ifocusit.livingdoc</groupId>
     <artifactId>livingdoc-maven-plugin</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>maven-plugin</packaging>
 
     <name>Living Documentation maven plugin</name>
     <description>Plugin maven to generate a living docuemtnation from Java project</description>
@@ -64,6 +64,31 @@
         </dependency>
 
         <!-- business deps -->
+        <dependency>
+            <groupId>ch.ifocusit</groupId>
+            <artifactId>plantuml-builder</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.qdox</groupId>
+            <artifactId>qdox</artifactId>
+            <version>2.0-M5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.robwin</groupId>
+            <artifactId>markup-document-builder</artifactId>
+            <version>0.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.livingdocumentation</groupId>
+            <artifactId>dot-diagram</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctorj</artifactId>
+            <version>1.5.4.1</version>
+        </dependency>
 
         <!-- tools -->
         <dependency>
@@ -108,6 +133,20 @@
                         <id>mojo-descriptor</id>
                         <goals>
                             <goal>descriptor</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
                         </goals>
                     </execution>
                 </executions>

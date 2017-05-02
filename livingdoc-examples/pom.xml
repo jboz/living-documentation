@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ch.ifocusit.livingdoc</groupId>
-    <artifactId>livingdoc-example</artifactId>
+    <artifactId>livingdoc-examples</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -25,4 +25,8 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <modules>
+        <module>ddd-example</module>
+    </modules>
 </project>

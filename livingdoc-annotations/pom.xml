@@ -6,7 +6,7 @@
     <groupId>ch.ifocusit.livingdoc</groupId>
     <artifactId>livingdoc-annotations</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <name>Living Documentation annotations</name>
     <description>Annotations to use in real life projects to generate living documentation</description>
