@@ -1,3 +1,4 @@
+image::https://travis-ci.org/jboz/living-documentation.svg?branch=master["Build Status", link="https://travis-ci.org/jboz/living-documentation"]
 = Living documentation tools
 
 This project is intented to provide some tools to allow a nice Living Documentation.
