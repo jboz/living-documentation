@@ -1,1 +1,16 @@
 = Living documentation tools
+
+This project is intented to provide some tools to allow a nice Living Documentation.
+
+See examples to show the powerfull !
+
+You'll be able to generate beatiful diagrams with a simple configuration.
+
+[plantuml]
+plantuml::livingdoc-examples/ddd-example/src/main/docs/example-domain.plantuml[format=png, alt="Class diagram"]
+
+== Maven configuration :
+[source,xml]
+----
+include::livingdoc-examples/ddd-example/pom.xml[tags=plugin-livingdoc]
+----

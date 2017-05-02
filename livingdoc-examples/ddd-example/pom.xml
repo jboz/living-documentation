@@ -48,6 +48,7 @@
 
     <build>
         <plugins>
+            <!-- tag::plugin-livingdoc[] -->
             <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
@@ -63,13 +64,14 @@
                 </executions>
                 <configuration>
                     <prefix>ch.ifocusit.telecom.domain</prefix>
-                    <format>PLANTUML</format>
+                    <diagramType>plantuml</diagramType>
                     <output>${project.build.directory}/domain.plantuml</output>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
+            <!-- end::plugin-livingdoc[] -->
         </plugins>
     </build>
 </project>

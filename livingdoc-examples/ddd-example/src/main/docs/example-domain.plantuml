@@ -1,0 +1,37 @@
+@startuml
+
+abstract class Access {
+  phoneNumber : String
+  price : BigDecimal
+  dateTime : ZonedDateTime
+}
+
+class CallAccess {
+  duration : Duration
+}
+
+class SmsAccess
+
+class Bill {
+  month : YearMonth
+  contract : Contract
+  accesses : Set<Access>
+}
+
+class Contract {
+  id : Long
+  customer : Customer
+}
+
+class Customer {
+  name : String
+  contracts : Set<Contract>
+}
+
+Access <|-- CallAccess
+Access <|-- SmsAccess
+Bill --> Contract : contract
+Bill --> "*" Access : accesses
+Contract "*" <-> Customer : customer
+
+@enduml

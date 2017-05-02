@@ -23,6 +23,7 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.diagram.PlantumlDiagramBuilder;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -37,11 +38,11 @@ public class DiagramMojo extends CommonMojoDefinition {
     @Parameter
     private String[] excludes = new String[0];
 
-    @Parameter(defaultValue = "PLANTUML", required = true)
+    @Parameter(defaultValue = "plantuml", required = true)
     private DiagramType diagramType;
 
     public static enum DiagramType {
-        PLANTUML, DOT;
+        plantuml, dot;
     }
 
     @Override
@@ -55,10 +56,11 @@ public class DiagramMojo extends CommonMojoDefinition {
     String generateDiagram() throws MojoExecutionException {
 
         switch (diagramType) {
-            case PLANTUML:
+            case plantuml:
                 return new PlantumlDiagramBuilder(project, prefix, excludes).generate();
+            default:
+                throw new NotImplementedException(String.format("format %s is not implemented yet", diagramType));
         }
-        return null;
     }
 
     void writeDiagram(String diagram) throws MojoExecutionException {
