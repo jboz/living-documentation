@@ -22,5 +22,8 @@
  */
 package ch.ifocusit.livingdoc.annotations;
 
+/**
+ * @author Julien Boz
+ */
 public @interface Glossary {
 }

@@ -29,6 +29,9 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+/**
+ * @author Julien Boz
+ */
 @Mojo(name = "diagram")
 public class DiagramMojo extends CommonMojoDefinition {
 

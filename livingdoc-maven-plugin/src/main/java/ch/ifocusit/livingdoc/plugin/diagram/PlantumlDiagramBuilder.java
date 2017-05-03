@@ -41,6 +41,9 @@ import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 
+/**
+ * @author Julien Boz
+ */
 public class PlantumlDiagramBuilder {
 
     private static final String TEST = "Test";

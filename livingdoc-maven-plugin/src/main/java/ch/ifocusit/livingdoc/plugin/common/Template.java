@@ -35,6 +35,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
+/**
+ * @author Julien Boz
+ */
 public class Template {
 
     @Parameter(required = true)

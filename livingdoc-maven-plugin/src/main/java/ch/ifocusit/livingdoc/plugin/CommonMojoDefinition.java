@@ -34,6 +34,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
+/**
+ * @author Julien Boz
+ */
 public abstract class CommonMojoDefinition extends AbstractMojo {
 
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
