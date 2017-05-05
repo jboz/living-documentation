@@ -22,11 +22,15 @@
  */
 package ch.ifocusit.livingdoc.plugin.diagram;
 
+import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.plantuml.classdiagram.ClassDiagramBuilder;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -35,18 +39,23 @@ import java.util.stream.Collectors;
 /**
  * @author Julien Boz
  */
-public class PlantumlClassDiagramBuilder extends ClassDiagramBuilder {
+public class PlantumlAbstractClassDiagramBuilder extends AbstractClassDiagramBuilder {
 
-    private ch.ifocusit.plantuml.classdiagram.ClassDiagramBuilder classDiagramBuilder = new ch.ifocusit.plantuml.classdiagram.ClassDiagramBuilder();
+    private ClassDiagramBuilder classDiagramBuilder = new ClassDiagramBuilder();
     private Predicate<ClassInfo> additionalClassPredicate = a -> true; // default predicate always true
+    private GlossaryNamesMapper namesMapper;
 
-    public PlantumlClassDiagramBuilder(MavenProject project, String prefix, String[] excludes) {
+    public PlantumlAbstractClassDiagramBuilder(MavenProject project, String prefix, String[] excludes) {
         super(project, prefix, excludes);
     }
 
     public String generate() throws MojoExecutionException {
         final ClassPath classPath = initClassPath();
         final Set<ClassInfo> allClasses = classPath.getTopLevelClassesRecursive(prefix);
+
+        if (namesMapper != null) {
+            classDiagramBuilder.withNamesMapper(namesMapper);
+        }
 
         String diagram = classDiagramBuilder
                 .addClasses(allClasses.stream()
@@ -59,11 +68,19 @@ public class PlantumlClassDiagramBuilder extends ClassDiagramBuilder {
         return diagram;
     }
 
-    public PlantumlClassDiagramBuilder filterOnAnnotation(Class<? extends Annotation> annotation) {
+    public PlantumlAbstractClassDiagramBuilder filterOnAnnotation(Class<? extends Annotation> annotation) {
         // create class predicate
         additionalClassPredicate = additionalClassPredicate.and(classInfo -> classInfo.load().isAnnotationPresent(annotation));
         // add field predicate
         classDiagramBuilder.addFieldPredicate(attribut -> attribut.getField().isAnnotationPresent(annotation));
         return this;
+    }
+
+    public void mapNames(File mappings, Class<? extends Annotation> annotation) throws MojoExecutionException {
+        try {
+            namesMapper = new GlossaryNamesMapper(mappings, annotation);
+        } catch (IOException e) {
+            throw new MojoExecutionException("erreor reading mappings file", e);
+        }
     }
 }

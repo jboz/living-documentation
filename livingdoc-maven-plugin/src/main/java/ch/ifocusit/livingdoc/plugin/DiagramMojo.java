@@ -23,7 +23,7 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.annotations.Glossary;
-import ch.ifocusit.livingdoc.plugin.diagram.PlantumlClassDiagramBuilder;
+import ch.ifocusit.livingdoc.plugin.diagram.PlantumlAbstractClassDiagramBuilder;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -59,8 +59,8 @@ public class DiagramMojo extends CommonMojoDefinition {
     /**
      * File to use for Glossary mapping.
      */
-    @Parameter()
-    private File mappingGlossary;
+    @Parameter
+    private File glossaryMapping;
 
     public static enum DiagramType {
         plantuml, dot;
@@ -78,9 +78,12 @@ public class DiagramMojo extends CommonMojoDefinition {
 
         switch (diagramType) {
             case plantuml:
-                PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, prefix, excludes);
+                PlantumlAbstractClassDiagramBuilder builder = new PlantumlAbstractClassDiagramBuilder(project, prefix, excludes);
                 if (onlyGlossary) {
                     builder.filterOnAnnotation(Glossary.class);
+                }
+                if (glossaryMapping != null) {
+                    builder.mapNames(glossaryMapping, Glossary.class);
                 }
                 return builder.generate();
             default:

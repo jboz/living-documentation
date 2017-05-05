@@ -44,12 +44,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>ch.ifocusit.livingdoc</groupId>
-            <artifactId>livingdoc-annotations</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
         <!-- maven technical deps -->
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -70,6 +64,16 @@
         </dependency>
 
         <!-- business deps -->
+        <dependency>
+            <groupId>ch.ifocusit.livingdoc</groupId>
+            <artifactId>livingdoc-annotations</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.simpleflatmapper</groupId>
+            <artifactId>sfm-csv</artifactId>
+            <version>3.11.6</version>
+        </dependency>
         <dependency>
             <groupId>ch.ifocusit</groupId>
             <artifactId>plantuml-builder</artifactId>
@@ -119,6 +123,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>2.7.17</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert</artifactId>
+            <version>1.4</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

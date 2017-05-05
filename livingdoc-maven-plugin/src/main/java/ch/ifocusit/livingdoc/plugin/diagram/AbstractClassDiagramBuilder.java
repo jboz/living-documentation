@@ -41,7 +41,7 @@ import static java.util.Arrays.stream;
 /**
  * @author Julien Boz
  */
-public abstract class ClassDiagramBuilder {
+public abstract class AbstractClassDiagramBuilder {
 
     private static final String TEST = "Test";
     private static final String PACKAGE_INFO = "package-info";
@@ -51,13 +51,13 @@ public abstract class ClassDiagramBuilder {
     protected final String prefix;
     protected final String[] excludes;
 
-    public ClassDiagramBuilder(MavenProject project, String prefix, String[] excludes) {
+    public AbstractClassDiagramBuilder(MavenProject project, String prefix, String[] excludes) {
         this.project = project;
         this.prefix = prefix;
         this.excludes = excludes;
     }
 
-    public abstract ClassDiagramBuilder filterOnAnnotation(Class<? extends Annotation> annotation);
+    public abstract AbstractClassDiagramBuilder filterOnAnnotation(Class<? extends Annotation> annotation);
 
     public abstract String generate() throws MojoExecutionException;
 
