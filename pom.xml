@@ -28,6 +28,8 @@
 
     <scm>
         <url>https://github.com/jboz/living-documentation</url>
+        <connection>scm:git:git://github.com/jboz/living-documentation.git</connection>
+        <developerConnection>scm:git:git@github.com:jboz/living-documentation.git</developerConnection>
     </scm>
 
     <developers>

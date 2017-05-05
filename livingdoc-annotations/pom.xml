@@ -26,10 +26,47 @@
         </license>
     </licenses>
 
+    <scm>
+        <url>https://github.com/jboz/living-documentation</url>
+        <connection>scm:git:git://github.com/jboz/living-documentation.git</connection>
+        <developerConnection>scm:git:git@github.com:jboz/living-documentation.git</developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>jboz</id>
+            <name>Julien Boz</name>
+            <email>julienboz@gmail.com</email>
+        </developer>
+    </developers>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <build>
+        <resources>
+            <resource>
+                <targetPath>META-INF</targetPath>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>LICENSE</include>
+                    <include>NOTICE</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 </project>

@@ -27,11 +27,14 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/jboz/living-documentation/livingdoc-maven-plugin</url>
+        <url>https://github.com/jboz/living-documentation</url>
+        <connection>scm:git:git://github.com/jboz/living-documentation.git</connection>
+        <developerConnection>scm:git:git@github.com:jboz/living-documentation.git</developerConnection>
     </scm>
 
     <developers>
         <developer>
+            <id>jboz</id>
             <name>Julien Boz</name>
             <email>julienboz@gmail.com</email>
         </developer>
@@ -134,6 +137,16 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <targetPath>META-INF</targetPath>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>LICENSE</include>
+                    <include>NOTICE</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <!-- taken from http://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html -->
@@ -155,4 +168,15 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 </project>
