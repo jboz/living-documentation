@@ -20,25 +20,46 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.access;
+package ch.ifocusit.telecom_annotated.domain;
 
 import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.telecom_annotated.domain.access.Access;
+import ch.ifocusit.telecom_annotated.domain.common.AbstractDomain;
 
-import java.time.Duration;
+import java.time.YearMonth;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Appel téléphonique.
+ * *Monthly* bill.
+ * [NOTE]
+ * Generate by the system at contract birth date.
+ *
+ * @since 2017-03-01
  */
-@Glossary
-public class CallAccess extends Access {
+@Glossary(id = 100)
+public class Bill extends AbstractDomain {
 
-    private Duration duration;
+    /**
+     * Facturation month.
+     */
+    @Glossary(id = 101)
+    private YearMonth month;
 
-    public Duration getDuration() {
-        return duration;
-    }
+    /**
+     * Contract concerned by the bill.
+     */
+    @Glossary(id = 200)
+    private Contract contract;
 
-    public void setDuration(final Duration duration) {
-        this.duration = duration;
-    }
+    /**
+     * Bill contents.
+     */
+    @Glossary(id = 400)
+    private Set<Access> accesses = new HashSet<>();
+
+    /**
+     * Flag that indicate whenever the bill has been sended to the customer.
+     */
+    private boolean customerInformed;
 }

@@ -20,35 +20,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain;
+package ch.ifocusit.telecom_annotated.domain.common;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
-import ch.ifocusit.telecom.domain.common.AbstractDomain;
-
-/**
- * Telecom *contract*
- * <p>
- * Created by U803121 on 01.03.2017.
- */
-@Glossary
-public class Contract extends AbstractDomain {
-
-    private Long id;
-    private Customer customer;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(final Customer customer) {
-        this.customer = customer;
-    }
+public abstract class AbstractDomain {
 }

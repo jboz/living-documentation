@@ -20,19 +20,25 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.annotations;
+package ch.ifocusit.telecom_annotated.domain;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.telecom_annotated.domain.common.AbstractDomain;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * @author Julien Boz
+ * Customer of the telecom service
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
-public @interface Glossary {
+@Glossary(id = 300)
+public class Customer extends AbstractDomain {
 
-    public int id() default -1;
+    /**
+     * Name of the customer.
+     */
+    @Glossary(id = 301)
+    private String name;
+
+    private Set<Contract> contracts = new HashSet<>();
 }

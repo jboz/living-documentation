@@ -20,13 +20,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain;
+package ch.ifocusit.telecom_annotated.domain;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
-import ch.ifocusit.telecom.domain.access.Access;
-import ch.ifocusit.telecom.domain.access.CallAccess;
-import ch.ifocusit.telecom.domain.access.SmsAccess;
-import ch.ifocusit.telecom.domain.common.AbstractDomain;
+import ch.ifocusit.telecom_annotated.domain.access.Access;
+import ch.ifocusit.telecom_annotated.domain.access.SmsAccess;
+import ch.ifocusit.telecom_annotated.domain.common.AbstractDomain;
+import ch.ifocusit.telecom_annotated.domain.access.CallAccess;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -35,14 +34,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Facture *mensuel*.
- * [NOTE]
- * Généré pas le système à la date anniversaire du contrat + 1 jour.
- *
- * @since 2017-03-01
- */
-@Glossary
 public class Bill extends AbstractDomain {
 
     private YearMonth month;

@@ -20,29 +20,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain;
+package ch.ifocusit.telecom_annotated.domain;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
-import ch.ifocusit.telecom.domain.common.AbstractDomain;
+import ch.ifocusit.telecom_annotated.domain.common.AbstractDomain;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * ### Customer of the service
- * [NOTE]
- * .A NOTE admonition block
- * =====================================================================
- * Qui in magna commodo, est labitur dolorum an. Est ne magna primis adolescens.
- * . Fusce euismod commodo velit.
- * . Vivamus fringilla mi eu lacus.
- * .. Fusce euismod commodo velit.
- * .. Vivamus fringilla mi eu lacus.
- * . Donec eget arcu bibendum nunc consequat lobortis.
- * =====================================================================
- */
-@Glossary
 public class Customer extends AbstractDomain {
 
     private String name;

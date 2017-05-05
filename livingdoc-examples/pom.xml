@@ -28,5 +28,6 @@
 
     <modules>
         <module>ddd-example</module>
+        <module>ddd-annotated-example</module>
     </modules>
 </project>

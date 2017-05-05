@@ -1,0 +1,31 @@
+= DDD example project
+
+This a simple DDD project around the telecom aggregate
+
+The maven plugin is use to generate dynamicly the domain class diagram :
+
+[plantuml, class-diagram, png]
+plantuml::src/main/docs/example-domain.plantuml[format=png, alt="Class diagram"]
+
+== Maven configuration :
+
+=== Domain object decoration with some annotation
+
+[source,java]
+----
+@Glossary(id = 100)
+public class Bill {
+    [...]
+}
+----
+
+[source,xml]
+----
+include::pom.xml[tags=annotation-livingdoc]
+----
+
+=== Diagram generation by maven plugin
+[source,xml]
+----
+include::pom.xml[tags=plugin-livingdoc]
+----

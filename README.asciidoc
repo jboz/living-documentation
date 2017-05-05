@@ -5,9 +5,11 @@ image::https://travis-ci.org/jboz/living-documentation.svg?branch=master["Build 
 
 This project is intented to provide some tools to allow a nice Living Documentation.
 
+_Inspired by https://livingdocumentation.github.io/livingdoc-maven-plugin/intro.html_
+
 See examples to show the powerfull !
 
-You'll be able to generate beatiful diagrams with a simple configuration.
+You'll be able to generate beautiful diagrams with a simple configuration.
 
 === Diagram example :
 

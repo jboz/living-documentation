@@ -20,19 +20,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.annotations;
+package ch.ifocusit.telecom_annotated.domain.access;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import ch.ifocusit.livingdoc.annotations.Glossary;
+
+import java.time.Duration;
 
 /**
- * @author Julien Boz
+ * Phone call type access.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
-public @interface Glossary {
+@Glossary(id = 500)
+public class CallAccess extends Access {
 
-    public int id() default -1;
+    /**
+     * Phone call duration
+     */
+    @Glossary(id = 501)
+    private Duration duration;
 }

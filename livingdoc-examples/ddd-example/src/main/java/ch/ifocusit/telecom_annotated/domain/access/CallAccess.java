@@ -20,19 +20,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.annotations;
+package ch.ifocusit.telecom_annotated.domain.access;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.time.Duration;
 
-/**
- * @author Julien Boz
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
-public @interface Glossary {
+public class CallAccess extends Access {
 
-    public int id() default -1;
+    private Duration duration;
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(final Duration duration) {
+        this.duration = duration;
+    }
 }

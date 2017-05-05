@@ -20,18 +20,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.access;
+package ch.ifocusit.telecom_annotated.domain.access;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
-import ch.ifocusit.telecom.domain.common.AbstractDomain;
+import ch.ifocusit.telecom_annotated.domain.common.AbstractDomain;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
-/**
- * Bill line.
- */
-@Glossary
 public abstract class Access extends AbstractDomain {
 
     private String phoneNumber;

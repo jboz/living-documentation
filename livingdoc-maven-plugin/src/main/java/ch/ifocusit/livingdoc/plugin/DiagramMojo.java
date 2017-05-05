@@ -22,12 +22,15 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import ch.ifocusit.livingdoc.plugin.diagram.PlantumlDiagramBuilder;
+import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.plugin.diagram.PlantumlClassDiagramBuilder;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+
+import java.io.File;
 
 /**
  * @author Julien Boz
@@ -41,8 +44,23 @@ public class DiagramMojo extends CommonMojoDefinition {
     @Parameter
     private String[] excludes = new String[0];
 
+    /**
+     * Output diagram format
+     */
     @Parameter(defaultValue = "plantuml", required = true)
     private DiagramType diagramType;
+
+    /**
+     * Extract only class/field/method annotated with @Glossary
+     */
+    @Parameter(defaultValue = "false")
+    private boolean onlyGlossary = false;
+
+    /**
+     * File to use for Glossary mapping.
+     */
+    @Parameter()
+    private File mappingGlossary;
 
     public static enum DiagramType {
         plantuml, dot;
@@ -60,7 +78,11 @@ public class DiagramMojo extends CommonMojoDefinition {
 
         switch (diagramType) {
             case plantuml:
-                return new PlantumlDiagramBuilder(project, prefix, excludes).generate();
+                PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, prefix, excludes);
+                if (onlyGlossary) {
+                    builder.filterOnAnnotation(Glossary.class);
+                }
+                return builder.generate();
             default:
                 throw new NotImplementedException(String.format("format %s is not implemented yet", diagramType));
         }

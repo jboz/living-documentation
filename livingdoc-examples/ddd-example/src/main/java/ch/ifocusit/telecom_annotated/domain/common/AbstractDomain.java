@@ -20,13 +20,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.access;
+package ch.ifocusit.telecom_annotated.domain.common;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
-
-/**
- * SMS - message texte.
- */
-@Glossary
-public class SmsAccess extends Access {
+public abstract class AbstractDomain {
 }

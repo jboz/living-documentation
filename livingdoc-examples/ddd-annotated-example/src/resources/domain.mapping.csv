@@ -1,0 +1,16 @@
+id;name;description
+100;Facture;Facture Mensuelle générée par le système à la date anniversaire du contrat
+101;Mois de facture;Mois concerné par la facture
+200;Contrat;Contrat de téléphonie liant la société à un client
+201;Identifiant;Identifiant du contrat unique dans le système
+202;Date d'effet;Date à laquelle le contrat prend effet
+203;Date anniversaire;Date anniversaire du contrat. Correspond au jour/mois de la date d'effet
+300;Client;Client du service lié par un contrat
+301;Nom;Nom d'usage du client
+400;Accès;Utilisation du service de télécommunication
+401;Téléphone;Numéro de téléphone utilisé
+402;Prix;Montant de l'accès au service
+403;Horodatage;Timestamp de l'utilisation du service
+500;Appel téléphonique;
+501;durée;Durée de l'appel téléphonique
+600;SMS;SMS

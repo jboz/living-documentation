@@ -22,64 +22,55 @@
  */
 package ch.ifocusit.livingdoc.plugin.diagram;
 
-import ch.ifocusit.plantuml.classdiagram.ClassDiagramBuilder;
 import com.google.common.reflect.ClassPath;
-import com.google.common.reflect.ClassPath.ClassInfo;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 
 /**
  * @author Julien Boz
  */
-public class PlantumlDiagramBuilder {
+public abstract class ClassDiagramBuilder {
 
     private static final String TEST = "Test";
     private static final String PACKAGE_INFO = "package-info";
     private final String IT = "IT";
 
-    private MavenProject project;
-    private String prefix;
-    private String[] excludes;
+    protected final MavenProject project;
+    protected final String prefix;
+    protected final String[] excludes;
 
-    public PlantumlDiagramBuilder(MavenProject project, String prefix, String[] excludes) {
+    public ClassDiagramBuilder(MavenProject project, String prefix, String[] excludes) {
         this.project = project;
         this.prefix = prefix;
         this.excludes = excludes;
     }
 
-    public String generate() throws MojoExecutionException {
-        final ClassPath classPath = initClassPath();
-        final Set<ClassInfo> allClasses = classPath.getTopLevelClassesRecursive(prefix);
+    public abstract ClassDiagramBuilder filterOnAnnotation(Class<? extends Annotation> annotation);
 
-        String diagram = new ClassDiagramBuilder()
-                // filter some classes
-                .addClasses(allClasses.stream().filter(filter()).map(ClassInfo::load).collect(Collectors.toList()))
-                .build();
-        return diagram;
-    }
+    public abstract String generate() throws MojoExecutionException;
 
-    private Predicate<ClassInfo> filter() {
+    protected Predicate<ClassPath.ClassInfo> defaultFilter() {
         return ci -> ci.getPackageName().startsWith(prefix)
                 && !ci.getSimpleName().equalsIgnoreCase(PACKAGE_INFO)
                 && !ci.getSimpleName().endsWith(TEST)
                 && !ci.getSimpleName().endsWith(IT)
+                // do not load class if must be filtered
                 && stream(excludes).noneMatch(excl -> ci.getName().matches(excl));
     }
 
-    private ClassPath initClassPath() throws MojoExecutionException {
+    protected ClassPath initClassPath() throws MojoExecutionException {
         final ClassPath classPath;
         try {
             try {
@@ -93,7 +84,7 @@ public class PlantumlDiagramBuilder {
         return classPath;
     }
 
-    private ClassLoader getRuntimeClassLoader() throws DependencyResolutionRequiredException, MalformedURLException {
+    protected ClassLoader getRuntimeClassLoader() throws DependencyResolutionRequiredException, MalformedURLException {
         List<String> runtimeClasspathElements = project.getRuntimeClasspathElements();
         List<String> compileClasspathElements = project.getCompileClasspathElements();
         URL[] runtimeUrls = new URL[runtimeClasspathElements.size() + compileClasspathElements.size()];

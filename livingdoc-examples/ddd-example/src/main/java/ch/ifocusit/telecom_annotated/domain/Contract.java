@@ -20,19 +20,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.annotations;
+package ch.ifocusit.telecom_annotated.domain;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import ch.ifocusit.telecom_annotated.domain.common.AbstractDomain;
 
-/**
- * @author Julien Boz
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
-public @interface Glossary {
+public class Contract extends AbstractDomain {
 
-    public int id() default -1;
+    private Long id;
+    private Customer customer;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(final Customer customer) {
+        this.customer = customer;
+    }
 }

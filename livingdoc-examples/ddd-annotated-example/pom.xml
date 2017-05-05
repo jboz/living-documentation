@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ch.ifocusit.livingdoc</groupId>
-    <artifactId>livingdoc-example-ddd</artifactId>
+    <artifactId>livingdoc-example-ddd-annotated</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <description>Living Documentation example in a DDD project</description>
+    <description>Living Documentation example in a DDD project with annotated classes</description>
 
     <organization>
         <name>Focus IT</name>
@@ -26,9 +26,19 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <failOnMissingWebXml>false</failOnMissingWebXml>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <!-- living doc deps -->
+        <!-- tag::annotation-livingdoc[] -->
+        <dependency>
+            <groupId>ch.ifocusit.livingdoc</groupId>
+            <artifactId>livingdoc-annotations</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!-- end::annotation-livingdoc[] -->
+    </dependencies>
 
     <build>
         <plugins>
@@ -47,9 +57,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <prefix>ch.ifocusit.telecom.domain</prefix>
+                    <prefix>ch.ifocusit.telecom_annotated.domain</prefix>
+                    <onlyGlossary>true</onlyGlossary>
                     <diagramType>plantuml</diagramType>
-                    <output>${project.build.directory}/domain.plantuml</output>
+                    <output>${project.build.directory}/domain-annotated.plantuml</output>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>

@@ -20,19 +20,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.annotations;
+package ch.ifocusit.telecom_annotated.domain.access;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.telecom_annotated.domain.common.AbstractDomain;
+
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
 /**
- * @author Julien Boz
+ * Use of telecom service.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
-public @interface Glossary {
+@Glossary(id = 400)
+public abstract class Access extends AbstractDomain {
 
-    public int id() default -1;
+    /**
+     * Phone number used.
+     */
+    @Glossary(id = 401)
+    private String phoneNumber;
+
+    /**
+     * Price of use of the service.
+     */
+    @Glossary(id = 402)
+    private BigDecimal price;
+
+    /**
+     * Timestamp of use.
+     */
+    @Glossary(id = 403)
+    private ZonedDateTime dateTime = ZonedDateTime.now();
 }
