@@ -1,31 +1,36 @@
 language: java
+
 sudo: false
+
 jdk:
 - oraclejdk8
+
 install: mvn install -Dmaven.javadoc.skip=true -B -V
+
 branches:
   only:
   - master
+
 cache:
   directories:
   - "$HOME/.m2"
+
 after_success:
+- "git clone -b deploy `git config --get remote.origin.url` target/deploy"
 - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/pubring.gpg.enc -out $GPG_DIR/pubring.gpg -d
 - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/secring.gpg.enc -out $GPG_DIR/secring.gpg -d
-- "[[ ${TRAVIS_PULL_REQUEST} == 'false' ]] && [[ ${TRAVIS_TAG} == '' ]] && mvn deploy\
-  \ -f livingdoc-annotations/pom.xml --settings $GPG_DIR/settings.xml -DperformRelease=true\
-  \ -DskipTests=true"
-- "[[ ${TRAVIS_PULL_REQUEST} == 'false' ]] && [[ ${TRAVIS_TAG} == '' ]] && mvn deploy\
-  \ -f livingdoc-maven-plugin/pom.xml --settings $GPG_DIR/settings.xml -DperformRelease=true\
-  \ -DskipTests=true"
+- "[[ ${TRAVIS_PULL_REQUEST} == 'false' ]] && [[ ${TRAVIS_TAG} == '' ]] && mvn deploy -f livingdoc-annotations/pom.xml --settings $GPG_DIR/settings.xml -DperformRelease=true -DskipTests=true"
+- "[[ ${TRAVIS_PULL_REQUEST} == 'false' ]] && [[ ${TRAVIS_TAG} == '' ]] && mvn deploy -f livingdoc-maven-plugin/pom.xml --settings $GPG_DIR/settings.xml -DperformRelease=true -DskipTests=true"
+
 env:
   global:
-  - GPG_DIR="`pwd`/deploy"
+  - GPG_DIR="`pwd`/target/deploy"
   - secure: llf7R4RqxrKbM0CDpgAu38bt3ojrPeWbUq/9K8xN4UDCa7FOlbUx5/vlpDzaHSZlW2G04pl1lHjH+Wq9IultDrY7/FmWs8hGrNwEg8ZBKiz9ydImJzgMoJGfjlIgtlLaIksxdU4GesGPehUrk65uyoI2dCsQLunOX5nF9tnbrBcOzg8NngHEp6/p13P07C+ls3XBmTtgbelGTyRG4A1IHXqonwQnhfJyfHOY0nx7IwHnFviK0docJCWq2XWg2XfOHJBtOCS1iQYIoxNEd75M47T9sbir6j5PORV0Y+sGAas8yuAEJvSpwJicWiCMNWTKu06DCZLu3IqMMmS7Mahe77n5R17Eo1MfrIAp/jYj8DpI8vzikaSUxaP8lu3HHSBsEaDq0Q9NgeA0xUi7jbmrMHHJWy9GXxRhK2LOL9mVxYf2a4Lv9qaGeNhxnpggJmBgAjWATatpBwwk/tRlyV79XNgFXXXbU3q7YXGodIDdwQDTcTUqZ9SaP/lGq5Vw4lji1Rosvv8Nfhgoeddxq6I6X1brV6qihn2AFEPmY6lQ+BvW9/QGyjEmtzAK90QsBszNTFQ+HjjAbDcZ5ZqRO6sFM5LL4r8Zd6bwKWE3GruVAcRZ56jfQ0skfBDiPbEwFlxIesG+Ov+qRB1Lh1bSNHkn194JwSvFmRRrgT3VvC7geAg=
   - secure: O04Jt4X1QH2oBGg38tWuCiFejS5Wj8xj9P3Wv81J1g9ZwyfFmC+V2vvpWbHiC+wB2hDK7db7jphGKmE2CD4RfiabWIEyxE3AQfWVUD13aehIroAU5vSFigGvXmejUDPInJb4olldLzgDhBH5/wCt0E/2DTdAEvmT0yKseIxKMkS2ZBGhlK7eVFm2bGEd2/DKADwwClciyGi0uI5RM44FZpupZZMdn2/w9jrgp+8GYepJgNKs3nlUQnZ0DQLd0z6oYzAY4R1cj4+zklsSpmmoM4LDXXV86ipji/gtLQHxwvWzdeRL73qn9nwyXSVFrrZd2Snfa5n7YfRL5n1DH3TsW2+AdTImFTZCAYH9NXLK880FqX+bFvUhBicYxtVuQ/Z710chzC30F+WExsA1hqoVDqiSomqtFXzPwycz2wUPu13nKh3/REMno+R/bgkZHxJIyW4h6zpaz6l3oGd8RGwnWeQkCngpPW2TJgriJDcARrPSVim5Nw/XWTszyb+6+bEI2XAm6EgzMwrHZbExEN8gNCZr2vHmMD7D7npRI90r4epQAoGXbcPNtjC9KgVUH2w3lR8R16M+oBvyGWkz2uKaAI4anSC9dQEEiHF9ZlhT+y19ihQ891vDau2W2Og+GD3smQFXOqYUqxTon1dp6K7XlU0pgTR3Gb2vf5qYiyGVXbY=
   - secure: bn9fF+BJdxDzsBLMAhHaK5GhDmmRg0nRtRIIDTstPTen+4gskEo/YesA8TV95bExt+1yBWn7xUA7I4vmu9Cn+SIQJb68EuRBSTyKtTtLkMBIwVYBoepmfABZl6cT/DQjafuSKWwIFCmsCpYFAisrGqPVhx7zGKROPdaEM/+RFHmosHkNkP4K3nXaQvyC7TufeaCcORV5mg6L1Vx2fnBzoszkxOjwYSm4e3XWsXtk5xlNBNxlUaBfcxjJwQClzB1JyAmluj0t2q7IK+IsNm5fqeoRABM4o2pE7CfVAqmhOv9oNu4V6g37kTGzUxPzIPCHXRhJapWLgiIxIvloS7A/euDBj/ItbDwi0AYw06uasigZIuY7m8rCofuzyfbu7IhCWva++tXUqvVH0tlBEN5ICIyxPNIZ3e+pOwHTL249cITdACRK2ZzuGQLP1/EZSXN03hwLZpWaUNiXAqAkR45iVBiEVZv8vqvPHaSGAkHSne49MqFB6oyzAliyhDlWHdUyusWhl8HXHXSO5apX6grby38uOexqV/M1Ri9oggG7FYTlQivEbuhqAq41bVZtDC0fZmumQ4PAMY7vrNPl1o2PbyOFK46D8pQR3Uof4+nvwKHASgX221CwjYcn+W5uIFffkg5DaVYmPn12GbfQkjx6iJRgn9FsamgGrtrakg5prmQ=
   - secure: aTHUOAxZzwDrVz0e9B9xJSPBp9zVza3E73WHiyDzsL5j+mAYhiiyeDVLMLlDp0pPOiuds3K1UnSnqaOqJT8C4EWLdhae/TVG2K3jieawbTvPCj3m5Hwqd90wnlPTXM/uwXEtF7yNKib7pmhULzQckQvuGR5SmgbuqfQ13S4AIc3S69xUSNOPXn1LbcCYpzss/Yt6qGrRXJFbgga5hLLLHKL/x7KvMdsjSS3uv2UxJGpvys4UGMx+c5/uHRVTF2Cb1kJ6e8RqVxaDBU/SyS9F/oHJYhF004j2NbnUm8X3HL1W9Vuy5npMIOkyajcwUuIISAIbcTqGkVVIF+rLpRmM7pWlcWde9/Dwpy84+xzaIkw3dDckOLquagBLx8dE/qbcaXbcCyIKTNRBSPqDncguzXLhuffkfKDThZHDuN0al12BBEvazHtWPaghNUfu3dJSiU/5doY8PYpkAHQPt2RjK4YIGqI4jih0XEkDgF63roNHoQttWLOE5FVmGHdGO/qIk/p0cDo/5UYTBcLwDXBLDZxATWF7nupFPMo82s3RC/ZPkt7/+gCqDv44jFaF88TxrTxCdEMzrNTEljY67Rr9y42Xknbo+lEuRAfxHMrb5I8reeyPexsIcEPBN6SSLY5l8Z7Cc3oIWcL15tn1SrJBhmys4RgNsWI6CeVHdIYelQ4=
   - secure: fc5vZkD60K68Mp/B1teDqU1P3dJ153CFT9FqLLQ+q8VJ1keJby+cfkQgrbZ/RtEW6UoobvXTRZjj1l17T77nsxCaKwoDNPeZkiPmQW9be7bwNOk+9IJHXupNmYiqkVSmlN/PWkBdR95X7fWAN6rQ7i5OVo6kxIgHAOcO/ZzvfKDR9DXG5VWgfs58MeSezrjxI/ExI+x2z43V70gdWz1XW8isysBJ1tET9mVaZ55nfFtUjCihoqnL03R94QwP1jX6m2tVRz5CGaNtX0o+iIZ3uHPIzeYZE7NPtpiQ3JLdXKYWs1ApKenqvGqNcez6fI69dyYWqORL6wEqz/8EVMD6bp+dsLFGQiqvSa2lzB7eHBLoLt6iGzpSlg++ZWv9GHdi0lP1H7mCHGLNa/0HFf5cayNme0ZAQzXsJDC3XyLMCluPGWzrgjU+8kSA3M9EU+DF+QPUsS6gDFRmYRefc2rh+pm+rF3HWdVKjhULgr3vTAVWZeGHHFvy5DTC72bXy3aYswf8bbvz4hORsC3ZVBXL+ZqqWU6VPMW1LJxn+1xpmCVTOA6BVcq8iBn7lHO8X7HFG5nZGZSWsR9xva3X8jD4lto296/Ca1DmLXlt7028xsoje6aXm4ylDEUJQTeikXUX9RFbR3BzZ30cnZh9wsxsMdt/rJ6JyYppLgmqBoLW8Vg=
+
 notifications:
   email:
   - julienboz@gmail.com
