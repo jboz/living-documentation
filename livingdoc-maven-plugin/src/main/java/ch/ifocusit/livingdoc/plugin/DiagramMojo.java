@@ -24,6 +24,7 @@ package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.annotations.Glossary;
 import ch.ifocusit.livingdoc.plugin.diagram.PlantumlAbstractClassDiagramBuilder;
+import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -67,11 +68,24 @@ public class DiagramMojo extends CommonMojoDefinition {
     }
 
     @Override
+    protected String getDefaultFilename() {
+        return "diagram.adoc";
+    }
+
+    @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         // generate diagram
         String diagram = generateDiagram();
+
+        AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
+        asciiDocBuilder.documentTitle("Class diagram");
+        asciiDocBuilder.textLine("[plantuml, class-diagram, png]");
+        asciiDocBuilder.textLine("----");
+        asciiDocBuilder.textLine(diagram);
+        asciiDocBuilder.textLine("----");
+
         // write to file
-        writeDiagram(diagram);
+        write(asciiDocBuilder);
     }
 
     String generateDiagram() throws MojoExecutionException {
@@ -89,9 +103,5 @@ public class DiagramMojo extends CommonMojoDefinition {
             default:
                 throw new NotImplementedException(String.format("format %s is not implemented yet", diagramType));
         }
-    }
-
-    void writeDiagram(String diagram) throws MojoExecutionException {
-        write(diagram, output);
     }
 }

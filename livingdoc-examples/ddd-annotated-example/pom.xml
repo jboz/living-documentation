@@ -54,17 +54,28 @@
                         <goals>
                             <goal>diagram</goal>
                         </goals>
+                        <configuration>
+                            <prefix>ch.ifocusit.telecom_annotated.domain</prefix>
+                            <outputFilename>domain-annotated.plantuml</outputFilename>
+                            <onlyGlossary>true</onlyGlossary>
+                            <glossaryMapping>src/docs/domain-mapping.csv</glossaryMapping>
+                            <diagramType>plantuml</diagramType>
+                            <excludes>
+                                <exclude>.*domain.common.*</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>glossary</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>glossary</goal>
+                        </goals>
                     </execution>
                 </executions>
                 <configuration>
-                    <prefix>ch.ifocusit.telecom_annotated.domain</prefix>
-                    <onlyGlossary>true</onlyGlossary>
-                    <glossaryMapping>src/docs/domain-mapping.csv</glossaryMapping>
-                    <diagramType>plantuml</diagramType>
-                    <output>${project.build.directory}/domain-annotated.plantuml</output>
-                    <excludes>
-                        <exclude>.*domain.common.*</exclude>
-                    </excludes>
+                    <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
+                    <format>html</format>
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->

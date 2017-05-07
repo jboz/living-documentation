@@ -23,16 +23,22 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.common.Template;
+import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.asciidoctor.Asciidoctor;
+import org.asciidoctor.OptionsBuilder;
+import org.asciidoctor.SafeMode;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Julien Boz
@@ -42,8 +48,23 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     protected MavenProject project;
 
-    @Parameter(required = true)
-    File output;
+    /**
+     * Directory where the glossary will be generated
+     */
+    @Parameter(defaultValue = "${project.build.directory}/generated-docs", required = true)
+    protected File outputDirectory;
+
+    /**
+     * Output filename
+     */
+    @Parameter
+    protected String outputFileName;
+
+    /**
+     * Output format of the glossary (default html, others : adoc)
+     */
+    @Parameter(defaultValue = "html")
+    protected String format;
 
     @Parameter
     protected Template template;
@@ -63,5 +84,29 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
         } catch (IOException e) {
             throw new MojoExecutionException(String.format("Unable to write output file '%s' !", output), e);
         }
+    }
+
+    void write(AsciiDocBuilder asciiDocBuilder) throws MojoExecutionException {
+        outputDirectory.mkdirs();
+        try {
+            asciiDocBuilder.writeToFile(outputDirectory.getAbsolutePath(), getFilename().replace(".adoc", ""), StandardCharsets.UTF_8);
+            if ("html".equals(format)) {
+                Asciidoctor asciidoctor = Asciidoctor.Factory.create();
+                asciidoctor.requireLibrary("asciidoctor-diagram");
+                asciidoctor.convertFile(getOutput(), OptionsBuilder.options().backend("html5").safe(SafeMode.UNSAFE).asMap());
+            }
+        } catch (IOException e) {
+            throw new MojoExecutionException(String.format("Unable to write asciidoc output file '%s' !", getOutput().getAbsolutePath()), e);
+        }
+    }
+
+    protected abstract String getDefaultFilename();
+
+    protected String getFilename() {
+        return StringUtils.defaultIfBlank(outputFileName, getDefaultFilename());
+    }
+
+    protected File getOutput() {
+        return new File(outputDirectory, getFilename());
     }
 }
