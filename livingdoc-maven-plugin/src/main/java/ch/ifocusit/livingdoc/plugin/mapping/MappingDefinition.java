@@ -1,5 +1,6 @@
 package ch.ifocusit.livingdoc.plugin.mapping;
 
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -43,7 +44,17 @@ public class MappingDefinition implements Comparable<MappingDefinition> {
 
     @Override
     public int compareTo(MappingDefinition o) {
-        return BY_ID.compound(BY_NAME).compound(BY_DESCRIPTION).nullsFirst().compare(this, o);
+        return new Ordering<MappingDefinition>() {
+            @Override
+            public int compare(MappingDefinition left, MappingDefinition right) {
+                return ComparisonChain.start()
+                        .compare(left.getId(), right.getId(), Ordering.natural().nullsFirst())
+                        .compare(left.getName(), right.getName(), Ordering.natural().nullsFirst())
+                        .compare(left.getDescription(), right.getDescription(), Ordering.natural().nullsFirst())
+                        .result();
+            }
+        }.nullsFirst()
+                .compare(this, o);
     }
 
     @Override
@@ -55,8 +66,4 @@ public class MappingDefinition implements Comparable<MappingDefinition> {
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
-
-    private static final Ordering<MappingDefinition> BY_ID = Ordering.natural().onResultOf(MappingDefinition::getId);
-    private static final Ordering<MappingDefinition> BY_NAME = Ordering.natural().nullsFirst().onResultOf(MappingDefinition::getName);
-    private static final Ordering<MappingDefinition> BY_DESCRIPTION = Ordering.natural().nullsFirst().onResultOf(MappingDefinition::getDescription);
 }
