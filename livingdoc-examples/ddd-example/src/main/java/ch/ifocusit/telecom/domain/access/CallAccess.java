@@ -20,7 +20,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom_annotated.domain.access;
+package ch.ifocusit.telecom.domain.access;
 
-public class SmsAccess extends Access {
+import java.time.Duration;
+
+public class CallAccess extends Access {
+
+    private Duration duration;
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(final Duration duration) {
+        this.duration = duration;
+    }
 }

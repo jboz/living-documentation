@@ -20,28 +20,46 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom_annotated.domain;
+package ch.ifocusit.telecom.domain;
 
-import ch.ifocusit.telecom_annotated.domain.common.AbstractDomain;
+import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.telecom.domain.common.AbstractDomain;
 
+import java.time.LocalDate;
+import java.time.MonthDay;
+
+/**
+ * Telecom contract
+ */
+@Glossary(id = 200)
 public class Contract extends AbstractDomain {
 
-    private Long id;
+    /**
+     * Contract identifier.
+     * Generate by the system and communicate to client.
+     */
+    @Glossary(id = 201)
+    private String id;
+
+    /**
+     * Contract customer.
+     */
+    @Glossary(id = 300)
     private Customer customer;
 
-    public Long getId() {
-        return id;
-    }
+    /**
+     * Contract effect date.
+     */
+    @Glossary(id = 202)
+    private LocalDate effectDate;
 
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(final Customer customer) {
-        this.customer = customer;
+    /**
+     * Extract birth day from effect date.
+     *
+     * @return the contract birth date
+     */
+    @Glossary(id = 203)
+    public MonthDay getBirthDay() {
+        return MonthDay.from(effectDate);
     }
 }

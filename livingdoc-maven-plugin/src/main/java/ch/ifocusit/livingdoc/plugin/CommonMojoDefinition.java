@@ -58,19 +58,23 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
      * Output filename
      */
     @Parameter
-    protected String outputFileName;
+    protected String outputFilename;
 
     /**
      * Output format of the glossary (default html, others : adoc)
      */
     @Parameter(defaultValue = "html")
-    protected String format;
+    protected Format format;
 
     @Parameter
     protected boolean withoutTitle = false;
 
     @Parameter
     protected Template template;
+
+    public static enum Format {
+        asccidoc, html;
+    }
 
     void write(final String newValue, final File output) throws MojoExecutionException {
         write(newValue, output, null);
@@ -93,7 +97,7 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
         outputDirectory.mkdirs();
         try {
             asciiDocBuilder.writeToFile(outputDirectory.getAbsolutePath(), getFilename().replace(".adoc", ""), StandardCharsets.UTF_8);
-            if ("html".equals(format)) {
+            if (Format.html.equals(format)) {
                 Asciidoctor asciidoctor = Asciidoctor.Factory.create();
                 asciidoctor.requireLibrary("asciidoctor-diagram");
                 asciidoctor.convertFile(getOutput(), OptionsBuilder.options().backend("html5").safe(SafeMode.UNSAFE).asMap());
@@ -106,7 +110,7 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
     protected abstract String getDefaultFilename();
 
     protected String getFilename() {
-        return StringUtils.defaultIfBlank(outputFileName, getDefaultFilename());
+        return StringUtils.defaultIfBlank(outputFilename, getDefaultFilename());
     }
 
     protected File getOutput() {

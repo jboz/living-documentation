@@ -20,35 +20,36 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom_annotated.domain.access;
+package ch.ifocusit.telecom.domain;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
-import ch.ifocusit.telecom_annotated.domain.common.AbstractDomain;
+import ch.ifocusit.telecom.domain.common.AbstractDomain;
 
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * Use of telecom service.
- */
-@Glossary(id = 400)
-public abstract class Access extends AbstractDomain {
+public class Customer extends AbstractDomain {
 
-    /**
-     * Phone number used.
-     */
-    @Glossary(id = 401)
-    private String phoneNumber;
+    private String name;
+    private Set<Contract> contracts = new HashSet<>();
 
-    /**
-     * Price of use of the service.
-     */
-    @Glossary(id = 402)
-    private BigDecimal price;
+    public String getName() {
+        return name;
+    }
 
-    /**
-     * Timestamp of use.
-     */
-    @Glossary(id = 403)
-    private ZonedDateTime dateTime = ZonedDateTime.now();
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public Set<Contract> getContracts() {
+        return Collections.unmodifiableSet(contracts);
+    }
+
+    public boolean addContract(final Contract contract) {
+        return this.contracts.add(contract);
+    }
+
+    public boolean removeContract(final Contract contract) {
+        return this.contracts.remove(contract);
+    }
 }

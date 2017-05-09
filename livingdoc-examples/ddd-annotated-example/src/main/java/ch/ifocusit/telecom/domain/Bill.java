@@ -20,11 +20,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom_annotated.domain;
+package ch.ifocusit.telecom.domain;
 
 import ch.ifocusit.livingdoc.annotations.Glossary;
-import ch.ifocusit.telecom_annotated.domain.access.Access;
-import ch.ifocusit.telecom_annotated.domain.common.AbstractDomain;
+import ch.ifocusit.telecom.domain.access.Access;
+import ch.ifocusit.telecom.domain.common.AbstractDomain;
 
 import java.time.YearMonth;
 import java.util.HashSet;

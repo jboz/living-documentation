@@ -20,7 +20,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom_annotated.domain.common;
+package ch.ifocusit.telecom.domain.access;
 
-public abstract class AbstractDomain {
+public class SmsAccess extends Access {
 }

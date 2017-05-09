@@ -20,19 +20,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom_annotated.domain.access;
+package ch.ifocusit.telecom.domain.access;
 
-import java.time.Duration;
+import ch.ifocusit.telecom.domain.common.AbstractDomain;
 
-public class CallAccess extends Access {
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
-    private Duration duration;
+public abstract class Access extends AbstractDomain {
 
-    public Duration getDuration() {
-        return duration;
+    private String phoneNumber;
+    private BigDecimal price;
+    private ZonedDateTime dateTime = ZonedDateTime.now();
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setDuration(final Duration duration) {
-        this.duration = duration;
+    public void setPhoneNumber(final String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public ZonedDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(ZonedDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 }

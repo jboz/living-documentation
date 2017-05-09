@@ -55,8 +55,7 @@
                             <goal>diagram</goal>
                         </goals>
                         <configuration>
-                            <packageRoot>ch.ifocusit.telecom_annotated.domain</packageRoot>
-                            <outputFilename>domain-annotated.plantuml</outputFilename>
+                            <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
                             <onlyGlossary>true</onlyGlossary>
                             <diagramType>plantuml</diagramType>
                             <excludes>

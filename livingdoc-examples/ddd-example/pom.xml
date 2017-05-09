@@ -50,7 +50,7 @@
                     <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
                     <diagramType>plantuml</diagramType>
                     <outputDirectory>${build.directory}</outputDirectory>
-                    <outputFileName>domain.adoc</outputFileName>
+                    <outputFilename>domain.adoc</outputFilename>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>

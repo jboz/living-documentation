@@ -20,21 +20,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom_annotated.domain.access;
+package ch.ifocusit.telecom.domain.common;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
-
-import java.time.Duration;
-
-/**
- * Phone call type access.
- */
-@Glossary(id = 500)
-public class CallAccess extends Access {
-
-    /**
-     * Phone call duration
-     */
-    @Glossary(id = 501)
-    private Duration duration;
+public abstract class AbstractDomain {
 }

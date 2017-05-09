@@ -77,18 +77,23 @@ public class DiagramMojo extends CommonMojoDefinition {
         // generate diagram
         String diagram = generateDiagram();
 
-        AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
-        if (!withoutTitle) {
-            asciiDocBuilder.documentTitle("Class diagram");
+        if (Format.html.equals(format)) {
+
+            AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
+            if (!withoutTitle) {
+                asciiDocBuilder.documentTitle("Class diagram");
+            }
+            if (DiagramType.plantuml.equals(diagramType)) {
+                asciiDocBuilder.textLine("[plantuml, class-diagram, png]");
+            }
+            asciiDocBuilder.textLine("----");
+            asciiDocBuilder.textLine(diagram);
+            asciiDocBuilder.textLine("----");
+            // write to file
+            write(asciiDocBuilder);
+        } else {
+            write(diagram, getOutput());
         }
-        if (DiagramType.plantuml.equals(diagramType)) {
-            asciiDocBuilder.textLine("[plantuml, class-diagram, png]");
-        }
-        asciiDocBuilder.textLine("----");
-        asciiDocBuilder.textLine(diagram);
-        asciiDocBuilder.textLine("----");
-        // write to file
-        write(asciiDocBuilder);
     }
 
     String generateDiagram() throws MojoExecutionException {

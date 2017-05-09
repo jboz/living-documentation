@@ -20,12 +20,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom_annotated.domain;
+package ch.ifocusit.telecom.domain;
 
-import ch.ifocusit.telecom_annotated.domain.access.Access;
-import ch.ifocusit.telecom_annotated.domain.access.SmsAccess;
-import ch.ifocusit.telecom_annotated.domain.common.AbstractDomain;
-import ch.ifocusit.telecom_annotated.domain.access.CallAccess;
+import ch.ifocusit.telecom.domain.access.Access;
+import ch.ifocusit.telecom.domain.access.SmsAccess;
+import ch.ifocusit.telecom.domain.common.AbstractDomain;
+import ch.ifocusit.telecom.domain.access.CallAccess;
 
 import java.math.BigDecimal;
 import java.time.Duration;

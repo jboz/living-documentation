@@ -20,36 +20,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom_annotated.domain;
+package ch.ifocusit.telecom.domain.common;
 
-import ch.ifocusit.telecom_annotated.domain.common.AbstractDomain;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-public class Customer extends AbstractDomain {
-
-    private String name;
-    private Set<Contract> contracts = new HashSet<>();
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public Set<Contract> getContracts() {
-        return Collections.unmodifiableSet(contracts);
-    }
-
-    public boolean addContract(final Contract contract) {
-        return this.contracts.add(contract);
-    }
-
-    public boolean removeContract(final Contract contract) {
-        return this.contracts.remove(contract);
-    }
+public abstract class AbstractDomain {
 }
