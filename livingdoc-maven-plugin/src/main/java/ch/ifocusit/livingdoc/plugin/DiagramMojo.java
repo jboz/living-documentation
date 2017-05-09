@@ -39,8 +39,8 @@ import java.io.File;
 @Mojo(name = "diagram")
 public class DiagramMojo extends CommonMojoDefinition {
 
-    @Parameter(required = true)
-    private String prefix;
+    @Parameter(required = true, defaultValue = "${groupid}.${artifactid}.domain")
+    private String packageRoot;
 
     @Parameter
     private String[] excludes = new String[0];
@@ -78,11 +78,17 @@ public class DiagramMojo extends CommonMojoDefinition {
         String diagram = generateDiagram();
 
         AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
-        asciiDocBuilder.documentTitle("Class diagram");
-        asciiDocBuilder.textLine("[plantuml, class-diagram, png]");
+        if (!withoutTitle) {
+            asciiDocBuilder.documentTitle("Class diagram");
+        }
+        if (DiagramType.plantuml.equals(diagramType)) {
+            asciiDocBuilder.textLine("[plantuml, class-diagram, png]");
+        }
         asciiDocBuilder.textLine("----");
         asciiDocBuilder.textLine(diagram);
         asciiDocBuilder.textLine("----");
+        // write to file
+        write(asciiDocBuilder);
 
         // write to file
         write(asciiDocBuilder);
@@ -92,7 +98,7 @@ public class DiagramMojo extends CommonMojoDefinition {
 
         switch (diagramType) {
             case plantuml:
-                PlantumlAbstractClassDiagramBuilder builder = new PlantumlAbstractClassDiagramBuilder(project, prefix, excludes);
+                PlantumlAbstractClassDiagramBuilder builder = new PlantumlAbstractClassDiagramBuilder(project, packageRoot, excludes);
                 if (onlyGlossary) {
                     builder.filterOnAnnotation(Glossary.class);
                 }

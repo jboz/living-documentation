@@ -67,6 +67,9 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
     protected String format;
 
     @Parameter
+    protected boolean withoutTitle = false;
+
+    @Parameter
     protected Template template;
 
     void write(final String newValue, final File output) throws MojoExecutionException {

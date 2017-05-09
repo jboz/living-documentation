@@ -22,46 +22,56 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
+import com.google.common.collect.Lists;
 import org.apache.maven.plugins.annotations.Mojo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Julien Boz
  */
-@Mojo(name = "glossary")
-public class GlossaryMojo extends CommonGlossaryMojoDefinition {
+@Mojo(name = "dictionnary")
+public class DictionnaryMojo extends CommonGlossaryMojoDefinition {
 
     @Override
     protected String getDefaultFilename() {
-        return "glossary.adoc";
+        return "dictionnary.adoc";
     }
 
     @Override
     protected String getTitle() {
-        return "Glossary";
+        return "Dictionnary";
     }
 
     @Override
     protected void executeMojo() {
+        List<List<String>> fields = new ArrayList<>();
+
         javaDocBuilder.getClasses().stream()
                 .filter(this::hasAnnotation) // if annotated
                 .forEach(javaClass -> {
-                    // add class entry
-                    addGlossarEntry(getName(javaClass, javaClass.getName()), getDescription(javaClass, javaClass.getComment()));
-
                     // browse fields
                     javaClass.getFields().stream()
                             .filter(this::hasAnnotation) // if annotated
                             .forEach(javaField -> {
                                 // add field entry
-                                addGlossarEntry(getName(javaField, javaField.getName()), getDescription(javaField, javaField.getComment()));
+                                fields.add(Lists.newArrayList(
+                                        getGlossaryId(javaField) == -1 ? "UNDEFINED" : String.valueOf(getGlossaryId(javaField)),
+                                        getName(javaField, javaField.getName()),
+                                        getDescription(javaField, javaField.getComment())));
                             });
                 });
-    }
 
-    private void addGlossarEntry(String name, String comment) {
-        asciiDocBuilder.sectionTitleLevel1(name);
-        asciiDocBuilder.textLine("");
-        asciiDocBuilder.textLine(comment);
-        asciiDocBuilder.textLine("");
+        // rows
+        List<String> rows = fields
+                .stream()
+                .map(field -> field.stream().collect(Collectors.joining("|")))
+                .collect(Collectors.toList());
+        // add table header row
+        rows.add(0, "id|name|description");
+
+        asciiDocBuilder.tableWithHeaderRow(rows);
     }
 }

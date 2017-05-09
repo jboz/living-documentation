@@ -20,7 +20,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.diagram;
+package ch.ifocusit.livingdoc.plugin.mapping;
 
 import ch.ifocusit.livingdoc.annotations.Glossary;
 import ch.ifocusit.plantuml.classdiagram.NamesMapper;

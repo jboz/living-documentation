@@ -47,9 +47,10 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <prefix>ch.ifocusit.telecom.domain</prefix>
+                    <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
                     <diagramType>plantuml</diagramType>
-                    <output>${project.build.directory}/domain.plantuml</output>
+                    <outputDirectory>${build.directory}</outputDirectory>
+                    <outputFileName>domain.plantuml</outputFileName>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>

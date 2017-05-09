@@ -1,4 +1,4 @@
-package ch.ifocusit.livingdoc.plugin.diagram;
+package ch.ifocusit.livingdoc.plugin.mapping;
 
 public class MappingDefinition {
     private int id;
@@ -36,4 +36,6 @@ public class MappingDefinition {
         name = name.trim().replace(" ", "_");
         return this;
     }
+
+
 }

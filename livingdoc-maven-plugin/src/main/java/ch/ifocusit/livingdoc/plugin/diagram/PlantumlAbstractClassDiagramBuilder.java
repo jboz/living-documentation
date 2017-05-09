@@ -22,7 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin.diagram;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.plugin.mapping.GlossaryNamesMapper;
 import ch.ifocusit.plantuml.classdiagram.ClassDiagramBuilder;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
@@ -80,7 +80,7 @@ public class PlantumlAbstractClassDiagramBuilder extends AbstractClassDiagramBui
         try {
             namesMapper = new GlossaryNamesMapper(mappings, annotation);
         } catch (IOException e) {
-            throw new MojoExecutionException("erreor reading mappings file", e);
+            throw new MojoExecutionException("error reading mappings file", e);
         }
     }
 }
