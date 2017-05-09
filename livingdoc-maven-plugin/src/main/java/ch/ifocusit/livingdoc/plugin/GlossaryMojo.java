@@ -23,19 +23,23 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.mapping.MappingDefinition;
-import com.thoughtworks.qdox.model.JavaAnnotatedElement;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Julien Boz
  */
 @Mojo(name = "glossary")
 public class GlossaryMojo extends CommonGlossaryMojoDefinition {
+
+    public static final String HEARDER = "=== #{0}# - {1}";
+
+    @Parameter(defaultValue = HEARDER)
+    private String glossaryTemplate;
 
     @Override
     protected String getDefaultFilename() {
@@ -50,7 +54,7 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
     @Override
     protected void executeMojo() {
         // regroup all mapping definition
-        Set<MappingDefinition> definitions = new HashSet<>();
+        List<MappingDefinition> definitions = new ArrayList<>();
 
         javaDocBuilder.getClasses().stream()
                 .filter(this::hasAnnotation) // if annotated
@@ -68,13 +72,12 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
                 });
 
         // sort definitions before add asciidoc entries
-        definitions.stream().sorted().forEach(this::addGlossarEntry);
+        definitions.stream().sorted().filter(distinctByKey()).forEach(this::addGlossarEntry);
     }
 
-    private void addGlossarEntry(MappingDefinition definition) {
-        asciiDocBuilder.sectionTitleLevel2((definition.getId() != -1 ? definition.getId() + " - " : "") + definition.getName());
-        asciiDocBuilder.textLine("");
-        asciiDocBuilder.textLine(definition.getDescription());
+    private void addGlossarEntry(MappingDefinition def) {
+        asciiDocBuilder.textLine(MessageFormat.format(glossaryTemplate, def.getId(), def.getName()));
+        asciiDocBuilder.textLine(def.getDescription());
         asciiDocBuilder.textLine("");
     }
 }

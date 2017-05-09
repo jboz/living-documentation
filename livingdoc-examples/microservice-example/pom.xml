@@ -148,6 +148,9 @@
                         <goals>
                             <goal>glossary</goal>
                         </goals>
+                        <configuration>
+                            <glossaryTemplate>=== {1} ^{0}^</glossaryTemplate>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>

@@ -36,7 +36,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -132,5 +136,14 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
         javaDocBuilder.setErrorHandler(e -> getLog().warn(e.getMessage()));
         sources.stream().map(File::new).forEach(javaDocBuilder::addSourceTree);
         return javaDocBuilder;
+    }
+
+    private static Function<MappingDefinition, ?> key() {
+        return def -> def.getId() == null ? def.getName().toLowerCase() : def.getId();
+    }
+
+    protected static Predicate<MappingDefinition> distinctByKey() {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(key().apply(t), Boolean.TRUE) == null;
     }
 }

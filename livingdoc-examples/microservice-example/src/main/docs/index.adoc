@@ -1,11 +1,10 @@
+_Micro service around the Bill aggregate_
+
 = Telecom micro service
 
 == Conception
 
-[plantuml,domain-diagram-classes,svg]
-----
 include::{generated}/diagram.adoc[]
-----
 
 == Glossary
 

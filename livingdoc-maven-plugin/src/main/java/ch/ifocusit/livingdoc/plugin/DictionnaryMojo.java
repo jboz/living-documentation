@@ -26,9 +26,7 @@ import ch.ifocusit.livingdoc.plugin.mapping.MappingDefinition;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -52,7 +50,7 @@ public class DictionnaryMojo extends CommonGlossaryMojoDefinition {
     @Override
     protected void executeMojo() {
         // regroup all mapping definition
-        Set<MappingDefinition> definitions = new HashSet<>();
+        List<MappingDefinition> definitions = new ArrayList<>();
 
         javaDocBuilder.getClasses().stream()
                 .filter(this::hasAnnotation) // if annotated
@@ -69,6 +67,8 @@ public class DictionnaryMojo extends CommonGlossaryMojoDefinition {
         List<String> rows = definitions.stream()
                 // sort
                 .sorted()
+                // distinct on "business key"
+                .filter(distinctByKey())
                 // map to List<String>
                 .map(def -> newArrayList(defaultString(def.getId(), "UNDEFINED"), def.getName(), def.getDescription()))
                 // join List<String> with "|"

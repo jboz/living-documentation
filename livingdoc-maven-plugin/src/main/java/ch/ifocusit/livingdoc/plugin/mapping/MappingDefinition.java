@@ -9,11 +9,11 @@ public class MappingDefinition implements Comparable<MappingDefinition> {
     private String name;
     private String description;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -56,11 +56,12 @@ public class MappingDefinition implements Comparable<MappingDefinition> {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
-    private static final Ordering<MappingDefinition> ORDERING = Ordering.natural().nullsFirst()
-            .onResultOf(MappingDefinition::getId)
-            .compound(Ordering.natural().nullsFirst()
-                    .onResultOf(MappingDefinition::getName))
-            .compound(Ordering.natural().nullsFirst()
-                    .onResultOf(MappingDefinition::getDescription))
+    private static final Ordering<MappingDefinition> ORDERING = Ordering
+            // sort by id
+            .natural().nullsFirst().onResultOf(MappingDefinition::getId)
+            // and after by name
+            .compound(Ordering.natural().nullsFirst().onResultOf(MappingDefinition::getName))
+            // and after by description
+            .compound(Ordering.natural().nullsFirst().onResultOf(MappingDefinition::getDescription))
             .nullsFirst();
 }
