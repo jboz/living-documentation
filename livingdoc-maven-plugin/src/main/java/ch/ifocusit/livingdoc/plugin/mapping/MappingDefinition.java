@@ -43,7 +43,7 @@ public class MappingDefinition implements Comparable<MappingDefinition> {
 
     @Override
     public int compareTo(MappingDefinition o) {
-        return ORDERING.compare(this, o);
+        return BY_ID.compound(BY_NAME).compound(BY_DESCRIPTION).nullsFirst().compare(this, o);
     }
 
     @Override
@@ -56,12 +56,7 @@ public class MappingDefinition implements Comparable<MappingDefinition> {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
-    private static final Ordering<MappingDefinition> ORDERING = Ordering
-            // sort by id
-            .natural().nullsFirst().onResultOf(MappingDefinition::getId)
-            // and after by name
-            .compound(Ordering.natural().nullsFirst().onResultOf(MappingDefinition::getName))
-            // and after by description
-            .compound(Ordering.natural().nullsFirst().onResultOf(MappingDefinition::getDescription))
-            .nullsFirst();
+    private static final Ordering<MappingDefinition> BY_ID = Ordering.natural().onResultOf(MappingDefinition::getId);
+    private static final Ordering<MappingDefinition> BY_NAME = Ordering.natural().nullsFirst().onResultOf(MappingDefinition::getName);
+    private static final Ordering<MappingDefinition> BY_DESCRIPTION = Ordering.natural().nullsFirst().onResultOf(MappingDefinition::getDescription);
 }
