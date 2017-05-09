@@ -64,12 +64,12 @@ public class DiagramMojo extends CommonMojoDefinition {
     private File glossaryMapping;
 
     public static enum DiagramType {
-        plantuml, dot;
+        plantuml;
     }
 
     @Override
     protected String getDefaultFilename() {
-        return "diagram.adoc";
+        return "diagram";
     }
 
     @Override
@@ -77,22 +77,27 @@ public class DiagramMojo extends CommonMojoDefinition {
         // generate diagram
         String diagram = generateDiagram();
 
-        if (Format.html.equals(format)) {
+        switch (format) {
+            case html:
+            case adoc:
+            case asciidoc:
+                AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
+                if (!withoutTitle) {
+                    asciiDocBuilder.documentTitle("Class diagram");
+                }
+                switch (diagramType) {
+                    case plantuml:
+                        asciiDocBuilder.textLine(String.format("[plantuml, %s, png]", getFilenameWithoutExtension()));
+                }
+                asciiDocBuilder.textLine("----");
+                asciiDocBuilder.textLine(diagram);
+                asciiDocBuilder.textLine("----");
+                // write to file
+                write(asciiDocBuilder);
+                break;
 
-            AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
-            if (!withoutTitle) {
-                asciiDocBuilder.documentTitle("Class diagram");
-            }
-            if (DiagramType.plantuml.equals(diagramType)) {
-                asciiDocBuilder.textLine("[plantuml, class-diagram, png]");
-            }
-            asciiDocBuilder.textLine("----");
-            asciiDocBuilder.textLine(diagram);
-            asciiDocBuilder.textLine("----");
-            // write to file
-            write(asciiDocBuilder);
-        } else {
-            write(diagram, getOutput());
+            case plantuml:
+                write(diagram, getOutput(Format.plantuml));
         }
     }
 

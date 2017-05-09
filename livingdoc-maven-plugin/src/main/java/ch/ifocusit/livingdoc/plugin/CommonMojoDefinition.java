@@ -73,7 +73,7 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
     protected Template template;
 
     public enum Format {
-        asciidoc, html
+        asciidoc, adoc, html, plantuml
     }
 
     void write(final String newValue, final File output) throws MojoExecutionException {
@@ -95,15 +95,18 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
 
     void write(AsciiDocBuilder asciiDocBuilder) throws MojoExecutionException {
         outputDirectory.mkdirs();
+        File output = getOutput(Format.adoc);
         try {
-            asciiDocBuilder.writeToFile(outputDirectory.getAbsolutePath(), getFilename().replace(".adoc", ""), StandardCharsets.UTF_8);
+            // write adco file
+            asciiDocBuilder.writeToFile(outputDirectory.getAbsolutePath(), getFilenameWithoutExtension(), StandardCharsets.UTF_8);
             if (Format.html.equals(format)) {
                 Asciidoctor asciidoctor = Asciidoctor.Factory.create();
                 asciidoctor.requireLibrary("asciidoctor-diagram");
-                asciidoctor.convertFile(getOutput(), OptionsBuilder.options().backend("html5").safe(SafeMode.UNSAFE).asMap());
+                // write html from .adoc
+                asciidoctor.convertFile(output, OptionsBuilder.options().backend("html5").safe(SafeMode.UNSAFE).asMap());
             }
         } catch (IOException e) {
-            throw new MojoExecutionException(String.format("Unable to write asciidoc output file '%s' !", getOutput().getAbsolutePath()), e);
+            throw new MojoExecutionException(String.format("Unable to convert asciidoc file '%s' to html !", output.getAbsolutePath()), e);
         }
     }
 
@@ -113,7 +116,14 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
         return StringUtils.defaultIfBlank(outputFilename, getDefaultFilename());
     }
 
-    protected File getOutput() {
-        return new File(outputDirectory, getFilename());
+    protected String getFilenameWithoutExtension() {
+        String filename = getFilename();
+        return filename.indexOf(".") > 0 ? filename.substring(0, filename.lastIndexOf(".")) : filename;
+    }
+
+    protected File getOutput(Format desiredExtension) {
+        String filename = StringUtils.defaultIfBlank(outputFilename, getDefaultFilename());
+        filename = filename.endsWith("." + desiredExtension.name()) ? filename : filename + "." + desiredExtension;
+        return new File(outputDirectory, filename);
     }
 }
