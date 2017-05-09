@@ -1,0 +1,10 @@
+= Micro service example project
+
+This a simple micro-service project around the telecom aggregate
+
+=== Maven configuration :
+
+[source,xml]
+----
+include::pom.xml[tags=plugin-livingdoc]
+----

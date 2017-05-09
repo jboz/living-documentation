@@ -72,8 +72,8 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
     @Parameter
     protected Template template;
 
-    public static enum Format {
-        asccidoc, html;
+    public enum Format {
+        asciidoc, html
     }
 
     void write(final String newValue, final File output) throws MojoExecutionException {

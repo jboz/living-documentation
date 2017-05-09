@@ -1,0 +1,12 @@
+= Telecom micro service
+
+== Conception
+
+[plantuml,domain-diagram-classes,svg]
+----
+include::{generated}/diagram.adoc[]
+----
+
+== Glossary
+
+include::{generated}/glossary.adoc[]

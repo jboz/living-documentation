@@ -59,7 +59,7 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
     }
 
     private void addGlossarEntry(String name, String comment) {
-        asciiDocBuilder.sectionTitleLevel1(name);
+        asciiDocBuilder.sectionTitleLevel2(name);
         asciiDocBuilder.textLine("");
         asciiDocBuilder.textLine(comment);
         asciiDocBuilder.textLine("");

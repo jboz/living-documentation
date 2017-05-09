@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ch.ifocusit.livingdoc</groupId>
+    <artifactId>livingdoc-example-microservice</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <description>Living Documentation example in javaee micro service</description>
+
+    <organization>
+        <name>Focus IT</name>
+        <url>http://ifocusit.ch</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <livingdoc.output>${project.build.directory}/generated-docs</livingdoc.output>
+        <livingdoc.phase>prepare-package</livingdoc.phase>
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- JAVA EE Micro Service -->
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>7.0</version>
+                <scope>provided</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.8.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>2.8.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.8.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.16</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.24</version>
+        </dependency>
+
+        <!-- docs -->
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.5.12</version>
+        </dependency>
+
+        <!-- living doc deps -->
+        <!-- tag::annotation-livingdoc[] -->
+        <dependency>
+            <groupId>ch.ifocusit.livingdoc</groupId>
+            <artifactId>livingdoc-annotations</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!-- end::annotation-livingdoc[] -->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- tag::plugin-livingdoc[] -->
+            <!--<plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <executions>
+                    <execution>
+                        <id>copy-docs</id>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${livingdoc.output}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory></directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+            <plugin>
+                <groupId>ch.ifocusit.livingdoc</groupId>
+                <artifactId>livingdoc-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>class-diagram-domain</id>
+                        <phase>${livingdoc.phase}</phase>
+                        <goals>
+                            <goal>diagram</goal>
+                        </goals>
+                        <configuration>
+                            <packageRoot>ch.ifocusit.telecom</packageRoot>
+                            <diagramType>plantuml</diagramType>
+                            <excludes>
+                                <exclude>.*\.domain.common\..*</exclude>
+                                <exclude>.*JAXRSConfiguration</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>glossary</id>
+                        <phase>${livingdoc.phase}</phase>
+                        <goals>
+                            <goal>glossary</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <withoutTitle>true</withoutTitle>
+                    <outputDirectory>${livingdoc.output}</outputDirectory>
+                    <format>asciidoc</format>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>1.5.3</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jruby</groupId>
+                        <artifactId>jruby-complete</artifactId>
+                        <version>1.7.26</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-diagram</artifactId>
+                        <version>1.5.0</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/docs</sourceDirectory>
+                    <sourceDocumentName>index.adoc</sourceDocumentName>
+                    <backend>html5</backend>
+                    <outputDirectory>${build.directory}/docs</outputDirectory>
+                    <requires>
+                        <require>asciidoctor-diagram</require>
+                    </requires>
+                    <attributes>
+                        <doctype>book</doctype>
+                        <toc>left</toc>
+                        <toclevels>3</toclevels>
+                        <numbered/>
+                        <hardbreaks/>
+                        <sectlinks/>
+                        <sectanchors>true</sectanchors>
+                        <generated>${livingdoc.output}</generated>
+                    </attributes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>output-html</id>
+                        <phase>${livingdoc.phase}</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- end::plugin-livingdoc[] -->
+        </plugins>
+    </build>
+</project>
