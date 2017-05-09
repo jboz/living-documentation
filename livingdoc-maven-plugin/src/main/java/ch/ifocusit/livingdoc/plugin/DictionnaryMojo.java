@@ -22,12 +22,16 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import com.google.common.collect.Lists;
+import ch.ifocusit.livingdoc.plugin.mapping.MappingDefinition;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * @author Julien Boz
@@ -37,7 +41,7 @@ public class DictionnaryMojo extends CommonGlossaryMojoDefinition {
 
     @Override
     protected String getDefaultFilename() {
-        return "dictionnary.adoc";
+        return "dictionnary";
     }
 
     @Override
@@ -47,7 +51,8 @@ public class DictionnaryMojo extends CommonGlossaryMojoDefinition {
 
     @Override
     protected void executeMojo() {
-        List<List<String>> fields = new ArrayList<>();
+        // regroup all mapping definition
+        Set<MappingDefinition> definitions = new HashSet<>();
 
         javaDocBuilder.getClasses().stream()
                 .filter(this::hasAnnotation) // if annotated
@@ -57,21 +62,25 @@ public class DictionnaryMojo extends CommonGlossaryMojoDefinition {
                             .filter(this::hasAnnotation) // if annotated
                             .forEach(javaField -> {
                                 // add field entry
-                                fields.add(Lists.newArrayList(
-                                        getGlossaryId(javaField) == -1 ? "UNDEFINED" : String.valueOf(getGlossaryId(javaField)),
-                                        getName(javaField, javaField.getName()),
-                                        getDescription(javaField, javaField.getComment())));
+                                definitions.add(map(javaField, javaField.getName(), javaField.getComment()));
                             });
                 });
 
-        // rows
-        List<String> rows = fields
-                .stream()
+        List<String> rows = definitions.stream()
+                // sort
+                .sorted()
+                // map to List<String>
+                .map(def -> newArrayList(defaultString(def.getId(), "UNDEFINED"), def.getName(), def.getDescription()))
+                // join List<String> with "|"
                 .map(field -> field.stream().collect(Collectors.joining("|")))
                 .collect(Collectors.toList());
         // add table header row
         rows.add(0, "id|name|description");
 
         asciiDocBuilder.tableWithHeaderRow(rows);
+    }
+
+    private String defaultString(Integer id, String defaultString) {
+        return id == null ? defaultString : String.valueOf(id);
     }
 }

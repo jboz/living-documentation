@@ -22,7 +22,14 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
+import ch.ifocusit.livingdoc.plugin.mapping.MappingDefinition;
+import com.thoughtworks.qdox.model.JavaAnnotatedElement;
 import org.apache.maven.plugins.annotations.Mojo;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Julien Boz
@@ -32,7 +39,7 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
 
     @Override
     protected String getDefaultFilename() {
-        return "glossary.adoc";
+        return "glossary";
     }
 
     @Override
@@ -42,26 +49,32 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
 
     @Override
     protected void executeMojo() {
+        // regroup all mapping definition
+        Set<MappingDefinition> definitions = new HashSet<>();
+
         javaDocBuilder.getClasses().stream()
                 .filter(this::hasAnnotation) // if annotated
                 .forEach(javaClass -> {
                     // add class entry
-                    addGlossarEntry(getName(javaClass, javaClass.getName()), getDescription(javaClass, javaClass.getComment()));
+                    definitions.add(map(javaClass, javaClass.getName(), javaClass.getComment()));
 
                     // browse fields
                     javaClass.getFields().stream()
                             .filter(this::hasAnnotation) // if annotated
                             .forEach(javaField -> {
                                 // add field entry
-                                addGlossarEntry(getName(javaField, javaField.getName()), getDescription(javaField, javaField.getComment()));
+                                definitions.add(map(javaField, javaField.getName(), javaField.getComment()));
                             });
                 });
+
+        // sort definitions before add asciidoc entries
+        definitions.stream().sorted().forEach(this::addGlossarEntry);
     }
 
-    private void addGlossarEntry(String name, String comment) {
-        asciiDocBuilder.sectionTitleLevel2(name);
+    private void addGlossarEntry(MappingDefinition definition) {
+        asciiDocBuilder.sectionTitleLevel2((definition.getId() != -1 ? definition.getId() + " - " : "") + definition.getName());
         asciiDocBuilder.textLine("");
-        asciiDocBuilder.textLine(comment);
+        asciiDocBuilder.textLine(definition.getDescription());
         asciiDocBuilder.textLine("");
     }
 }

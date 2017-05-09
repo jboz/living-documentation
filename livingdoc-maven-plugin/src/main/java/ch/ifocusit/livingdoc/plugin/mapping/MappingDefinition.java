@@ -1,7 +1,11 @@
 package ch.ifocusit.livingdoc.plugin.mapping;
 
-public class MappingDefinition {
-    private int id;
+import com.google.common.collect.Ordering;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+public class MappingDefinition implements Comparable<MappingDefinition> {
+    private Integer id;
     private String name;
     private String description;
 
@@ -37,5 +41,26 @@ public class MappingDefinition {
         return this;
     }
 
+    @Override
+    public int compareTo(MappingDefinition o) {
+        return ORDERING.compare(this, o);
+    }
 
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
+    }
+
+    private static final Ordering<MappingDefinition> ORDERING = Ordering.natural().nullsFirst()
+            .onResultOf(MappingDefinition::getId)
+            .compound(Ordering.natural().nullsFirst()
+                    .onResultOf(MappingDefinition::getName))
+            .compound(Ordering.natural().nullsFirst()
+                    .onResultOf(MappingDefinition::getDescription))
+            .nullsFirst();
 }

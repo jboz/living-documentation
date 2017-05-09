@@ -70,7 +70,7 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
     public void execute() throws MojoExecutionException, MojoFailureException {
         javaDocBuilder = buildJavaProjectBuilder();
         if (!withoutTitle) {
-            asciiDocBuilder.documentTitle(getTitle());
+            asciiDocBuilder.sectionTitleLevel1(getTitle());
         }
 
         if (glossaryMapping != null) {
@@ -102,21 +102,29 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
                 .findFirst();
     }
 
-    protected Integer getGlossaryId(JavaAnnotatedElement annotatedElement) {
+    protected Optional<Integer> getGlossaryId(JavaAnnotatedElement annotatedElement) {
         Optional<JavaAnnotation> annotation = getGlossary(annotatedElement);
-        return annotation.map(annot -> Integer.valueOf(String.valueOf(annot.getNamedParameter("id")))).orElse(-1);
+        return annotation.map(annot -> Optional.ofNullable(Integer.valueOf(String.valueOf(annot.getNamedParameter("id"))))).orElse(Optional.empty());
     }
 
-    protected Optional<MappingDefinition> getDefinition(int id) {
-        return mappings == null ? Optional.empty() : mappings.stream().filter(def -> def.getId() == id).findFirst();
+    protected Optional<MappingDefinition> getDefinition(Optional<Integer> id) {
+        return mappings == null || !id.isPresent() ? Optional.empty() : mappings.stream().filter(def -> id.get().equals(def.getId())).findFirst();
     }
 
-    protected String getName(JavaAnnotatedElement annotatedElemen, String defaultValue) {
-        return getDefinition(getGlossaryId(annotatedElemen)).map(def -> def.getName()).orElse(defaultValue);
+    protected String getName(JavaAnnotatedElement annotatedElement, String defaultValue) {
+        return getDefinition(getGlossaryId(annotatedElement)).map(def -> def.getName()).orElse(defaultValue);
     }
 
     protected String getDescription(JavaAnnotatedElement annotatedElemen, String defaultValue) {
         return getDefinition(getGlossaryId(annotatedElemen)).map(def -> def.getDescription()).orElse(defaultValue);
+    }
+
+    protected MappingDefinition map(JavaAnnotatedElement annotatedElement, String name, String comment) {
+        MappingDefinition def = new MappingDefinition();
+        def.setId(getGlossaryId(annotatedElement).orElse(null));
+        def.setName(getName(annotatedElement, name));
+        def.setDescription(getDescription(annotatedElement, comment));
+        return def;
     }
 
     private JavaProjectBuilder buildJavaProjectBuilder() {
