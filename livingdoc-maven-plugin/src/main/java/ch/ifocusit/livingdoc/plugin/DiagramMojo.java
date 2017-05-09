@@ -89,9 +89,6 @@ public class DiagramMojo extends CommonMojoDefinition {
         asciiDocBuilder.textLine("----");
         // write to file
         write(asciiDocBuilder);
-
-        // write to file
-        write(asciiDocBuilder);
     }
 
     String generateDiagram() throws MojoExecutionException {
