@@ -23,7 +23,7 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.annotations.Glossary;
-import ch.ifocusit.livingdoc.plugin.diagram.PlantumlAbstractClassDiagramBuilder;
+import ch.ifocusit.livingdoc.plugin.diagram.PlantumlClassDiagramBuilder;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -52,6 +52,12 @@ public class DiagramMojo extends CommonMojoDefinition {
     private DiagramType diagramType;
 
     /**
+     * Output diagram image format
+     */
+    @Parameter(defaultValue = "png", required = true)
+    private DiagramImageType diagramOutputFormat;
+
+    /**
      * Extract only class/field/method annotated with @Glossary
      */
     @Parameter(defaultValue = "false")
@@ -63,8 +69,15 @@ public class DiagramMojo extends CommonMojoDefinition {
     @Parameter
     private File glossaryMapping;
 
-    public static enum DiagramType {
+    @Parameter(defaultValue = "glossaryid-{0}")
+    private String linkTemplate;
+
+    public enum DiagramType {
         plantuml;
+    }
+
+    public enum DiagramImageType {
+        png, svg, txt;
     }
 
     @Override
@@ -83,11 +96,11 @@ public class DiagramMojo extends CommonMojoDefinition {
             case asciidoc:
                 AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
                 if (!withoutTitle) {
-                    asciiDocBuilder.documentTitle("Class diagram");
+                    asciiDocBuilder.documentTitle("JavaClass diagram");
                 }
                 switch (diagramType) {
                     case plantuml:
-                        asciiDocBuilder.textLine(String.format("[plantuml, %s, png]", getFilenameWithoutExtension()));
+                        asciiDocBuilder.textLine(String.format("[plantuml, %s, format=%s, opts=interactive]", getFilenameWithoutExtension(), diagramOutputFormat));
                 }
                 asciiDocBuilder.textLine("----");
                 asciiDocBuilder.textLine(diagram);
@@ -105,13 +118,11 @@ public class DiagramMojo extends CommonMojoDefinition {
 
         switch (diagramType) {
             case plantuml:
-                PlantumlAbstractClassDiagramBuilder builder = new PlantumlAbstractClassDiagramBuilder(project, packageRoot, excludes);
+                PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes);
                 if (onlyGlossary) {
                     builder.filterOnAnnotation(Glossary.class);
                 }
-                if (glossaryMapping != null) {
-                    builder.mapNames(glossaryMapping, Glossary.class);
-                }
+                builder.mapNames(glossaryMapping, Glossary.class, linkTemplate);
                 return builder.generate();
             default:
                 throw new NotImplementedException(String.format("format %s is not implemented yet", diagramType));

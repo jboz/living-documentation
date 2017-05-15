@@ -13,7 +13,7 @@ You'll be able to generate beautiful diagrams with a simple configuration.
 
 === Diagram example :
 
-image::class-diagram.png[Asciidoctor Diagram classes diagram]
+image::class-diagram.png[Asciidoctor Diagram javaClasses diagram]
 
 === Maven configuration :
 [source,xml]

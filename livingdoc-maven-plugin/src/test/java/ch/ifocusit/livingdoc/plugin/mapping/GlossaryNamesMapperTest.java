@@ -1,7 +1,6 @@
 package ch.ifocusit.livingdoc.plugin.mapping;
 
 import ch.ifocusit.livingdoc.annotations.Glossary;
-import ch.ifocusit.livingdoc.plugin.mapping.GlossaryNamesMapper;
 import org.junit.Test;
 
 import java.io.File;
@@ -12,7 +11,7 @@ public class GlossaryNamesMapperTest {
 
     @Test
     public void testReadFile() throws Exception {
-        GlossaryNamesMapper mapper = new GlossaryNamesMapper(new File(getClass().getResource("/mappings.csv").toURI()), Glossary.class);
+        GlossaryNamesMapper mapper = new GlossaryNamesMapper(new File(getClass().getResource("/mappings.csv").toURI()), Glossary.class, "id-{0}");
         assertThat(mapper.mappings).hasSize(1);
     }
 }

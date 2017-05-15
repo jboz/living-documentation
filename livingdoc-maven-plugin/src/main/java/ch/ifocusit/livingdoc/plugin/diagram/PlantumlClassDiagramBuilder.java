@@ -39,13 +39,13 @@ import java.util.stream.Collectors;
 /**
  * @author Julien Boz
  */
-public class PlantumlAbstractClassDiagramBuilder extends AbstractClassDiagramBuilder {
+public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
 
     private ClassDiagramBuilder classDiagramBuilder = new ClassDiagramBuilder();
     private Predicate<ClassInfo> additionalClassPredicate = a -> true; // default predicate always true
     private GlossaryNamesMapper namesMapper;
 
-    public PlantumlAbstractClassDiagramBuilder(MavenProject project, String prefix, String[] excludes) {
+    public PlantumlClassDiagramBuilder(MavenProject project, String prefix, String[] excludes) {
         super(project, prefix, excludes);
     }
 
@@ -68,7 +68,7 @@ public class PlantumlAbstractClassDiagramBuilder extends AbstractClassDiagramBui
         return diagram;
     }
 
-    public PlantumlAbstractClassDiagramBuilder filterOnAnnotation(Class<? extends Annotation> annotation) {
+    public PlantumlClassDiagramBuilder filterOnAnnotation(Class<? extends Annotation> annotation) {
         // create class predicate
         additionalClassPredicate = additionalClassPredicate.and(classInfo -> classInfo.load().isAnnotationPresent(annotation));
         // add field predicate
@@ -76,9 +76,9 @@ public class PlantumlAbstractClassDiagramBuilder extends AbstractClassDiagramBui
         return this;
     }
 
-    public void mapNames(File mappings, Class<? extends Annotation> annotation) throws MojoExecutionException {
+    public void mapNames(File mappings, Class<? extends Annotation> annotation, String linkTemplate) throws MojoExecutionException {
         try {
-            namesMapper = new GlossaryNamesMapper(mappings, annotation);
+            namesMapper = new GlossaryNamesMapper(mappings, annotation, linkTemplate);
         } catch (IOException e) {
             throw new MojoExecutionException("error reading mappings file", e);
         }

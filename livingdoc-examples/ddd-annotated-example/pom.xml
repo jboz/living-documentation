@@ -8,7 +8,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <description>Living Documentation example in a DDD project with annotated classes</description>
+    <description>Living Documentation example in a DDD project with annotated javaClasses</description>
 
     <organization>
         <name>Focus IT</name>

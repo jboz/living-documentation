@@ -23,13 +23,17 @@
 package ch.ifocusit.livingdoc.plugin.mapping;
 
 import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.plugin.AnnotationUtils;
 import ch.ifocusit.plantuml.classdiagram.NamesMapper;
+import ch.ifocusit.plantuml.classdiagram.model.Link;
 import org.simpleflatmapper.csv.CsvParser;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,32 +43,54 @@ import java.util.stream.Collectors;
  */
 public class GlossaryNamesMapper<A extends Glossary> implements NamesMapper {
 
-    List<MappingDefinition> mappings;
+    List<MappingDefinition> mappings = new ArrayList<>();
     private Class<A> annotation;
 
-    public GlossaryNamesMapper(File file, Class<A> annotation) throws IOException {
-        this.annotation = annotation;
+    private String linkTemplate;
 
-        mappings = CsvParser.mapTo(MappingDefinition.class)
-                .stream(new FileReader(file))
-                .map(MappingDefinition::checkName)
-                .collect(Collectors.toList());
+    public GlossaryNamesMapper(File file, Class<A> annotation, String linkTemplate) throws IOException {
+        this.annotation = annotation;
+        this.linkTemplate = linkTemplate;
+
+        if (file != null) {
+            mappings = CsvParser.mapTo(MappingDefinition.class)
+                    .stream(new FileReader(file))
+                    .map(MappingDefinition::checkName)
+                    .collect(Collectors.toList());
+        }
     }
 
     private Optional<String> getName(int id) {
-        return mappings.stream().filter(def -> def.getId() == id).findFirst().map(def -> def.getName());
+        return mappings.stream().filter(def -> def.getId() == id).findFirst().map(MappingDefinition::getName);
     }
 
     @Override
-    public String getClassNameForDiagram(Class aClass) {
-        int id = aClass.isAnnotationPresent(annotation) ? ((A) aClass.getAnnotation(annotation)).id() : -1;
-        return getName(id).orElse(NamesMapper.super.getClassNameForDiagram(aClass));
+    public String getClassName(Class aClass) {
+        int id = AnnotationUtils.tryFind(aClass, annotation).map(Glossary::id).orElse(-1);
+        return getName(id).orElse(NamesMapper.super.getClassName(aClass));
     }
 
     @Override
-    public String getFieldNameForDiagram(Field field) {
-        int id = field.isAnnotationPresent(annotation) ? ((A) field.getAnnotation(annotation)).id() : -1;
-        return getName(id).orElse(NamesMapper.super.getFieldNameForDiagram(field));
+    public Optional<Link> getClassLink(Class aClass) {
+        return Optional.of(create(getClassName(aClass), AnnotationUtils.tryFind(aClass, annotation)));
     }
 
+    @Override
+    public String getFieldName(Field field) {
+        int id = AnnotationUtils.tryFind(field, annotation).map(Glossary::id).orElse(-1);
+        return getName(id).orElse(NamesMapper.super.getFieldName(field));
+    }
+
+    @Override
+    public Optional<Link> getFieldLink(Field field) {
+        return Optional.of(create(getFieldName(field), AnnotationUtils.tryFind(field, annotation)));
+    }
+
+    private Link create(String name, Optional<A> annotation) {
+        Link link = new Link();
+        link.setLabel(name);
+        String anchor = annotation.map(annot -> String.valueOf(annot.id())).orElse(name);
+        link.setUrl(MessageFormat.format(linkTemplate, anchor));
+        return link;
+    }
 }

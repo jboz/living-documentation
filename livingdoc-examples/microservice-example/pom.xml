@@ -100,7 +100,6 @@
 
     <build>
         <plugins>
-            <!-- tag::plugin-livingdoc[] -->
             <!--<plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.0.2</version>
@@ -122,6 +121,7 @@
                     </execution>
                 </executions>
             </plugin>-->
+            <!-- tag::plugin-livingdoc[] -->
             <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
@@ -136,10 +136,12 @@
                         <configuration>
                             <packageRoot>ch.ifocusit.telecom</packageRoot>
                             <diagramType>plantuml</diagramType>
+                            <diagramOutputFormat>svg</diagramOutputFormat>
                             <excludes>
                                 <exclude>.*\.domain.common\..*</exclude>
                                 <exclude>.*JAXRSConfiguration</exclude>
                             </excludes>
+                            <linkTemplate>../index.html#glossaryid-{0}</linkTemplate>
                         </configuration>
                     </execution>
                     <execution>
@@ -149,7 +151,9 @@
                             <goal>glossary</goal>
                         </goals>
                         <configuration>
-                            <glossaryTemplate>=== {1} ^{0}^</glossaryTemplate>
+                            <glossaryTemplate>[[glossaryid-{0}]]
+=== {1} ^{0}^
+                            </glossaryTemplate>
                         </configuration>
                     </execution>
                 </executions>
@@ -201,6 +205,34 @@
                         <goals>
                             <goal>process-asciidoc</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.3</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>${livingdoc.phase}</phase>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <doclet>nl.talsmasoftware.umldoclet.UMLDoclet</doclet>
+                            <docletArtifact>
+                                <groupId>nl.talsmasoftware</groupId>
+                                <artifactId>umldoclet</artifactId>
+                                <version>1.0.8</version>
+                            </docletArtifact>
+                            <docencoding>UTF-8</docencoding>
+                            <useStandardDocletOptions>true</useStandardDocletOptions>
+                            <additionalparam>
+                                -umlLogLevel DEBUG
+                                -umlImageFormat SVG
+                            </additionalparam>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
