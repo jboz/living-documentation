@@ -11,28 +11,3 @@ include::{generated}/diagram.adoc[]
 == Glossary
 
 include::{generated}/glossary.adoc[]
-
-
-== Test
-
-[plantuml, test, format=svg, opts=interactive]
-----
-@startuml
-
-abstract class Access [[../index.html#glossaryid-100{100}]] {
-  phoneNumber : String [[../index.html#glossaryid-101{101}]]
-  price : BigDecimal
-  dateTime : ZonedDateTime
-}
-
-class CallAccess [[https://goo.gl/Abb4dc{living-documentation}]] {
-  duration : Duration
-}
-
-class SmsAccess
-
-Access <|-- CallAccess
-Access <|-- SmsAccess
-
-@enduml
-----
