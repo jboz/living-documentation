@@ -1,4 +1,4 @@
-= Micro service example project
+= Living documentation in a micro service project
 
 This a simple micro-service project around the telecom aggregate
 

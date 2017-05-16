@@ -79,7 +79,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <glossaryMapping>src/docs/domain-mapping.csv</glossaryMapping>
+                    <glossaryMapping>src/docs/business-glossary.csv</glossaryMapping>
                     <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
                     <format>html</format>
                 </configuration>

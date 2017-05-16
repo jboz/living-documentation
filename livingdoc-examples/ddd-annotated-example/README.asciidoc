@@ -1,23 +1,22 @@
 :imagesdir: images
 
-= DDD example project
+= Living documentation in a DDD project
 
 This a simple DDD project around the telecom aggregate
 
-The maven plugin is use to generate dynamicly the domain class diagram :
+The maven plugin is use to generate dynamically the domain class diagram.
+A simple mapping file is used to *translate the ubiquitous language* from technical names to business names.
 
-== Diagram :
+== generated diagram :
 image::diagram.png[]
 
-== Glossary :
+== Generated glossary :
 image::glossary.png[]
 
-== Dictionary :
+== Generated dictionary :
 image::dictionary.png[]
 
-== Maven configuration :
-
-=== Domain object decoration with some annotation
+== Domain object decoration with some annotation
 
 [source,java]
 ----
@@ -28,6 +27,8 @@ public class Bill {
 }
 ----
 
+Annotations are from dependency :
+
 [source,xml]
 ----
 <dependency>
@@ -37,7 +38,7 @@ public class Bill {
 </dependency>
 ----
 
-=== Living documentation generation by maven plugin
+== Maven plugin configuration
 [source,xml]
 ----
 <plugin>
@@ -76,7 +77,7 @@ public class Bill {
         </execution>
     </executions>
     <configuration>
-        <glossaryMapping>src/docs/domain-mapping.csv</glossaryMapping>
+        <glossaryMapping>src/docs/business-glossary.csv</glossaryMapping>
         <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
         <format>html</format>
     </configuration>

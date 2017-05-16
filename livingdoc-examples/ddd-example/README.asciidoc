@@ -1,10 +1,10 @@
 :imagesdir: images
 
-= DDD example project
+= Living documentation in minimally DDD project
 
 This a simple DDD project around the telecom aggregate
 
-The maven plugin is use to generate dynamicly the domain class diagram :
+The maven plugin is use to generate dynamically the domain class diagram :
 
 image::domain.png[]
 
