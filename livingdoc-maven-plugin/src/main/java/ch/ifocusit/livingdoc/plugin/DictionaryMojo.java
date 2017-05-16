@@ -34,17 +34,17 @@ import static com.google.common.collect.Lists.newArrayList;
 /**
  * @author Julien Boz
  */
-@Mojo(name = "dictionnary")
-public class DictionnaryMojo extends CommonGlossaryMojoDefinition {
+@Mojo(name = "dictionary")
+public class DictionaryMojo extends CommonGlossaryMojoDefinition {
 
     @Override
     protected String getDefaultFilename() {
-        return "dictionnary";
+        return "dictionary";
     }
 
     @Override
     protected String getTitle() {
-        return "Dictionnary";
+        return "Dictionary";
     }
 
     @Override

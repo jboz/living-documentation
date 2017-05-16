@@ -1,11 +1,19 @@
+:imagesdir: images
+
 = DDD example project
 
 This a simple DDD project around the telecom aggregate
 
 The maven plugin is use to generate dynamicly the domain class diagram :
 
-[plantuml, class-diagram, png]
-plantuml::src/main/docs/example-domain.plantuml[format=png, alt="Class diagram"]
+== Diagram :
+image::diagram.png[]
+
+== Glossary :
+image::glossary.png[]
+
+== Dictionary :
+image::dictionary.png[]
 
 == Maven configuration :
 
@@ -13,6 +21,7 @@ plantuml::src/main/docs/example-domain.plantuml[format=png, alt="Class diagram"]
 
 [source,java]
 ----
+@RootAggregate
 @Glossary(id = 100)
 public class Bill {
     [...]
@@ -21,11 +30,55 @@ public class Bill {
 
 [source,xml]
 ----
-include::pom.xml[tags=annotation-livingdoc]
+<dependency>
+    <groupId>ch.ifocusit.livingdoc</groupId>
+    <artifactId>livingdoc-annotations</artifactId>
+    <version>1.0-SNAPSHOT</version>
+</dependency>
 ----
 
-=== Diagram generation by maven plugin
+=== Living documentation generation by maven plugin
 [source,xml]
 ----
-include::pom.xml[tags=plugin-livingdoc]
+<plugin>
+    <groupId>ch.ifocusit.livingdoc</groupId>
+    <artifactId>livingdoc-maven-plugin</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <executions>
+        <execution>
+            <id>class-diagram</id>
+            <phase>package</phase>
+            <goals>
+                <goal>diagram</goal>
+            </goals>
+            <configuration>
+                <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
+                <onlyGlossary>true</onlyGlossary>
+                <diagramType>plantuml</diagramType>
+                <excludes>
+                    <exclude>.*domain.common.*</exclude>
+                </excludes>
+            </configuration>
+        </execution>
+        <execution>
+            <id>glossary</id>
+            <phase>package</phase>
+            <goals>
+                <goal>glossary</goal>
+            </goals>
+        </execution>
+        <execution>
+            <id>dico</id>
+            <phase>package</phase>
+            <goals>
+                <goal>dictionary</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>
+        <glossaryMapping>src/docs/domain-mapping.csv</glossaryMapping>
+        <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
+        <format>html</format>
+    </configuration>
+</plugin>
 ----

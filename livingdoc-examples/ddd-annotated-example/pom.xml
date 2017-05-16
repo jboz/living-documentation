@@ -74,7 +74,7 @@
                         <id>dico</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>dictionnary</goal>
+                            <goal>dictionary</goal>
                         </goals>
                     </execution>
                 </executions>
