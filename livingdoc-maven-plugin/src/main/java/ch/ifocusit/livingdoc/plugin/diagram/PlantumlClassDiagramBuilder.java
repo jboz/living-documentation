@@ -22,8 +22,12 @@
  */
 package ch.ifocusit.livingdoc.plugin.diagram;
 
+import ch.ifocusit.livingdoc.annotations.RootAggregate;
+import ch.ifocusit.livingdoc.plugin.AnnotationUtils;
+import ch.ifocusit.livingdoc.plugin.domain.Color;
 import ch.ifocusit.livingdoc.plugin.mapping.GlossaryNamesMapper;
 import ch.ifocusit.plantuml.classdiagram.ClassDiagramBuilder;
+import ch.ifocusit.plantuml.classdiagram.model.JavaClass;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -41,12 +45,26 @@ import java.util.stream.Collectors;
  */
 public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
 
-    private ClassDiagramBuilder classDiagramBuilder = new ClassDiagramBuilder();
+    private ClassDiagramBuilder classDiagramBuilder;
     private Predicate<ClassInfo> additionalClassPredicate = a -> true; // default predicate always true
     private GlossaryNamesMapper namesMapper;
 
-    public PlantumlClassDiagramBuilder(MavenProject project, String prefix, String[] excludes) {
+    public PlantumlClassDiagramBuilder(MavenProject project, String prefix, String[] excludes, Color rootAggregateColor) {
         super(project, prefix, excludes);
+
+        // override creation to change root aggregate class color
+        classDiagramBuilder = new ClassDiagramBuilder() {
+            @Override
+            protected JavaClass createJavaClass(Class clazz) {
+                JavaClass javaClass = super.createJavaClass(clazz);
+                if (rootAggregateColor != null) {
+                    AnnotationUtils.tryFind(clazz, RootAggregate.class).ifPresent(annot ->
+                            javaClass.setBackgroundColor(rootAggregateColor.getBackgroundColor())
+                                    .setBorderColor(rootAggregateColor.getBorderColor()));
+                }
+                return javaClass;
+            }
+        };
     }
 
     public String generate() throws MojoExecutionException {

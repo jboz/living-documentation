@@ -23,6 +23,7 @@
 package ch.ifocusit.telecom.domain;
 
 import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.RootAggregate;
 import ch.ifocusit.telecom.domain.access.Access;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
 import lombok.Data;
@@ -38,6 +39,7 @@ import java.util.Set;
  *
  * @since 2017-03-01
  */
+@RootAggregate
 @Glossary(id = 100)
 @Data
 public class Bill extends AbstractDomain {

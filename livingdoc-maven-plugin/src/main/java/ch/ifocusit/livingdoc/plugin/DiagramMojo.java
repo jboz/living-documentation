@@ -24,6 +24,7 @@ package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.annotations.Glossary;
 import ch.ifocusit.livingdoc.plugin.diagram.PlantumlClassDiagramBuilder;
+import ch.ifocusit.livingdoc.plugin.domain.Color;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -38,6 +39,8 @@ import java.io.File;
  */
 @Mojo(name = "diagram")
 public class DiagramMojo extends CommonMojoDefinition {
+
+    private static final Color DEFAULT_ROOT_COLOR = Color.from("wheat", null);
 
     @Parameter(required = true, defaultValue = "${groupid}.${artifactid}.domain")
     private String packageRoot;
@@ -71,6 +74,9 @@ public class DiagramMojo extends CommonMojoDefinition {
 
     @Parameter(defaultValue = "glossaryid-{0}")
     private String linkTemplate;
+
+    @Parameter
+    private Color rootAggregateColor = DEFAULT_ROOT_COLOR;
 
     public enum DiagramType {
         plantuml;
@@ -118,7 +124,7 @@ public class DiagramMojo extends CommonMojoDefinition {
 
         switch (diagramType) {
             case plantuml:
-                PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes);
+                PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes, rootAggregateColor);
                 if (onlyGlossary) {
                     builder.filterOnAnnotation(Glossary.class);
                 }
