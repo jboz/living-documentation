@@ -26,4 +26,9 @@
         </license>
     </licenses>
 
+    <modules>
+        <module>ddd</module>
+        <module>ddd-annotated</module>
+        <module>microservice</module>
+    </modules>
 </project>
