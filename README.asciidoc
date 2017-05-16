@@ -1,6 +1,7 @@
 ifndef::imagesdir[:imagesdir: images]
 
 image::https://travis-ci.org/jboz/living-documentation.svg?branch=master["Build Status", link="https://travis-ci.org/jboz/living-documentation"]
+image::https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square["Make a pull request", link="http://makeapullrequest.com"]
 = Living documentation tools
 
 This project is intented to provide some tools to allow a nice Living Documentation.
