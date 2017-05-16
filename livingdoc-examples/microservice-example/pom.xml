@@ -132,10 +132,10 @@
                         <phase>${livingdoc.phase}</phase>
                         <goals>
                             <goal>diagram</goal>
+                            <goal>glossary</goal>
                         </goals>
                         <configuration>
                             <packageRoot>ch.ifocusit.telecom</packageRoot>
-                            <diagramType>plantuml</diagramType>
                             <diagramOutputFormat>svg</diagramOutputFormat>
                             <excludes>
                                 <exclude>.*\.domain.common\..*</exclude>
@@ -144,26 +144,21 @@
                             <linkTemplate>../index.html#glossaryid-{0}</linkTemplate>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>glossary</id>
-                        <phase>${livingdoc.phase}</phase>
-                        <goals>
-                            <goal>glossary</goal>
-                        </goals>
-                        <configuration>
-                            <glossaryTemplate>[[glossaryid-{0}]]
-=== {1} ^{0}^
-                            </glossaryTemplate>
-                        </configuration>
-                    </execution>
                 </executions>
                 <configuration>
-                    <withoutTitle>true</withoutTitle>
                     <outputDirectory>${livingdoc.output}</outputDirectory>
                     <format>asciidoc</format>
+                    <!-- page without title because they'll be integrate in an index -->
+                    <withoutTitle>true</withoutTitle>
+                    <!-- link definition in diagram will forward to the index page -->
+                    <linkTemplate>../index.html#glossaryid-{0}</linkTemplate>
+                    <!-- link template defined here to match with the link definition in diagram -->
+                    <glossaryTemplate>[[glossaryid-{0}]]
+                        === {1} ^{0}^
+                    </glossaryTemplate>
                 </configuration>
             </plugin>
-            <plugin>
+            <plugin><!-- asciidoctor plugin to generate an index page including the generate docs -->
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>1.5.3</version>

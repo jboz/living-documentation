@@ -2,9 +2,4 @@
 
 This a simple micro-service project around the telecom aggregate
 
-=== Maven configuration :
-
-[source,xml]
-----
-include::pom.xml[tags=plugin-livingdoc]
-----
+launch *mvn clean package* and see open *target/docs/index.html* file.
