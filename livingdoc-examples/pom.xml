@@ -26,9 +26,4 @@
         </license>
     </licenses>
 
-    <modules>
-        <module>ddd-example</module>
-        <module>ddd-annotated-example</module>
-        <module>microservice-example</module>
-    </modules>
 </project>
