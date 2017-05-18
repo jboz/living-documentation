@@ -5,7 +5,7 @@ sudo: false
 jdk:
 - oraclejdk8
 
-install: mvn install site-deploy -Dmaven.javadoc.skip=true -B -V -U
+install: mvn install -Dmaven.javadoc.skip=true -B -V -U
 
 branches:
   only:
@@ -16,6 +16,7 @@ cache:
   - "$HOME/.m2"
 
 after_success:
+- "mvn site-deploy -f livingdoc-examples/microservice/pom.xml"
 - "git clone -b deploy `git config --get remote.origin.url` target/deploy"
 - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/pubring.gpg.enc -out $GPG_DIR/pubring.gpg -d
 - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/secring.gpg.enc -out $GPG_DIR/secring.gpg -d
