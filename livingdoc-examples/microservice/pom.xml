@@ -132,6 +132,7 @@
             <plugin>
                 <artifactId>maven-site-plugin</artifactId>
                 <configuration>
+                    <skipDeploy>true</skipDeploy>
                     <asciidoc>
                         <requires>
                             <require>asciidoctor-diagram</require>
@@ -157,6 +158,26 @@
                 </dependencies>
             </plugin>
             <!-- end::plugin-livingdoc[] -->
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>0.5</version>
+                <configuration>
+                    <message>Building site for ${project.version}</message>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>site-deploy</phase>
+                        <configuration>
+                            <path>${project.version}</path>
+                            <merge>true</merge>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
