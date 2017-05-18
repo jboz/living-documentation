@@ -34,14 +34,6 @@ public class MappingDefinition implements Comparable<MappingDefinition> {
         this.description = description;
     }
 
-    /**
-     * Check the name
-     */
-    public MappingDefinition checkName() {
-        name = name.trim().replace(" ", "_");
-        return this;
-    }
-
     @Override
     public int compareTo(MappingDefinition o) {
         return new Ordering<MappingDefinition>() {

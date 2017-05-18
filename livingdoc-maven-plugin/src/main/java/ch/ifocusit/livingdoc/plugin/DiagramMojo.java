@@ -24,6 +24,7 @@ package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.annotations.Glossary;
 import ch.ifocusit.livingdoc.plugin.diagram.PlantumlClassDiagramBuilder;
+import ch.ifocusit.livingdoc.plugin.domain.Cluster;
 import ch.ifocusit.livingdoc.plugin.domain.Color;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.lang3.NotImplementedException;
@@ -33,6 +34,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author Julien Boz
@@ -72,11 +74,29 @@ public class DiagramMojo extends CommonMojoDefinition {
     @Parameter
     private File glossaryMapping;
 
+    /**
+     * Link template to use in diagram.
+     */
     @Parameter(defaultValue = "glossaryid-{0}")
     private String linkTemplate;
 
+    /**
+     * Class color for @{@link ch.ifocusit.livingdoc.annotations.RootAggregate} class.
+     */
     @Parameter
     private Color rootAggregateColor = DEFAULT_ROOT_COLOR;
+
+    /**
+     * Indicate if cluster must automatically detected.
+     */
+    @Parameter(defaultValue = "true")
+    private boolean detectCluster = true;
+
+    /**
+     * Effective cluster list.
+     */
+    @Parameter
+    private List<Cluster> clusters;
 
     public enum DiagramType {
         plantuml;
@@ -102,7 +122,7 @@ public class DiagramMojo extends CommonMojoDefinition {
             case asciidoc:
                 AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
                 if (!withoutTitle) {
-                    asciiDocBuilder.documentTitle("JavaClass diagram");
+                    asciiDocBuilder.documentTitle("JavaClazz diagram");
                 }
                 switch (diagramType) {
                     case plantuml:

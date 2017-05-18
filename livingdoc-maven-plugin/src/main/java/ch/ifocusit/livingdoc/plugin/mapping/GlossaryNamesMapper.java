@@ -55,7 +55,6 @@ public class GlossaryNamesMapper<A extends Glossary> implements NamesMapper {
         if (file != null) {
             mappings = CsvParser.mapTo(MappingDefinition.class)
                     .stream(new FileReader(file))
-                    .map(MappingDefinition::checkName)
                     .collect(Collectors.toList());
         }
     }

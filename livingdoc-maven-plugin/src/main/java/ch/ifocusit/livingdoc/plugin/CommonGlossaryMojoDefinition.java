@@ -81,7 +81,6 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
             try {
                 mappings = CsvParser.mapTo(MappingDefinition.class)
                         .stream(new FileReader(glossaryMapping))
-                        .map(MappingDefinition::checkName)
                         .collect(Collectors.toList());
             } catch (IOException e) {
                 throw new MojoExecutionException("error reading mappings file", e);

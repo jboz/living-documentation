@@ -27,7 +27,7 @@ import ch.ifocusit.livingdoc.plugin.AnnotationUtils;
 import ch.ifocusit.livingdoc.plugin.domain.Color;
 import ch.ifocusit.livingdoc.plugin.mapping.GlossaryNamesMapper;
 import ch.ifocusit.plantuml.classdiagram.ClassDiagramBuilder;
-import ch.ifocusit.plantuml.classdiagram.model.JavaClass;
+import ch.ifocusit.plantuml.classdiagram.model.clazz.JavaClazz;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -55,8 +55,8 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
         // override creation to change root aggregate class color
         classDiagramBuilder = new ClassDiagramBuilder() {
             @Override
-            protected JavaClass createJavaClass(Class clazz) {
-                JavaClass javaClass = super.createJavaClass(clazz);
+            protected JavaClazz createJavaClass(Class clazz) {
+                JavaClazz javaClass = super.createJavaClass(clazz);
                 if (rootAggregateColor != null) {
                     AnnotationUtils.tryFind(clazz, RootAggregate.class).ifPresent(annot ->
                             javaClass.setBackgroundColor(rootAggregateColor.getBackgroundColor())
@@ -76,7 +76,7 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
         }
 
         String diagram = classDiagramBuilder
-                .addClasses(allClasses.stream()
+                .addClasse(allClasses.stream()
                         // apply filters
                         .filter(defaultFilter())
                         .filter(additionalClassPredicate)

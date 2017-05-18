@@ -27,27 +27,30 @@ import org.apache.maven.plugins.annotations.Parameter;
 /**
  * @author Julien Boz
  */
-public class Color {
+public class Cluster {
+
+    @Parameter(required = true)
+    private String packageRoot;
 
     @Parameter
-    private String backgroundColor;
+    private String name;
 
-    @Parameter
-    private String borderColor;
+    @Parameter(defaultValue = "Rectangle")
+    private Type type = Type.Rectangle;
 
-
-    public String getBackgroundColor() {
-        return backgroundColor;
+    public String getPackageRoot() {
+        return packageRoot;
     }
 
-    public String getBorderColor() {
-        return borderColor;
+    public String getName() {
+        return name;
     }
 
-    public static Color from(String bg, String border) {
-        Color color = new Color();
-        color.backgroundColor = bg;
-        color.borderColor = border;
-        return color;
+    public Type getType() {
+        return type;
+    }
+
+    public static enum Type {
+        Node, Rectangle, Frame, Cloud, Database;
     }
 }
