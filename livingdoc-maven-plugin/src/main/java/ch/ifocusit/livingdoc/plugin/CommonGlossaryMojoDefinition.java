@@ -73,7 +73,7 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         javaDocBuilder = buildJavaProjectBuilder();
-        if (!withoutTitle) {
+        if (Format.html.equals(format)) {
             asciiDocBuilder.sectionTitleLevel1(getTitle());
         }
 

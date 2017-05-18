@@ -1,0 +1,11 @@
+_Micro service around the Bill aggregate_
+
+= Telecom micro service
+
+== Conception
+
+include::{generated}/diagram.adoc[]
+
+== Glossary
+
+include::{generated}/glossary.adoc[]

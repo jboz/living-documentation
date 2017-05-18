@@ -100,27 +100,6 @@
 
     <build>
         <plugins>
-            <!--<plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
-                <executions>
-                    <execution>
-                        <id>copy-docs</id>
-                        <phase>pre-site</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${livingdoc.output}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory></directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>-->
             <!-- tag::plugin-livingdoc[] -->
             <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
@@ -134,100 +113,48 @@
                             <goal>diagram</goal>
                             <goal>glossary</goal>
                         </goals>
-                        <configuration>
-                            <packageRoot>ch.ifocusit.telecom</packageRoot>
-                            <diagramOutputFormat>svg</diagramOutputFormat>
-                            <excludes>
-                                <exclude>.*\.domain.common\..*</exclude>
-                                <exclude>.*JAXRSConfiguration</exclude>
-                            </excludes>
-                            <linkTemplate>../index.html#glossaryid-{0}</linkTemplate>
-                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
                     <outputDirectory>${livingdoc.output}</outputDirectory>
                     <format>asciidoc</format>
-                    <!-- page without title because they'll be integrate in an index -->
-                    <withoutTitle>true</withoutTitle>
-                    <!-- link definition in diagram will forward to the index page -->
-                    <linkTemplate>../index.html#glossaryid-{0}</linkTemplate>
+                    <packageRoot>ch.ifocusit.telecom</packageRoot>
+                    <excludes>
+                        <exclude>.*\.domain.common\..*</exclude>
+                        <exclude>.*JAXRSConfiguration</exclude>
+                    </excludes>
+                    <diagramOutputFormat>svg</diagramOutputFormat>
                     <!-- link template defined here to match with the link definition in diagram -->
-                    <glossaryTemplate>[[glossaryid-{0}]]\n=== {1} ^{0}^</glossaryTemplate>
+                    <linkTemplate>../../livingdoc.html#glossaryid-{0}</linkTemplate>
+                    <glossaryTemplate>\n\n[[glossaryid-{0}]]\n=== {1} ^{0}^</glossaryTemplate>
                 </configuration>
             </plugin>
-            <plugin><!-- asciidoctor plugin to generate an index page including the generate docs -->
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.3</version>
+            <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <configuration>
+                    <asciidoc>
+                        <requires>
+                            <require>asciidoctor-diagram</require>
+                        </requires>
+                        <attributes>
+                            <generated>${livingdoc.output}</generated>
+                            <imagesoutdir>${project.build.directory}/site/images/generated</imagesoutdir>
+                            <imagesdir>./images/generated</imagesdir>
+                        </attributes>
+                    </asciidoc>
+                </configuration>
                 <dependencies>
                     <dependency>
-                        <groupId>org.jruby</groupId>
-                        <artifactId>jruby-complete</artifactId>
-                        <version>1.7.26</version>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <version>1.5.5</version>
                     </dependency>
                     <dependency>
                         <groupId>org.asciidoctor</groupId>
                         <artifactId>asciidoctorj-diagram</artifactId>
-                        <version>1.5.0</version>
+                        <version>1.5.4</version>
                     </dependency>
                 </dependencies>
-                <configuration>
-                    <sourceDirectory>${project.basedir}/src/main/docs</sourceDirectory>
-                    <sourceDocumentName>index.adoc</sourceDocumentName>
-                    <backend>html5</backend>
-                    <outputDirectory>${build.directory}/docs</outputDirectory>
-                    <requires>
-                        <require>asciidoctor-diagram</require>
-                    </requires>
-                    <attributes>
-                        <doctype>book</doctype>
-                        <toc>left</toc>
-                        <toclevels>3</toclevels>
-                        <numbered/>
-                        <hardbreaks/>
-                        <sectlinks/>
-                        <sectanchors>true</sectanchors>
-                        <generated>${livingdoc.output}</generated>
-                    </attributes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>output-html</id>
-                        <phase>${livingdoc.phase}</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.3</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <phase>${livingdoc.phase}</phase>
-                        <goals>
-                            <goal>aggregate</goal>
-                        </goals>
-                        <configuration>
-                            <doclet>nl.talsmasoftware.umldoclet.UMLDoclet</doclet>
-                            <docletArtifact>
-                                <groupId>nl.talsmasoftware</groupId>
-                                <artifactId>umldoclet</artifactId>
-                                <version>1.0.8</version>
-                            </docletArtifact>
-                            <docencoding>UTF-8</docencoding>
-                            <useStandardDocletOptions>true</useStandardDocletOptions>
-                            <additionalparam>
-                                -umlLogLevel DEBUG
-                                -umlImageFormat SVG
-                            </additionalparam>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <!-- end::plugin-livingdoc[] -->
         </plugins>

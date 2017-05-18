@@ -67,9 +67,6 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
     protected Format format;
 
     @Parameter
-    protected boolean withoutTitle = false;
-
-    @Parameter
     protected Template template;
 
     public enum Format {

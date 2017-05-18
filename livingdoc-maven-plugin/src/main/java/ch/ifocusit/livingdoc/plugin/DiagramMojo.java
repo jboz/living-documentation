@@ -121,8 +121,8 @@ public class DiagramMojo extends CommonMojoDefinition {
             case adoc:
             case asciidoc:
                 AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
-                if (!withoutTitle) {
-                    asciiDocBuilder.documentTitle("JavaClazz diagram");
+                if (Format.html.equals(format)) {
+                    asciiDocBuilder.documentTitle("Class diagram");
                 }
                 switch (diagramType) {
                     case plantuml:
