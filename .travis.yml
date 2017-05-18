@@ -5,7 +5,7 @@ sudo: false
 jdk:
 - oraclejdk8
 
-install: mvn install site -Dmaven.javadoc.skip=true -B -V -U
+install: mvn install site-deploy -Dmaven.javadoc.skip=true -B -V -U
 
 branches:
   only:
