@@ -36,7 +36,8 @@ import java.util.List;
 @Mojo(name = "glossary")
 public class GlossaryMojo extends CommonGlossaryMojoDefinition {
 
-    public static final String HEARDER = "=== #{0}# - {1}";
+    public static final String NEWLINE = System.getProperty("line.separator");
+    public static final String HEARDER = "[[glossaryid-{0}]]\n=== #{0}# - {1}";
 
     @Parameter(defaultValue = HEARDER)
     private String glossaryTemplate;
@@ -76,7 +77,8 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
     }
 
     private void addGlossarEntry(MappingDefinition def) {
-        asciiDocBuilder.textLine(MessageFormat.format(glossaryTemplate, def.getId(), def.getName()));
+        asciiDocBuilder.textLine(MessageFormat.format(glossaryTemplate.replace("\\r\\n", NEWLINE).replace("\\n", NEWLINE),
+                def.getId(), def.getName()));
         asciiDocBuilder.textLine(def.getDescription());
         asciiDocBuilder.textLine("");
     }
