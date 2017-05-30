@@ -19,7 +19,7 @@ You'll be able to generate beautiful diagrams with a simple configuration.
 generate the documentation from the code automatically.
 
 ==== A conception diagram
-image::class-diagram.png[Asciidoctor Diagram javaClasses diagram]
+image::conception-diagram.png[Asciidoctor Diagram javaClasses diagram]
 
 
 ==== And a business glossary (with asciidoc syntax)
