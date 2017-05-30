@@ -14,11 +14,9 @@ See examples to show the powerfull !
 
 You'll be able to generate beautiful diagrams with a simple configuration.
 
-=== Living documentation example :
+Generate the documentation from the code automatically. Easily customizable.
 
-generate the documentation from the code automatically.
-
-==== A conception diagram
+==== Generation a conception diagram
 image::conception-diagram.png[Asciidoctor Diagram javaClasses diagram]
 
 
