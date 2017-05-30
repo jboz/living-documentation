@@ -2,10 +2,12 @@ _Micro service around the Bill aggregate_
 
 = Telecom micro service
 
+[[conception]]
 == Conception
 
 include::{generated}/diagram.adoc[]
 
+[[glossary]]
 == Glossary
 
 include::{generated}/glossary.adoc[]

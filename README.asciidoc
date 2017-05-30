@@ -1,7 +1,9 @@
 ifndef::imagesdir[:imagesdir: images]
 
-image::https://travis-ci.org/jboz/living-documentation.svg?branch=master["Build Status", link="https://travis-ci.org/jboz/living-documentation"]
-image::https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square["Make a pull request", link="http://makeapullrequest.com"]
+image:https://travis-ci.org/jboz/living-documentation.svg?branch=master["Build Status", link="https://travis-ci.org/jboz/living-documentation"]
+image:https://img.shields.io/badge/PRs-welcome-brightgreen.svg["Make a pull request", link="http://makeapullrequest.com"]
+image:https://img.shields.io/github/license/spotify/dockerfile-maven.svg[License]
+
 = Living documentation tools
 
 This project is intented to provide some tools to allow a nice Living Documentation.

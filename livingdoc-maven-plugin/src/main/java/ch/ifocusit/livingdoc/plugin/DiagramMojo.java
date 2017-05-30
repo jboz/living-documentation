@@ -98,6 +98,18 @@ public class DiagramMojo extends CommonMojoDefinition {
     @Parameter
     private List<Cluster> clusters;
 
+    /**
+     * Header of the diagram
+     */
+    @Parameter(defaultValue = "src/main/docs/diagram.header")
+    private File header;
+
+    /**
+     * Footer of the diagram
+     */
+    @Parameter(defaultValue = "src/main/docs/diagram.footer")
+    private File footer;
+
     public enum DiagramType {
         plantuml;
     }
@@ -144,7 +156,8 @@ public class DiagramMojo extends CommonMojoDefinition {
 
         switch (diagramType) {
             case plantuml:
-                PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes, rootAggregateColor);
+                PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes,
+                        rootAggregateColor, header, footer);
                 if (onlyGlossary) {
                     builder.filterOnAnnotation(Glossary.class);
                 }

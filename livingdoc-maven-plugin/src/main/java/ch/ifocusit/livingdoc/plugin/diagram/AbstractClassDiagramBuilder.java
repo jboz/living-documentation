@@ -23,6 +23,7 @@
 package ch.ifocusit.livingdoc.plugin.diagram;
 
 import com.google.common.reflect.ClassPath;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -33,6 +34,7 @@ import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -50,16 +52,39 @@ public abstract class AbstractClassDiagramBuilder {
     protected final MavenProject project;
     protected final String prefix;
     protected final String[] excludes;
+    protected final File header;
+    protected final File footer;
 
-    public AbstractClassDiagramBuilder(MavenProject project, String prefix, String[] excludes) {
+    public AbstractClassDiagramBuilder(MavenProject project, String prefix, String[] excludes, File header, File footer) {
         this.project = project;
         this.prefix = prefix;
         this.excludes = excludes;
+        this.header = header;
+        this.footer = footer;
     }
 
     public abstract AbstractClassDiagramBuilder filterOnAnnotation(Class<? extends Annotation> annotation);
 
     public abstract String generate() throws MojoExecutionException;
+
+    protected String readHeader() throws MojoExecutionException {
+        return read(header);
+    }
+
+    protected String readFooter() throws MojoExecutionException {
+        return read(footer);
+    }
+
+    protected String read(File file) throws MojoExecutionException {
+        if (file == null || !file.exists()) {
+            return null;
+        }
+        try {
+            return IOUtils.toString(file.toURI(), Charset.defaultCharset());
+        } catch (IOException e) {
+            throw new MojoExecutionException("Unable to read header file !", e);
+        }
+    }
 
     protected Predicate<ClassPath.ClassInfo> defaultFilter() {
         return ci -> ci.getPackageName().startsWith(prefix)

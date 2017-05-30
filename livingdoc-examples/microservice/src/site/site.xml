@@ -27,10 +27,9 @@
             <item name="github" href="https://github.com/jboz/living-documentation"/>
         </links>
 
-        <menu name="Application Documentation">
-            <item name="Living documentation" href="livingdoc.html"/>
+        <menu name="Living Documentation" ref="livingdoc.html">
+            <item name="Conception" href="livingdoc.html#conception"/>
+            <item name="Glossary" href="livingdoc.html#glossary"/>
         </menu>
-
-        <menu ref="reports"/>
     </body>
 </project>

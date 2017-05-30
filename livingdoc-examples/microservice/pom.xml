@@ -32,7 +32,6 @@
         <livingdoc.phase>prepare-package</livingdoc.phase>
     </properties>
 
-
     <dependencyManagement>
         <dependencies>
             <!-- JAVA EE Micro Service -->
