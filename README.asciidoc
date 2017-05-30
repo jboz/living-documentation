@@ -135,3 +135,5 @@ SMS type access.
     </configuration>
 </plugin>
 ----
+
+See https://github.com/jboz/living-documentation/tree/master/livingdoc-examples[livingdoc-examples] for more uses cases.
