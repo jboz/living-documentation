@@ -14,9 +14,102 @@ See examples to show the powerfull !
 
 You'll be able to generate beautiful diagrams with a simple configuration.
 
-=== Diagram example :
+=== Living documentation example :
 
+generate the documentation from the code automatically.
+
+==== A conception diagram
 image::class-diagram.png[Asciidoctor Diagram javaClasses diagram]
+
+
+==== And a business glossary
+
+[[glossaryid-100]]
+===== Bill ^100^
+*Monthly* bill.
+[NOTE]
+Generate by the system at contract birth date.
+
+
+
+[[glossaryid-101]]
+===== month ^101^
+Facturation month.
+
+
+
+[[glossaryid-200]]
+===== Contract ^200^
+Telecom contract
+
+
+
+[[glossaryid-201]]
+===== id ^201^
+Contract identifier.
+Generate by the system and communicate to client.
+
+
+
+[[glossaryid-202]]
+===== effectDate ^202^
+Contract effect date.
+
+
+
+[[glossaryid-300]]
+===== Customer ^300^
+Customer of the telecom service
+
+
+
+[[glossaryid-301]]
+===== name ^301^
+Name of the customer.
+
+
+
+[[glossaryid-400]]
+===== Access ^400^
+Use of telecom service.
+
+
+
+[[glossaryid-401]]
+===== phoneNumber ^401^
+Phone number used.
+
+
+
+[[glossaryid-402]]
+===== price ^402^
+Price of use of the service.
+
+
+
+[[glossaryid-403]]
+===== dateTime ^403^
+Timestamp of use.
+
+
+
+[[glossaryid-500]]
+===== CallAccess ^500^
+Phone call type access.
+
+
+
+[[glossaryid-501]]
+===== duration ^501^
+Phone call duration
+
+
+
+[[glossaryid-600]]
+===== SmsAccess ^600^
+SMS type access.
+
+
 
 === Maven configuration :
 [source,xml]
