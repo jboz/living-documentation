@@ -1,5 +1,8 @@
 = Living documentation in a micro service project
 
+Petit service autonome et indépendante (applicatif et fonctionel) qui expose ses services.
+Propriétaire des données présente sur une facture
+
 This a simple micro-service project around the telecom aggregate
 
 launch *mvn clean package* and see open *target/docs/index.html* file.

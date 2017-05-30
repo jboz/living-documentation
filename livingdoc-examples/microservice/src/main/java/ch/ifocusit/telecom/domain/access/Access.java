@@ -24,7 +24,10 @@ package ch.ifocusit.telecom.domain.access;
 
 import ch.ifocusit.livingdoc.annotations.Glossary;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -33,7 +36,9 @@ import java.time.ZonedDateTime;
  * Use of telecom service.
  */
 @Glossary(id = 400)
-@Data
+@Getter
+@Setter
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class Access extends AbstractDomain {
 
     /**

@@ -29,6 +29,5 @@ import lombok.Data;
  * SMS type access.
  */
 @Glossary(id = 600)
-@Data
 public class SmsAccess extends Access {
 }

@@ -28,7 +28,8 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <livingdoc.output>${project.build.directory}/generated-docs</livingdoc.output>
+        <livingdoc.generated>generated-docs</livingdoc.generated>
+        <livingdoc.output>${project.build.directory}/${livingdoc.generated}</livingdoc.output>
         <livingdoc.phase>prepare-package</livingdoc.phase>
     </properties>
 
@@ -80,12 +81,48 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.24</version>
         </dependency>
-
-        <!-- docs -->
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
             <version>1.5.12</version>
+        </dependency>
+
+        <!-- tests -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.easytesting</groupId>
+            <artifactId>fest-assert</artifactId>
+            <version>1.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.7.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>1.2.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>1.2.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.extras</groupId>
+            <artifactId>glassfish-embedded-all</artifactId>
+            <version>4.1.1</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- living doc deps -->
@@ -98,85 +135,191 @@
         <!-- end::annotation-livingdoc[] -->
     </dependencies>
 
-    <build>
-        <plugins>
-            <!-- tag::plugin-livingdoc[] -->
-            <plugin>
-                <groupId>ch.ifocusit.livingdoc</groupId>
-                <artifactId>livingdoc-maven-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <id>class-diagram-domain</id>
-                        <phase>${livingdoc.phase}</phase>
-                        <goals>
-                            <goal>diagram</goal>
-                            <goal>glossary</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <outputDirectory>${livingdoc.output}</outputDirectory>
-                    <format>asciidoc</format>
-                    <packageRoot>ch.ifocusit.telecom</packageRoot>
-                    <excludes>
-                        <exclude>.*\.domain.common\..*</exclude>
-                        <exclude>.*JAXRSConfiguration</exclude>
-                    </excludes>
-                    <diagramOutputFormat>svg</diagramOutputFormat>
-                    <!-- link template defined here to match with the link definition in diagram -->
-                    <linkTemplate>../../livingdoc.html#glossaryid-{0}</linkTemplate>
-                    <glossaryTemplate>\n\n[[glossaryid-{0}]]\n=== {1} ^{0}^</glossaryTemplate>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-site-plugin</artifactId>
-                <configuration>
-                    <skipDeploy>true</skipDeploy>
-                    <asciidoc>
-                        <requires>
-                            <require>asciidoctor-diagram</require>
-                        </requires>
-                        <attributes>
-                            <generated>${livingdoc.output}</generated>
-                            <imagesoutdir>${project.build.directory}/site/images/generated</imagesoutdir>
-                            <imagesdir>./images/generated</imagesdir>
-                        </attributes>
-                    </asciidoc>
-                </configuration>
-                <dependencies>
-                    <dependency>
+    <profiles>
+        <profile>
+            <id>livingdoc</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <!-- tag::plugin-livingdoc[] -->
+                    <plugin>
+                        <groupId>ch.ifocusit.livingdoc</groupId>
+                        <artifactId>livingdoc-maven-plugin</artifactId>
+                        <version>1.0-SNAPSHOT</version>
+                        <executions>
+                            <execution>
+                                <id>class-diagram-domain</id>
+                                <phase>${livingdoc.phase}</phase>
+                                <goals>
+                                    <goal>diagram</goal>
+                                    <goal>glossary</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <outputDirectory>${livingdoc.output}</outputDirectory>
+                            <format>plantuml</format>
+                            <packageRoot>ch.ifocusit.telecom</packageRoot>
+                            <excludes>
+                                <exclude>.*\.domain.common\..*</exclude>
+                                <exclude>.*JAXRSConfiguration</exclude>
+                            </excludes>
+                            <diagramOutputFormat>svg</diagramOutputFormat>
+                            <!-- link template defined here to match with the link definition in diagram -->
+                            <linkTemplate>../../livingdoc.html#glossaryid-{0}</linkTemplate>
+                            <glossaryTemplate>\n\n[[glossaryid-{0}]]\n=== {1} ^{0}^</glossaryTemplate>
+                        </configuration>
+                    </plugin>
+                    <!-- end::plugin-livingdoc[] -->
+
+
+                    <plugin>
+                        <groupId>com.github.cukedoctor</groupId>
+                        <artifactId>cukedoctor-maven-plugin</artifactId>
+                        <version>1.0.6</version>
+                        <configuration>
+                            <outputFileName>cucumber</outputFileName>
+                            <outputDir>${livingdoc.generated}</outputDir>
+                            <docVersion>${project.version}</docVersion>
+                            <featuresDir>target/cucumber</featuresDir>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <phase>prepare-package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <!-- tag::plugin-asciidoctor[] -->
+                    <plugin>
                         <groupId>org.asciidoctor</groupId>
                         <artifactId>asciidoctor-maven-plugin</artifactId>
                         <version>1.5.5</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctorj-diagram</artifactId>
-                        <version>1.5.4</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <!-- end::plugin-livingdoc[] -->
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.jruby</groupId>
+                                <artifactId>jruby-complete</artifactId>
+                                <version>1.7.26</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj-diagram</artifactId>
+                                <version>1.5.4</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.github.domgold.doctools.asciidoctor</groupId>
+                                <artifactId>asciidoctor-gherkin-extension</artifactId>
+                                <version>1.0.1</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/docs</sourceDirectory>
+                            <sourceDocumentName>index.adoc</sourceDocumentName>
+                            <backend>html5</backend>
+                            <outputDirectory>${build.directory}/docs</outputDirectory>
+                            <requires>
+                                <require>asciidoctor-diagram</require>
+                            </requires>
+                            <attributes>
+                                <doctype>book</doctype>
+                                <toc>left</toc>
+                                <toclevels>3</toclevels>
+                                <numbered/>
+                                <hardbreaks/>
+                                <sectlinks/>
+                                <sectanchors>true</sectanchors>
+                                <generated>${livingdoc.output}</generated>
+                                <bdd-dir>${project.basedir}/src/test/resources/features</bdd-dir>
+                            </attributes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>output-html</id>
+                                <phase>${livingdoc.phase}</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- end::plugin-asciidoctor[] -->
+
+                    <!-- tag::plugin-integration-site[] -->
+                    <!--<plugin>
+                        <artifactId>maven-site-plugin</artifactId>
+                        <configuration>
+                            <skipDeploy>true</skipDeploy>
+                            <asciidoc>
+                                <requires>
+                                    <require>asciidoctor-diagram</require>
+                                </requires>
+                                <attributes>
+                                    <imagesoutdir>${project.build.directory}/site/images/generated</imagesoutdir>
+                                    <imagesdir>./images/generated</imagesdir>
+                                    <generated>${livingdoc.output}</generated>
+                                    <bdd-dir>${project.basedir}/src/test/resources/features</bdd-dir>
+                                </attributes>
+                            </asciidoc>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctor-maven-plugin</artifactId>
+                                <version>1.5.5</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj-diagram</artifactId>
+                                <version>1.5.4</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>com.github.domgold.doctools.asciidoctor</groupId>
+                                <artifactId>asciidoctor-gherkin-extension</artifactId>
+                                <version>1.0.1</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.github</groupId>
+                        <artifactId>site-maven-plugin</artifactId>
+                        <version>0.5</version>
+                        <configuration>
+                            <message>Building site for ${project.version}</message>
+                            <path>${project.version}</path>
+                            <merge>true</merge>
+                            <server>github</server>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>site</goal>
+                                </goals>
+                                <phase>site-deploy</phase>
+                            </execution>
+                        </executions>
+                    </plugin>-->
+                    <!-- end::plugin-integration-site[] -->
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <reporting>
+        <plugins>
             <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <version>0.5</version>
-                <configuration>
-                    <message>Building site for ${project.version}</message>
-                    <path>${project.version}</path>
-                    <merge>true</merge>
-                    <server>github</server>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                        <phase>site-deploy</phase>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.8</version>
             </plugin>
         </plugins>
-    </build>
+    </reporting>
 </project>

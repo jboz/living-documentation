@@ -4,8 +4,12 @@ _Micro service around the Bill aggregate_
 
 == Conception
 
-include::{generated}/diagram.adoc[]
+plantuml::{generated}/diagram.plantuml[format=svg, opts=interactive]
 
 == Glossary
 
 include::{generated}/glossary.adoc[]
+
+== Feature
+
+gherkin::{bdd-dir}/billing.feature[]
