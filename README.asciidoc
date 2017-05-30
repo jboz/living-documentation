@@ -22,7 +22,7 @@ generate the documentation from the code automatically.
 image::class-diagram.png[Asciidoctor Diagram javaClasses diagram]
 
 
-==== And a business glossary
+==== And a business glossary (with asciidoc syntax)
 
 [[glossaryid-100]]
 ===== Bill ^100^
