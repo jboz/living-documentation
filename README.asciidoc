@@ -16,6 +16,8 @@ You'll be able to generate beautiful diagrams with a simple configuration.
 
 Create a living documentation from the code automatically. Easily customizable.
 
+Trello board: https://trello.com/b/pabtQSZG
+
 == Generate a conception diagram
 image::conception-diagram.png[Asciidoctor Diagram javaClasses diagram]
 
