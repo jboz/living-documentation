@@ -1,0 +1,7 @@
+= Living documentation in a legagy project
+
+Image that you want generate a much more complete documentation by aggregating many domaine.
+No problem, you can create a new module for living documentation generation.
+
+The diagram mojo wil work just by adding dependencies definition in the plugin.
+For the glossary generation, just publish javadoc/sources artifact to allow javadoc reading !
