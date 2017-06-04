@@ -3,4 +3,4 @@
 This a simple micro-service project around the telecom aggregate.
 This wil generate living documentation in maven-site.
 
-launch *clean package site* and see open *target/site/index.html* file.
+launch *mvn package install site* and see open *target/site/index.html* file.

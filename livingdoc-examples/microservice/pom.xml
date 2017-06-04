@@ -3,9 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ch.ifocusit.livingdoc.example</groupId>
+    <parent>
+        <groupId>ch.ifocusit.livingdoc.example</groupId>
+        <artifactId>examples-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
     <artifactId>microservice</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <description>Living Documentation example in javaee micro service</description>
@@ -157,25 +160,6 @@
                 </dependencies>
             </plugin>
             <!-- end::plugin-livingdoc[] -->
-            <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <version>0.5</version>
-                <configuration>
-                    <message>Building site for ${project.version}</message>
-                    <path>${project.version}</path>
-                    <merge>true</merge>
-                    <server>github</server>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                        <phase>site-deploy</phase>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 </project>
