@@ -57,20 +57,19 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
         // regroup all mapping definition
         List<MappingDefinition> definitions = new ArrayList<>();
 
-        javaDocBuilder.getClasses().stream()
-                .filter(this::hasAnnotation) // if annotated
-                .forEach(javaClass -> {
-                    // add class entry
-                    definitions.add(map(javaClass, javaClass.getName(), javaClass.getComment()));
 
-                    // browse fields
-                    javaClass.getFields().stream()
-                            .filter(this::hasAnnotation) // if annotated
-                            .forEach(javaField -> {
-                                // add field entry
-                                definitions.add(map(javaField, javaField.getName(), javaField.getComment()));
-                            });
-                });
+        getClasses().forEach(javaClass -> {
+            // add class entry
+            definitions.add(map(javaClass, javaClass.getName(), javaClass.getComment()));
+
+            // browse fields
+            javaClass.getFields().stream()
+                    .filter(this::hasAnnotation) // if annotated
+                    .forEach(javaField -> {
+                        // add field entry
+                        definitions.add(map(javaField, javaField.getName(), javaField.getComment()));
+                    });
+        });
 
         // sort definitions before add asciidoc entries
         definitions.stream().sorted().filter(distinctByKey()).forEach(this::addGlossarEntry);

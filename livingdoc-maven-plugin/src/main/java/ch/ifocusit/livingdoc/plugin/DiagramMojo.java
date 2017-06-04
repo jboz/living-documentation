@@ -44,7 +44,7 @@ public class DiagramMojo extends CommonMojoDefinition {
 
     private static final Color DEFAULT_ROOT_COLOR = Color.from("wheat", null);
 
-    @Parameter(required = true, defaultValue = "${groupid}.${artifactid}.domain")
+    @Parameter(required = true)
     private String packageRoot;
 
     @Parameter
@@ -60,13 +60,19 @@ public class DiagramMojo extends CommonMojoDefinition {
      * Output diagram image format
      */
     @Parameter(defaultValue = "png", required = true)
-    private DiagramImageType diagramOutputFormat;
+    private DiagramImageType diagramImageType;
 
     /**
      * Extract only class/field/method annotated with @Glossary
      */
     @Parameter(defaultValue = "false")
     private boolean onlyGlossary = false;
+
+    /**
+     * Add link into diagram to glossary
+     */
+    @Parameter(defaultValue = "true")
+    private boolean withLink = true;
 
     /**
      * File to use for Glossary mapping.
@@ -138,7 +144,7 @@ public class DiagramMojo extends CommonMojoDefinition {
                 }
                 switch (diagramType) {
                     case plantuml:
-                        asciiDocBuilder.textLine(String.format("[plantuml, %s, format=%s, opts=interactive]", getFilenameWithoutExtension(), diagramOutputFormat));
+                        asciiDocBuilder.textLine(String.format("[plantuml, %s, format=%s, opts=interactive]", getFilenameWithoutExtension(), diagramImageType));
                 }
                 asciiDocBuilder.textLine("----");
                 asciiDocBuilder.textLine(diagram);
@@ -161,7 +167,9 @@ public class DiagramMojo extends CommonMojoDefinition {
                 if (onlyGlossary) {
                     builder.filterOnAnnotation(Glossary.class);
                 }
-                builder.mapNames(glossaryMapping, Glossary.class, linkTemplate);
+                if (withLink && !DiagramImageType.png.equals(diagramImageType)) {
+                    builder.mapNames(glossaryMapping, Glossary.class, linkTemplate);
+                }
                 return builder.generate();
             default:
                 throw new NotImplementedException(String.format("format %s is not implemented yet", diagramType));

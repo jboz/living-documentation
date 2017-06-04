@@ -22,20 +22,16 @@
  */
 package ch.ifocusit.livingdoc.plugin.diagram;
 
+import ch.ifocusit.livingdoc.plugin.common.ClassLoaderUtil;
 import com.google.common.reflect.ClassPath;
 import org.apache.commons.io.IOUtils;
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.charset.Charset;
-import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.stream;
@@ -96,35 +92,10 @@ public abstract class AbstractClassDiagramBuilder {
     }
 
     protected ClassPath initClassPath() throws MojoExecutionException {
-        final ClassPath classPath;
         try {
-            try {
-                classPath = ClassPath.from(getRuntimeClassLoader());
-            } catch (DependencyResolutionRequiredException e) {
-                throw new MojoExecutionException("Unable to load project runtime !", e);
-            }
+            return ClassPath.from(ClassLoaderUtil.getRuntimeClassLoader(project));
         } catch (IOException e) {
             throw new MojoExecutionException("Unable to initialize classPath !", e);
         }
-        return classPath;
-    }
-
-    protected ClassLoader getRuntimeClassLoader() throws DependencyResolutionRequiredException, MalformedURLException {
-        List<String> runtimeClasspathElements = project.getRuntimeClasspathElements();
-        List<String> compileClasspathElements = project.getCompileClasspathElements();
-        URL[] runtimeUrls = new URL[runtimeClasspathElements.size() + compileClasspathElements.size()];
-        for (int i = 0; i < runtimeClasspathElements.size(); i++) {
-            String element = runtimeClasspathElements.get(i);
-            runtimeUrls[i] = new File(element).toURI().toURL();
-        }
-
-        int j = runtimeClasspathElements.size();
-
-        for (int i = 0; i < compileClasspathElements.size(); i++) {
-            String element = compileClasspathElements.get(i);
-            runtimeUrls[i + j] = new File(element).toURI().toURL();
-        }
-
-        return new URLClassLoader(runtimeUrls, Thread.currentThread().getContextClassLoader());
     }
 }

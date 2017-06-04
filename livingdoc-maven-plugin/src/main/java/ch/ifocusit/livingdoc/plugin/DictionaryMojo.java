@@ -52,17 +52,15 @@ public class DictionaryMojo extends CommonGlossaryMojoDefinition {
         // regroup all mapping definition
         List<MappingDefinition> definitions = new ArrayList<>();
 
-        javaDocBuilder.getClasses().stream()
-                .filter(this::hasAnnotation) // if annotated
-                .forEach(javaClass -> {
-                    // browse fields
-                    javaClass.getFields().stream()
-                            .filter(this::hasAnnotation) // if annotated
-                            .forEach(javaField -> {
-                                // add field entry
-                                definitions.add(map(javaField, javaField.getName(), javaField.getComment()));
-                            });
-                });
+        getClasses().forEach(javaClass -> {
+            // browse fields
+            javaClass.getFields().stream()
+                    .filter(this::hasAnnotation) // if annotated
+                    .forEach(javaField -> {
+                        // add field entry
+                        definitions.add(map(javaField, javaField.getName(), javaField.getComment()));
+                    });
+        });
 
         List<String> rows = definitions.stream()
                 // sort

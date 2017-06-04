@@ -22,26 +22,39 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
+import ch.ifocusit.livingdoc.plugin.common.ClassLoaderUtil;
 import ch.ifocusit.livingdoc.plugin.mapping.MappingDefinition;
 import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.library.OrderedClassLibraryBuilder;
 import com.thoughtworks.qdox.model.JavaAnnotatedElement;
 import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.simpleflatmapper.csv.CsvParser;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Julien Boz
@@ -65,6 +78,9 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
      */
     @Parameter
     private File glossaryMapping;
+
+    @Parameter
+    private String packageRoot;
 
     protected AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
     protected JavaProjectBuilder javaDocBuilder;
@@ -95,6 +111,13 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
 
     protected abstract void executeMojo();
 
+    protected Stream<JavaClass> getClasses() {
+        return javaDocBuilder.getClasses().stream()
+                .filter(javaClass -> packageRoot == null || javaClass.getPackageName().startsWith(packageRoot))
+                .filter(this::hasAnnotation) // if annotated
+                ;
+    }
+
     protected boolean hasAnnotation(JavaAnnotatedElement annotatedElement) {
         return getGlossary(annotatedElement).isPresent();
     }
@@ -107,7 +130,9 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
 
     protected Optional<Integer> getGlossaryId(JavaAnnotatedElement annotatedElement) {
         Optional<JavaAnnotation> annotation = getGlossary(annotatedElement);
-        return annotation.map(annot -> Optional.ofNullable(Integer.valueOf(String.valueOf(annot.getNamedParameter("id"))))).orElse(Optional.empty());
+        return annotation.map(annot -> annot.getProperty("id") == null ? null :
+                    Optional.ofNullable(Integer.valueOf(String.valueOf(annot.getNamedParameter("id")))))
+                .orElse(Optional.empty());
     }
 
     protected Optional<MappingDefinition> getDefinition(Optional<Integer> id) {
@@ -130,11 +155,57 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
         return def;
     }
 
-    private JavaProjectBuilder buildJavaProjectBuilder() {
-        JavaProjectBuilder javaDocBuilder = new JavaProjectBuilder();
+    private JavaProjectBuilder buildJavaProjectBuilder() throws MojoExecutionException {
+        JavaProjectBuilder javaDocBuilder = new JavaProjectBuilder(new OrderedClassLibraryBuilder());
+        javaDocBuilder.setEncoding(Charset.defaultCharset().toString());
         javaDocBuilder.setErrorHandler(e -> getLog().warn(e.getMessage()));
         sources.stream().map(File::new).forEach(javaDocBuilder::addSourceTree);
+        javaDocBuilder.addClassLoader(ClassLoaderUtil.getRuntimeClassLoader(project));
+
+        loadSourcesDependencies(javaDocBuilder);
+
         return javaDocBuilder;
+    }
+
+    private void loadSourcesDependencies(JavaProjectBuilder javaDocBuilder) {
+
+        PluginDescriptor pluginDescriptor = ((PluginDescriptor) getPluginContext().get("pluginDescriptor"));
+
+        Stream.concat(project.getDependencies().stream(),
+                project.getPlugin(pluginDescriptor.getPluginLookupKey()).getDependencies().stream())
+
+                .forEach(dependency -> {
+                    Artifact sourcesArtifact = repositorySystem.createArtifactWithClassifier(dependency.getGroupId(),
+                            dependency.getArtifactId(), dependency.getVersion(), dependency.getType(), "sources");
+
+                    loadSourcesDependency(javaDocBuilder, sourcesArtifact);
+                });
+
+    }
+
+    private void loadSourcesDependency(JavaProjectBuilder javaDocBuilder, Artifact sourcesArtifact) {
+        // create request
+        ArtifactResolutionRequest request = new ArtifactResolutionRequest();
+        request.setArtifact(sourcesArtifact);
+
+        // resolve deps
+        ArtifactResolutionResult result = repositorySystem.resolve(request);
+
+        // load source file into javadoc builder
+        result.getArtifacts().forEach(artifact -> {
+            try {
+                JarFile jarFile = new JarFile(artifact.getFile());
+                for (Enumeration entries = jarFile.entries(); entries.hasMoreElements(); ) {
+                    JarEntry entry = (JarEntry) entries.nextElement();
+                    String name = entry.getName();
+                    if (name.endsWith(".java") && !name.endsWith("/package-info.java")) {
+                        javaDocBuilder.addSource(new URL("jar:" + artifact.getFile().toURI().toURL().toString() + "!/" + name));
+                    }
+                }
+            } catch (Exception e) {
+                getLog().warn("Unable to load jar source " + artifact, e);
+            }
+        });
     }
 
     private static Function<MappingDefinition, ?> key() {
