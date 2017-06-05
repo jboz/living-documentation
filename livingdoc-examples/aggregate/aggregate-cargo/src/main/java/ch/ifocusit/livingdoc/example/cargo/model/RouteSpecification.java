@@ -1,5 +1,6 @@
 package ch.ifocusit.livingdoc.example.cargo.model;
 
+import ch.ifocusit.livingdoc.annotations.Glossary;
 import ch.ifocusit.livingdoc.example.location.model.Location;
 import ch.ifocusit.livingdoc.example.shared.AbstractSpecification;
 import ch.ifocusit.livingdoc.example.shared.ValueObject;
@@ -13,6 +14,7 @@ import java.util.Date;
  * Route specification. Describes where a cargo orign and destination is,
  * and the arrival deadline.
  */
+@Glossary
 public class RouteSpecification extends AbstractSpecification<Itinerary> implements ValueObject<RouteSpecification> {
 
     private Location origin;

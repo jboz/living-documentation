@@ -83,7 +83,7 @@ public class DiagramMojo extends CommonMojoDefinition {
     /**
      * Link template to use in diagram.
      */
-    @Parameter(defaultValue = "glossaryid-{0}")
+    @Parameter(defaultValue = "glossary.html#glossaryid-{0}")
     private String linkTemplate;
 
     /**
@@ -116,6 +116,9 @@ public class DiagramMojo extends CommonMojoDefinition {
     @Parameter(defaultValue = "src/main/docs/diagram.footer")
     private File footer;
 
+    @Parameter(defaultValue = "false")
+    private boolean interactive = false;
+
     public enum DiagramType {
         plantuml;
     }
@@ -131,6 +134,10 @@ public class DiagramMojo extends CommonMojoDefinition {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
+        if (interactive) {
+            withLink = true;
+            diagramImageType = DiagramImageType.svg;
+        }
         // generate diagram
         String diagram = generateDiagram();
 

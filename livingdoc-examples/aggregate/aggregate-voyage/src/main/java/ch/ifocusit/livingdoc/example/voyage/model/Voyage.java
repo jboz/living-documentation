@@ -1,5 +1,6 @@
 package ch.ifocusit.livingdoc.example.voyage.model;
 
+import ch.ifocusit.livingdoc.annotations.Glossary;
 import ch.ifocusit.livingdoc.annotations.RootAggregate;
 import ch.ifocusit.livingdoc.example.location.model.Location;
 import ch.ifocusit.livingdoc.example.shared.Entity;
@@ -13,6 +14,7 @@ import java.util.List;
  * A Voyage.
  */
 @RootAggregate
+@Glossary
 public class Voyage implements Entity<Voyage> {
 
     // Null object pattern

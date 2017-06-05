@@ -1,5 +1,6 @@
 package ch.ifocusit.livingdoc.example.cargo.model;
 
+import ch.ifocusit.livingdoc.annotations.Glossary;
 import ch.ifocusit.livingdoc.example.location.model.Location;
 import ch.ifocusit.livingdoc.example.shared.ValueObject;
 import ch.ifocusit.livingdoc.example.voyage.model.Voyage;
@@ -12,6 +13,7 @@ import java.util.Date;
 /**
  * An itinerary consists of one or more legs.
  */
+@Glossary
 public class Leg implements ValueObject<Leg> {
 
     private Voyage voyage;

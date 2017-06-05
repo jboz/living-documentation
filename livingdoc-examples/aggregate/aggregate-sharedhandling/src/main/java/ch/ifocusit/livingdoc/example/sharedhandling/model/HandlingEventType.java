@@ -1,11 +1,13 @@
 package ch.ifocusit.livingdoc.example.sharedhandling.model;
 
+import ch.ifocusit.livingdoc.annotations.Glossary;
 import ch.ifocusit.livingdoc.example.shared.ValueObject;
 
 /**
  * Handling event type. Either requires or prohibits a carrier movement
  * association, it's never optional.
  */
+@Glossary
 public enum HandlingEventType implements ValueObject<HandlingEventType> {
     LOAD(true),
     UNLOAD(true),

@@ -27,6 +27,7 @@ import java.util.Date;
  * <p/>
  * All other events must be of {@link HandlingEventType#RECEIVE}, {@link HandlingEventType#CLAIM} or {@link HandlingEventType#CUSTOMS}.
  */
+@Glossary
 public final class HandlingEvent implements ch.ifocusit.livingdoc.example.sharedhandling.model.HandlingEvent<Voyage, Location, Cargo>, DomainEvent<HandlingEvent> {
 
     private HandlingEventType type;

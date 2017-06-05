@@ -77,8 +77,4 @@ public class DictionaryMojo extends CommonGlossaryMojoDefinition {
 
         asciiDocBuilder.tableWithHeaderRow(rows);
     }
-
-    private String defaultString(Integer id, String defaultString) {
-        return id == null ? defaultString : String.valueOf(id);
-    }
 }

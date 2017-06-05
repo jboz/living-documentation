@@ -156,7 +156,7 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
     }
 
     private JavaProjectBuilder buildJavaProjectBuilder() throws MojoExecutionException {
-        JavaProjectBuilder javaDocBuilder = new JavaProjectBuilder(new OrderedClassLibraryBuilder());
+        JavaProjectBuilder javaDocBuilder = new JavaProjectBuilder();
         javaDocBuilder.setEncoding(Charset.defaultCharset().toString());
         javaDocBuilder.setErrorHandler(e -> getLog().warn(e.getMessage()));
         sources.stream().map(File::new).forEach(javaDocBuilder::addSourceTree);
@@ -215,5 +215,13 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
     protected static Predicate<MappingDefinition> distinctByKey() {
         Map<Object, Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(key().apply(t), Boolean.TRUE) == null;
+    }
+
+    protected String defaultString(Integer id, String defaultString) {
+        return id == null ? defaultString : String.valueOf(id);
+    }
+
+    protected String idFromName(MappingDefinition def) {
+        return def.getName().replaceAll(" ", "");
     }
 }

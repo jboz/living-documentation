@@ -88,8 +88,13 @@ public class GlossaryNamesMapper<A extends Glossary> implements NamesMapper {
     private Link create(String name, Optional<A> annotation) {
         Link link = new Link();
         link.setLabel(name);
-        String anchor = annotation.map(annot -> String.valueOf(annot.id())).orElse(name);
+        String anchor = annotation.map(annot -> annot.id() == -1 ? linkFromName(name) : String.valueOf(annot.id()))
+                .orElse(linkFromName(name));
         link.setUrl(MessageFormat.format(linkTemplate, anchor));
         return link;
+    }
+
+    private String linkFromName(String name) {
+        return name.replaceAll(" ", "");
     }
 }

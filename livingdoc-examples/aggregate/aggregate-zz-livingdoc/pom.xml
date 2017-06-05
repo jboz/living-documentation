@@ -52,10 +52,11 @@
                 </executions>
                 <configuration>
                     <packageRoot>ch.ifocusit.livingdoc.example</packageRoot>
-                    <format>plantuml</format>
+                    <format>html</format>
                     <excludes>
                         <exclude>.*\.shared.*</exclude><!-- exclude shared package -->
                     </excludes>
+                    <diagramImageType>svg</diagramImageType>
                 </configuration>
             </plugin>
         </plugins>
