@@ -23,12 +23,15 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.mapping.MappingDefinition;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * @author Julien Boz
@@ -38,8 +41,9 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
 
     public static final String NEWLINE = System.getProperty("line.separator");
     public static final String HEARDER = "[[glossaryid-{0}]]\n=== #{0}# - {1}";
+    public static final String HEARDER_LITE = "[[glossaryid-{0}]]\n=== {1}";
 
-    @Parameter(defaultValue = HEARDER)
+    @Parameter
     private String glossaryTemplate;
 
     @Override
@@ -57,28 +61,32 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
         // regroup all mapping definition
         List<MappingDefinition> definitions = new ArrayList<>();
 
-        javaDocBuilder.getClasses().stream()
-                .filter(this::hasAnnotation) // if annotated
-                .forEach(javaClass -> {
-                    // add class entry
-                    definitions.add(map(javaClass, javaClass.getName(), javaClass.getComment()));
 
-                    // browse fields
-                    javaClass.getFields().stream()
-                            .filter(this::hasAnnotation) // if annotated
-                            .forEach(javaField -> {
-                                // add field entry
-                                definitions.add(map(javaField, javaField.getName(), javaField.getComment()));
-                            });
-                });
+        getClasses().forEach(javaClass -> {
+            // add class entry
+            definitions.add(map(javaClass, javaClass.getName(), javaClass.getComment()));
+
+            // browse fields
+            javaClass.getFields().stream()
+                    .filter(this::hasAnnotation) // if annotated
+                    .forEach(javaField -> {
+                        // add field entry
+                        definitions.add(map(javaField, javaField.getName(), javaField.getComment()));
+                    });
+        });
 
         // sort definitions before add asciidoc entries
         definitions.stream().sorted().filter(distinctByKey()).forEach(this::addGlossarEntry);
     }
 
     private void addGlossarEntry(MappingDefinition def) {
-        asciiDocBuilder.textLine(MessageFormat.format(glossaryTemplate.replace("\\r\\n", NEWLINE).replace("\\n", NEWLINE),
-                def.getId(), def.getName()));
+        String text = MessageFormat.format(def.getId() == null ? HEARDER_LITE : HEARDER, idFromName(def), def.getName());
+
+        if (StringUtils.isNotBlank(glossaryTemplate)) {
+            text = MessageFormat.format(HEARDER_LITE, defaultString(def.getId(), EMPTY), def.getName());
+        }
+
+        asciiDocBuilder.textLine(text);
         asciiDocBuilder.textLine(def.getDescription());
         asciiDocBuilder.textLine("");
     }

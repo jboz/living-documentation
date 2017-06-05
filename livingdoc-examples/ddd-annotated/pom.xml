@@ -3,9 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ch.ifocusit.livingdoc.example</groupId>
+    <parent>
+        <groupId>ch.ifocusit.livingdoc.example</groupId>
+        <artifactId>examples-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
     <artifactId>ddd-annotated</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <description>Living Documentation example in a DDD project with annotated javaClasses</description>
@@ -23,13 +27,13 @@
         </license>
     </licenses>
 
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+
         <!-- living doc deps -->
         <!-- tag::annotation-livingdoc[] -->
         <dependency>
@@ -48,40 +52,41 @@
                 <artifactId>livingdoc-maven-plugin</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <executions>
-                    <execution>
+                    <!--<execution>
                         <id>class-diagram</id>
                         <phase>package</phase>
                         <goals>
                             <goal>diagram</goal>
+                            <goal>glossary</goal>
+                            <goal>dictionary</goal>
                         </goals>
-                        <configuration>
-                            <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
-                            <onlyGlossary>true</onlyGlossary>
-                            <diagramType>plantuml</diagramType>
-                            <excludes>
-                                <exclude>.*domain.common.*</exclude>
-                            </excludes>
-                        </configuration>
-                    </execution>
+                    </execution>-->
                     <execution>
-                        <id>glossary</id>
+                        <id>cargo</id>
                         <phase>package</phase>
                         <goals>
                             <goal>glossary</goal>
                         </goals>
-                    </execution>
-                    <execution>
-                        <id>dico</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>dictionary</goal>
-                        </goals>
+                        <configuration>
+                            <packageRoot>ch.ifocusit.cargo.domain.model</packageRoot>
+                            <outputFilename>cargo-diagram</outputFilename>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
-                    <glossaryMapping>src/docs/business-glossary.csv</glossaryMapping>
-                    <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
+                    <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
+                    <onlyGlossary>true</onlyGlossary>
+                    <diagramType>plantuml</diagramType>
                     <format>html</format>
+                    <diagramOutputFormat>svg</diagramOutputFormat>
+                    <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
+                    <glossaryMapping>src/docs/business-glossary.csv</glossaryMapping>
+                    <excludes>
+                        <exclude>.*domain.common.*</exclude>
+                    </excludes>
+                    <sources>
+                        <source>src/test/java</source>
+                    </sources>
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->

@@ -2,7 +2,8 @@
 
 = Living documentation in a DDD project
 
-This a simple DDD project around the telecom aggregate
+This is a simple DDD project around the telecom aggregate.
+In this example the *business model will be translate* during the living documentation generation phase.
 
 The maven plugin is use to generate dynamically the domain class diagram.
 A simple mapping file is used to *translate the ubiquitous language* from technical names to business names.
