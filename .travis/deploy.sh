@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "running deployment script..."
+
 function setReleaseVersion {
     echo "set $1 to release version"
     if ! mvn -f $1/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit; then
