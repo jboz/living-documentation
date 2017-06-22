@@ -47,9 +47,9 @@ fi
 
 if [ "$MAKE_RELEASE" = 'true' ]; then
     # upgrade poms to final release version
-    for project in $(find . -name 'pom.xml' -printf '%h\n'); do
-        setReleaseVersion $project
-    done
+    setReleaseVersion .
+    setReleaseVersion livingdoc-annotations
+    setReleaseVersion livingdoc-maven-plugin
 else
     echo "keep snapshot version in pom.xml"
 fi
@@ -71,9 +71,9 @@ if [ "$MAKE_RELEASE" = 'true' ]; then
     git tag "$GIT_TAG" -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
 
     echo "preparing next version..."
-    for project in $(find . -name 'pom.xml' -printf '%h\n'); do
-        setNextDevVersion $project
-    done
+    setNextDevVersion .
+    setNextDevVersion livingdoc-annotations
+    setNextDevVersion livingdoc-maven-plugin
 
     NEXT_VERSION=`mvn -q exec:exec -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive`
     echo "next development version will be $NEXT_VERSION"
