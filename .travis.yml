@@ -40,5 +40,5 @@ notifications:
 
 deploy:
   provider: script
-  script: ${env.GPG_DIR}/deploy.sh
+  script: .travis/deploy.sh
   skip_cleanup: true
