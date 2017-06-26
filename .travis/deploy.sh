@@ -20,7 +20,7 @@ function setNextDevVersion {
 
 function deploy {
     echo "deploying version of $1 to maven centrale..."
-    if ! mvn -f $1/pom.xml deploy --settings .travis/settings.xml -Prelease -DskipTests=true -B -U;then
+    if ! mvn -f $1/pom.xml deploy --settings ${env.GPG_DIR}/settings.xml -Prelease -DskipTests=true -B -U;then
         echo "maven deploy failed"
         exit 1
     fi
