@@ -67,6 +67,8 @@ if [ "$MAKE_RELEASE" = 'true' ]; then
     echo "create git tag $GIT_TAG"
     git tag "$GIT_TAG" -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
 
+    git config --global push.followTags true # push commit and tag
+
     echo "preparing next version..."
     setNextDevVersion .
     setNextDevVersion livingdoc-annotations
@@ -81,7 +83,7 @@ if [ "$MAKE_RELEASE" = 'true' ]; then
 
     REPO=`git config remote.origin.url`
     echo "pushing new development version..."
-    git push --tags "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git"
+    git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" --follow-tags
 
     echo "release $PROJECT_VERSION done, tag $GIT_TAG pushed, next development version $NEXT_VERSION setted"
 fi

@@ -6,3 +6,4 @@ target
 .project
 *.cache
 *.gpg
+*.versionsBackup
