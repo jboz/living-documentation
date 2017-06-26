@@ -19,8 +19,7 @@ function setNextDevVersion {
 }
 
 function deploy {
-    ls $GPG_DIR
-    echo "deploying version of $1 to maven centrale..."
+    echo "deploying version $PROJECT_VERSION of $1 to maven centrale..."
     if ! mvn -f $1/pom.xml deploy --settings $GPG_DIR/settings.xml -Prelease -DskipTests=true -B;then
         echo "maven deploy failed"
         exit 1
