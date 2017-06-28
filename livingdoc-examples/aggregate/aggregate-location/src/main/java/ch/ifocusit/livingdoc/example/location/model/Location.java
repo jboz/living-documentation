@@ -1,6 +1,6 @@
 package ch.ifocusit.livingdoc.example.location.model;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.annotations.RootAggregate;
 import ch.ifocusit.livingdoc.example.shared.Entity;
 import org.apache.commons.lang.Validate;
@@ -12,7 +12,7 @@ import org.apache.commons.lang.Validate;
  * It is uniquely identified by a UN Locode.
  */
 @RootAggregate
-@Glossary
+@UbiquitousLanguage
 public final class Location implements Entity<Location> {
 
     /**

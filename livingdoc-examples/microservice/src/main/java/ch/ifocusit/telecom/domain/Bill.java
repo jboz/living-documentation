@@ -22,7 +22,7 @@
  */
 package ch.ifocusit.telecom.domain;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.annotations.RootAggregate;
 import ch.ifocusit.telecom.domain.access.Access;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
@@ -40,26 +40,26 @@ import java.util.Set;
  * @since 2017-03-01
  */
 @RootAggregate
-@Glossary(id = 100)
+@UbiquitousLanguage(id = 100)
 @Data
 public class Bill extends AbstractDomain {
 
     /**
      * Facturation month.
      */
-    @Glossary(id = 101)
+    @UbiquitousLanguage(id = 101)
     private YearMonth month;
 
     /**
      * Contract concerned by the bill.
      */
-    @Glossary(id = 200)
+    @UbiquitousLanguage(id = 200)
     private Contract contract;
 
     /**
      * Bill contents.
      */
-    @Glossary(id = 400)
+    @UbiquitousLanguage(id = 400)
     private Set<Access> accesses = new HashSet<>();
 
     /**

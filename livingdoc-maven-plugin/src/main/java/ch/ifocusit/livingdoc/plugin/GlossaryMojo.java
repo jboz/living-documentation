@@ -52,7 +52,7 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
 
     @Override
     protected String getTitle() {
-        return "Glossary";
+        return "UbiquitousLanguage";
     }
 
     @Override

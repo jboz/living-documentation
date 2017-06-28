@@ -1,4 +1,4 @@
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.example.cargo.model.Cargo;
 import ch.ifocusit.livingdoc.example.location.model.Location;
 import ch.ifocusit.livingdoc.example.shared.DomainEvent;
@@ -27,7 +27,7 @@ import java.util.Date;
  * <p/>
  * All other events must be of {@link HandlingEventType#RECEIVE}, {@link HandlingEventType#CLAIM} or {@link HandlingEventType#CUSTOMS}.
  */
-@Glossary
+@UbiquitousLanguage
 public final class HandlingEvent implements ch.ifocusit.livingdoc.example.sharedhandling.model.HandlingEvent<Voyage, Location, Cargo>, DomainEvent<HandlingEvent> {
 
     private HandlingEventType type;

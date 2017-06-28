@@ -1,6 +1,6 @@
 package ch.ifocusit.livingdoc.example.cargo.model;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.annotations.RootAggregate;
 import ch.ifocusit.livingdoc.example.location.model.Location;
 import ch.ifocusit.livingdoc.example.shared.DomainObjectUtils;
@@ -45,7 +45,7 @@ import org.apache.commons.lang.Validate;
  * in port etc), are captured in this aggregate.
  */
 @RootAggregate
-@Glossary
+@UbiquitousLanguage
 public class Cargo implements Entity<Cargo> {
 
     private TrackingId trackingId;

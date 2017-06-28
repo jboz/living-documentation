@@ -22,19 +22,19 @@
  */
 package ch.ifocusit.telecom.domain.access;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 
 import java.time.Duration;
 
 /**
  * Phone call type access.
  */
-@Glossary(id = 500)
+@UbiquitousLanguage(id = 500)
 public class CallAccess extends Access {
 
     /**
      * Phone call duration
      */
-    @Glossary(id = 501)
+    @UbiquitousLanguage(id = 501)
     private Duration duration;
 }

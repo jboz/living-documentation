@@ -22,7 +22,7 @@
  */
 package ch.ifocusit.telecom.domain;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
 
 import java.util.HashSet;
@@ -31,13 +31,13 @@ import java.util.Set;
 /**
  * Customer of the telecom service
  */
-@Glossary(id = 300)
+@UbiquitousLanguage(id = 300)
 public class Customer extends AbstractDomain {
 
     /**
      * Name of the customer.
      */
-    @Glossary(id = 301)
+    @UbiquitousLanguage(id = 301)
     private String name;
 
     private Set<Contract> contracts = new HashSet<>();

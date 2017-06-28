@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
-public @interface Glossary {
+public @interface UbiquitousLanguage {
 
     /**
      * Business ID. Use to link resource and optional mapping file.

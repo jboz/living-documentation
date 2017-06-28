@@ -1,6 +1,6 @@
 package ch.ifocusit.livingdoc.example.cargo.model;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.example.location.model.Location;
 import ch.ifocusit.livingdoc.example.shared.ValueObject;
 import ch.ifocusit.livingdoc.example.sharedhandling.model.HandlingEventType;
@@ -14,7 +14,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * and can be used to express predictions about what is expected to
  * happen to a cargo in the future.
  */
-@Glossary
+@UbiquitousLanguage
 public class HandlingActivity implements ValueObject<HandlingActivity> {
 
     // TODO make HandlingActivity a part of HandlingEvent too? There is some overlap.

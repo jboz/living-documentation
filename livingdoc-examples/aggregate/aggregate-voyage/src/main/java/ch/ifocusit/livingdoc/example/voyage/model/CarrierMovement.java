@@ -1,6 +1,6 @@
 package ch.ifocusit.livingdoc.example.voyage.model;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.example.location.model.Location;
 import ch.ifocusit.livingdoc.example.shared.ValueObject;
 import org.apache.commons.lang.Validate;
@@ -13,7 +13,7 @@ import java.util.Date;
 /**
  * A carrier movement is a vessel voyage from one location to another.
  */
-@Glossary
+@UbiquitousLanguage
 public final class CarrierMovement implements ValueObject<CarrierMovement> {
 
     // Null object pattern

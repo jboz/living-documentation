@@ -22,7 +22,7 @@
  */
 package ch.ifocusit.telecom.domain;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
 import lombok.Data;
 
@@ -32,7 +32,7 @@ import java.time.MonthDay;
 /**
  * Telecom contract
  */
-@Glossary(id = 200)
+@UbiquitousLanguage(id = 200)
 @Data
 public class Contract extends AbstractDomain {
 
@@ -40,19 +40,19 @@ public class Contract extends AbstractDomain {
      * Contract identifier.
      * Generate by the system and communicate to client.
      */
-    @Glossary(id = 201)
+    @UbiquitousLanguage(id = 201)
     private String id;
 
     /**
      * Contract customer.
      */
-    @Glossary(id = 300)
+    @UbiquitousLanguage(id = 300)
     private Customer customer;
 
     /**
      * Contract effect date.
      */
-    @Glossary(id = 202)
+    @UbiquitousLanguage(id = 202)
     private LocalDate effectDate;
 
     /**
@@ -60,7 +60,7 @@ public class Contract extends AbstractDomain {
      *
      * @return the contract birth date
      */
-    @Glossary(id = 203)
+    @UbiquitousLanguage(id = 203)
     public MonthDay getBirthDay() {
         return MonthDay.from(effectDate);
     }

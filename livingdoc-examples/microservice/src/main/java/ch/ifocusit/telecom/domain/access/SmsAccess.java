@@ -22,13 +22,13 @@
  */
 package ch.ifocusit.telecom.domain.access;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import lombok.Data;
 
 /**
  * SMS type access.
  */
-@Glossary(id = 600)
+@UbiquitousLanguage(id = 600)
 @Data
 public class SmsAccess extends Access {
 }

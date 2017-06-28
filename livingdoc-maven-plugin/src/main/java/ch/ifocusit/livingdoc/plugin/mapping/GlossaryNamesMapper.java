@@ -22,7 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin.mapping;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.plugin.AnnotationUtils;
 import ch.ifocusit.plantuml.classdiagram.NamesMapper;
 import ch.ifocusit.plantuml.classdiagram.model.Link;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 /**
  * @author Julien Boz
  */
-public class GlossaryNamesMapper<A extends Glossary> implements NamesMapper {
+public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesMapper {
 
     List<MappingDefinition> mappings = new ArrayList<>();
     private Class<A> annotation;
@@ -65,7 +65,7 @@ public class GlossaryNamesMapper<A extends Glossary> implements NamesMapper {
 
     @Override
     public String getClassName(Class aClass) {
-        int id = AnnotationUtils.tryFind(aClass, annotation).map(Glossary::id).orElse(-1);
+        int id = AnnotationUtils.tryFind(aClass, annotation).map(UbiquitousLanguage::id).orElse(-1);
         return getName(id).orElse(NamesMapper.super.getClassName(aClass));
     }
 
@@ -76,7 +76,7 @@ public class GlossaryNamesMapper<A extends Glossary> implements NamesMapper {
 
     @Override
     public String getFieldName(Field field) {
-        int id = AnnotationUtils.tryFind(field, annotation).map(Glossary::id).orElse(-1);
+        int id = AnnotationUtils.tryFind(field, annotation).map(UbiquitousLanguage::id).orElse(-1);
         return getName(id).orElse(NamesMapper.super.getFieldName(field));
     }
 

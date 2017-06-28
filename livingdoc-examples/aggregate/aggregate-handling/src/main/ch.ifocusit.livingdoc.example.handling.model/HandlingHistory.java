@@ -1,4 +1,4 @@
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.example.shared.ValueObject;
 import org.apache.commons.lang.Validate;
 
@@ -9,7 +9,7 @@ import static java.util.Collections.sort;
 /**
  * The handling history of a cargo.
  */
-@Glossary
+@UbiquitousLanguage
 public class HandlingHistory implements ch.ifocusit.livingdoc.example.sharedhandling.model.HandlingHistory, ValueObject<HandlingHistory> {
 
     private static final Comparator<HandlingEvent> BY_COMPLETION_TIME_COMPARATOR =

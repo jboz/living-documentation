@@ -1,6 +1,6 @@
 package ch.ifocusit.livingdoc.example.voyage.model;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.example.shared.ValueObject;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * A voyage schedule.
  */
-@Glossary
+@UbiquitousLanguage
 public class Schedule implements ValueObject<Schedule> {
 
     public static final Schedule EMPTY = new Schedule();

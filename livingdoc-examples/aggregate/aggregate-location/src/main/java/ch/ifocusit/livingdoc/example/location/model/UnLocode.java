@@ -1,6 +1,6 @@
 package ch.ifocusit.livingdoc.example.location.model;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.example.shared.ValueObject;
 import org.apache.commons.lang.Validate;
 
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  *
  * http://www.unece.org/cefact/locode/DocColumnDescription.htm#LOCODE
  */
-@Glossary
+@UbiquitousLanguage
 public final class UnLocode implements ValueObject<UnLocode> {
 
     // Country code is exactly two letters.

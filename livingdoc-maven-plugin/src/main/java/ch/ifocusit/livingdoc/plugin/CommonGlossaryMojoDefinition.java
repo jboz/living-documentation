@@ -68,13 +68,13 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
     private List<String> sources;
 
     /**
-     * Annotation used to comment classes that will be included in the glossary (default: Glossary)
+     * Annotation used to comment classes that will be included in the glossary (default: UbiquitousLanguage)
      */
-    @Parameter(defaultValue = "Glossary")
+    @Parameter(defaultValue = "UbiquitousLanguage")
     private String annotation;
 
     /**
-     * File to use for Glossary mapping.
+     * File to use for UbiquitousLanguage mapping.
      */
     @Parameter
     private File glossaryMapping;

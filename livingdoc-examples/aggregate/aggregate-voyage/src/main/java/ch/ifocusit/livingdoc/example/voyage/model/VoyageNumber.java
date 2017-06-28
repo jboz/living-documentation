@@ -1,13 +1,13 @@
 package ch.ifocusit.livingdoc.example.voyage.model;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.example.shared.ValueObject;
 import org.apache.commons.lang.Validate;
 
 /**
  * Identifies a voyage.
  */
-@Glossary
+@UbiquitousLanguage
 public class VoyageNumber implements ValueObject<VoyageNumber> {
 
     private String number;

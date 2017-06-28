@@ -22,7 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.plugin.diagram.PlantumlClassDiagramBuilder;
 import ch.ifocusit.livingdoc.plugin.domain.Cluster;
 import ch.ifocusit.livingdoc.plugin.domain.Color;
@@ -64,7 +64,7 @@ public class DiagramMojo extends CommonMojoDefinition {
     private DiagramImageType diagramImageType;
 
     /**
-     * Extract only class/field/method annotated with @Glossary
+     * Extract only class/field/method annotated with @UbiquitousLanguage
      */
     @Parameter(defaultValue = "false")
     private boolean onlyGlossary = false;
@@ -76,7 +76,7 @@ public class DiagramMojo extends CommonMojoDefinition {
     private boolean withLink = true;
 
     /**
-     * File to use for Glossary mapping.
+     * File to use for UbiquitousLanguage mapping.
      */
     @Parameter
     private File glossaryMapping;
@@ -173,10 +173,10 @@ public class DiagramMojo extends CommonMojoDefinition {
                 PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes,
                         rootAggregateColor, header, footer);
                 if (onlyGlossary) {
-                    builder.filterOnAnnotation(Glossary.class);
+                    builder.filterOnAnnotation(UbiquitousLanguage.class);
                 }
                 if (withLink && !DiagramImageType.png.equals(diagramImageType)) {
-                    builder.mapNames(glossaryMapping, Glossary.class, linkTemplate);
+                    builder.mapNames(glossaryMapping, UbiquitousLanguage.class, linkTemplate);
                 }
                 return builder.generate();
             default:

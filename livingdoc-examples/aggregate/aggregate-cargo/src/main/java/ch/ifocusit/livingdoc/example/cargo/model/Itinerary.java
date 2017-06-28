@@ -1,6 +1,6 @@
 package ch.ifocusit.livingdoc.example.cargo.model;
 
-import ch.ifocusit.livingdoc.annotations.Glossary;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.example.location.model.Location;
 import ch.ifocusit.livingdoc.example.shared.ValueObject;
 import ch.ifocusit.livingdoc.example.sharedhandling.model.HandlingEvent;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * An itinerary.
  */
-@Glossary
+@UbiquitousLanguage
 public class Itinerary implements ValueObject<Itinerary> {
 
     static final Itinerary EMPTY_ITINERARY = new Itinerary();
