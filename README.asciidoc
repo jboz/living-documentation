@@ -89,7 +89,7 @@ SMS type access.
 <plugin>
     <groupId>ch.ifocusit.livingdoc</groupId>
     <artifactId>livingdoc-maven-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1</version>
     <executions>
         <execution>
             <id>class-diagram</id>
@@ -102,7 +102,6 @@ SMS type access.
     </executions>
     <configuration>
         <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
-        <diagramType>plantuml</diagramType>
         <interactive>true</interactive>
         <excludes>
             <exclude>.*domain.common.*</exclude>
