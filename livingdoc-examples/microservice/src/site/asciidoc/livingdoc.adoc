@@ -5,13 +5,9 @@ _Micro service around the Bill aggregate_
 [[conception]]
 == Conception
 
-plantuml::{generated}/diagram.plantuml[format=svg, opts=interactive]
+include::{generated}/diagram.adoc[]
 
 [[glossary]]
 == Glossary
 
 include::{generated}/glossary.adoc[]
-
-== Feature
-
-gherkin::{bdd-dir}/billing.feature[]

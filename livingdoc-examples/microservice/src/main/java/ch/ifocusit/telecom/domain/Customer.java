@@ -24,8 +24,7 @@ package ch.ifocusit.telecom.domain;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -36,8 +35,7 @@ import java.util.Set;
  * @author Julien Boz
  */
 @UbiquitousLanguage(id = 300)
-@Getter
-@Setter
+@Data
 public class Customer extends AbstractDomain {
 
     /**
