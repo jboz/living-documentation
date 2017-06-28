@@ -14,13 +14,6 @@
         <artifactId>maven-fluido-skin</artifactId>
         <version>1.2.1</version>
     </skin>
-    <custom>
-        <fluidoSkin>
-            <sideBarEnabled>true</sideBarEnabled>
-            <googlePlusOne/>
-        </fluidoSkin>
-    </custom>
-
 
     <body>
         <links>
