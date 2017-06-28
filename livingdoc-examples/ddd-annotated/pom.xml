@@ -39,7 +39,6 @@
         <dependency>
             <groupId>ch.ifocusit.livingdoc</groupId>
             <artifactId>livingdoc-annotations</artifactId>
-            <version>1.2-SNAPSHOT</version>
         </dependency>
         <!-- end::annotation-livingdoc[] -->
     </dependencies>
@@ -50,9 +49,8 @@
             <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
-                <version>1.1-SNAPSHOT</version>
                 <executions>
-                    <!--<execution>
+                    <execution>
                         <id>class-diagram</id>
                         <phase>package</phase>
                         <goals>
@@ -60,17 +58,6 @@
                             <goal>glossary</goal>
                             <goal>dictionary</goal>
                         </goals>
-                    </execution>-->
-                    <execution>
-                        <id>cargo</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>glossary</goal>
-                        </goals>
-                        <configuration>
-                            <packageRoot>ch.ifocusit.cargo.domain.model</packageRoot>
-                            <outputFilename>cargo-diagram</outputFilename>
-                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
@@ -78,15 +65,12 @@
                     <onlyGlossary>true</onlyGlossary>
                     <diagramType>plantuml</diagramType>
                     <format>html</format>
-                    <diagramOutputFormat>svg</diagramOutputFormat>
+                    <interactive>true</interactive>
                     <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
                     <glossaryMapping>src/docs/business-glossary.csv</glossaryMapping>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>
-                    <sources>
-                        <source>src/test/java</source>
-                    </sources>
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->

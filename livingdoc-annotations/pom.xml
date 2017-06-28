@@ -5,11 +5,11 @@
 
     <groupId>ch.ifocusit.livingdoc</groupId>
     <artifactId>livingdoc-annotations</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Living Documentation annotations</name>
-    <description>Annotations to use in real life projects to generate living documentation</description>
+    <description>Annotations to help to generate a nice living documentation</description>
     <url>https://github.com/jboz/living-documentation</url>
     <inceptionYear>2017</inceptionYear>
 

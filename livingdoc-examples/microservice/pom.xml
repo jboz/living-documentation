@@ -95,7 +95,6 @@
         <dependency>
             <groupId>ch.ifocusit.livingdoc</groupId>
             <artifactId>livingdoc-annotations</artifactId>
-            <version>1.2-SNAPSHOT</version>
         </dependency>
         <!-- end::annotation-livingdoc[] -->
     </dependencies>
@@ -106,7 +105,6 @@
             <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
-                <version>1.1-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>class-diagram-domain</id>
@@ -125,9 +123,9 @@
                         <exclude>.*\.domain.common\..*</exclude>
                         <exclude>.*JAXRSConfiguration</exclude>
                     </excludes>
-                    <diagramOutputFormat>svg</diagramOutputFormat>
+                    <interactive>true</interactive>
                     <!-- link template defined here to match with the link definition in diagram -->
-                    <linkTemplate>../../livingdoc.html#glossaryid-{0}</linkTemplate>
+                    <linkTemplate>../../livingdoc.html#glossaryid-{0}</linkTemplate><!-- relative link from svg diagram, so level up -->
                     <glossaryTemplate>\n\n[[glossaryid-{0}]]\n=== {1} ^{0}^</glossaryTemplate>
                 </configuration>
             </plugin>

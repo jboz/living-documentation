@@ -34,21 +34,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>ch.ifocusit.livingdoc.example</groupId>
-            <artifactId>ddd-annotated</artifactId>
-            <version>1.1-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <!-- tag::plugin-livingdoc[] -->
-            <!--<plugin>
+            <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>class-diagram</id>
@@ -67,47 +58,6 @@
                         <exclude>.*domain.common.*</exclude>
                     </excludes>
                 </configuration>
-            </plugin>-->
-            <plugin>
-                <groupId>ch.ifocusit.livingdoc</groupId>
-                <artifactId>livingdoc-maven-plugin</artifactId>
-                <version>1.1-SNAPSHOT</version>
-                <executions>
-                    <!--<execution>
-                        <id>cargo-diag</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>diagram</goal>
-                        </goals>
-                        <configuration>
-                            <outputFilename>cargo-diagram</outputFilename>
-                            <onlyGlossary>false</onlyGlossary>
-                            <withLink>false</withLink>
-                        </configuration>
-                    </execution>-->
-                    <execution>
-                        <id>cargo-gloss</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>glossary</goal>
-                        </goals>
-                        <configuration>
-                            <outputFilename>cargo-glossary</outputFilename>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <packageRoot>ch.ifocusit.cargo.domain.model</packageRoot>
-                    <diagramType>plantuml</diagramType>
-                    <outputDirectory>${build.directory}</outputDirectory>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>ch.ifocusit.livingdoc.example</groupId>
-                        <artifactId>ddd-annotated</artifactId>
-                        <version>1.1-SNAPSHOT</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <!-- end::plugin-livingdoc[] -->
         </plugins>

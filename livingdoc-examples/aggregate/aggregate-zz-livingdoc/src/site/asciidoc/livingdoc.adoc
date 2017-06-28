@@ -1,0 +1,13 @@
+_Aggregate different domain into one living documentation_
+
+= Many domains
+
+[[conception]]
+== Conception
+
+include::{generated}/diagram.adoc[]
+
+[[glossary]]
+== Glossary
+
+include::{generated}/glossary.adoc[]

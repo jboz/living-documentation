@@ -31,6 +31,16 @@
         </license>
     </licenses>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ch.ifocusit.livingdoc</groupId>
+                <artifactId>livingdoc-annotations</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <modules>
         <module>ddd</module>
         <module>ddd-annotated</module>
@@ -60,5 +70,14 @@
                 </executions>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>ch.ifocusit.livingdoc</groupId>
+                    <artifactId>livingdoc-maven-plugin</artifactId>
+                    <version>${project.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>

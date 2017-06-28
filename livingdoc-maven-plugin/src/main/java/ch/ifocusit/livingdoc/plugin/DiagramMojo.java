@@ -32,6 +32,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
 import java.util.List;
@@ -39,7 +40,7 @@ import java.util.List;
 /**
  * @author Julien Boz
  */
-@Mojo(name = "diagram")
+@Mojo(name = "diagram", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
 public class DiagramMojo extends CommonMojoDefinition {
 
     private static final Color DEFAULT_ROOT_COLOR = Color.from("wheat", null);

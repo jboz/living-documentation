@@ -24,6 +24,7 @@ package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.mapping.MappingDefinition;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ import static com.google.common.collect.Lists.newArrayList;
 /**
  * @author Julien Boz
  */
-@Mojo(name = "dictionary")
+@Mojo(name = "dictionary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
 public class DictionaryMojo extends CommonGlossaryMojoDefinition {
 
     @Override

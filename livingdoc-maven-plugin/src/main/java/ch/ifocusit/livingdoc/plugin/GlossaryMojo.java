@@ -26,22 +26,21 @@ import ch.ifocusit.livingdoc.plugin.mapping.MappingDefinition;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-
 /**
  * @author Julien Boz
  */
-@Mojo(name = "glossary")
+@Mojo(name = "glossary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
 public class GlossaryMojo extends CommonGlossaryMojoDefinition {
 
     public static final String NEWLINE = System.getProperty("line.separator");
-    public static final String HEARDER = "[[glossaryid-{0}]]\n=== #{0}# - {1}";
-    public static final String HEARDER_LITE = "[[glossaryid-{0}]]\n=== {1}";
+    public static final String HEADER = "[[glossaryid-{0}]]\n=== #{0}# - {1}";
+    public static final String HEADER_LITE = "[[glossaryid-{0}]]\n=== {1}";
 
     @Parameter
     private String glossaryTemplate;
@@ -61,7 +60,6 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
         // regroup all mapping definition
         List<MappingDefinition> definitions = new ArrayList<>();
 
-
         getClasses().forEach(javaClass -> {
             // add class entry
             definitions.add(map(javaClass, javaClass.getName(), javaClass.getComment()));
@@ -80,13 +78,14 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
     }
 
     private void addGlossarEntry(MappingDefinition def) {
-        String text = MessageFormat.format(def.getId() == null ? HEARDER_LITE : HEARDER, idFromName(def), def.getName());
+        String text = MessageFormat.format(def.getId() == null ? HEADER_LITE : HEADER,
+                defaultString(def.getId(), idFromName(def)), def.getName());
 
         if (StringUtils.isNotBlank(glossaryTemplate)) {
-            text = MessageFormat.format(HEARDER_LITE, defaultString(def.getId(), EMPTY), def.getName());
+            text = MessageFormat.format(glossaryTemplate, defaultString(def.getId(), idFromName(def)), def.getName());
         }
 
-        asciiDocBuilder.textLine(text);
+        asciiDocBuilder.textLine(text.replace("\\r\\n", NEWLINE).replace("\\n", NEWLINE));
         asciiDocBuilder.textLine(def.getDescription());
         asciiDocBuilder.textLine("");
     }

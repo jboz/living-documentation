@@ -34,5 +34,19 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
 public @interface Glossary {
 
-    public int id() default -1;
+    /**
+     * Business ID. Use to link resource and optional mapping file.
+     */
+    int id() default -1;
+
+    /**
+     * Business name.
+     */
+    String name() default "";
+
+    /**
+     * Business description.
+     */
+    String description() default "";
+
 }

@@ -13,11 +13,35 @@
     <artifactId>aggregate</artifactId>
     <packaging>pom</packaging>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ch.ifocusit.livingdoc.example</groupId>
+                <artifactId>aggregate-cargo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.ifocusit.livingdoc.example</groupId>
+                <artifactId>aggregate-handling</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.ifocusit.livingdoc.example</groupId>
+                <artifactId>aggregate-location</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.ifocusit.livingdoc.example</groupId>
+                <artifactId>aggregate-voyage</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>ch.ifocusit.livingdoc</groupId>
             <artifactId>livingdoc-annotations</artifactId>
-            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
