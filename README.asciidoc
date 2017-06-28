@@ -4,19 +4,18 @@ image:https://travis-ci.org/jboz/living-documentation.svg?branch=master["Build S
 image:https://img.shields.io/badge/PRs-welcome-brightgreen.svg["Make a pull request", link="http://makeapullrequest.com"]
 image:https://img.shields.io/github/license/jboz/living-documentation.svg[License]
 
+Read CONTRIBUTING file to contrib and check the the backlog on the trello board : https://trello.com/b/pabtQSZG/living-documentation
+
 = Living documentation tools
 
-This project is intented to provide some tools to allow a nice Living Documentation.
+This project is intended to provide some tools to allow a nice Living Documentation.
 
 _Inspired by https://livingdocumentation.github.io/livingdoc-maven-plugin/intro.html_
 
-See examples to show the powerfull !
-
-You'll be able to generate beautiful diagrams with a simple configuration.
-
+See examples to show the powerfull ! You'll be able to generate beautiful diagrams with a simple configuration.
 Create a living documentation from the code automatically. Easily customizable.
 
-Trello board: https://trello.com/b/pabtQSZG/living-documentation
+With or without annotations.
 
 == Generate a conception diagram
 image::conception-diagram.png[Asciidoctor Diagram javaClasses diagram]
