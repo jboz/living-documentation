@@ -154,7 +154,7 @@
                 </executions>
                 <configuration>
                     <outputDirectory>${livingdoc.output}</outputDirectory>
-                    <format>asciidoc</format>
+                    <format>plantuml</format>
                     <packageRoot>ch.ifocusit.telecom</packageRoot>
                     <excludes>
                         <exclude>.*\.domain.common\..*</exclude>
@@ -166,37 +166,9 @@
                     <glossaryTemplate>\n\n[[glossaryid-{0}]]\n=== {1} ^{0}^</glossaryTemplate>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-site-plugin</artifactId>
-                <configuration>
-                    <skipDeploy>true</skipDeploy>
-                    <asciidoc>
-                        <requires>
-                            <require>asciidoctor-diagram</require>
-                        </requires>
-                        <attributes>
-                            <generated>${livingdoc.output}</generated>
-                            <imagesoutdir>${project.build.directory}/site/images/generated</imagesoutdir>
-                            <imagesdir>./images/generated</imagesdir>
-                        </attributes>
-                    </asciidoc>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctor-maven-plugin</artifactId>
-                        <version>1.5.5</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctorj-diagram</artifactId>
-                        <version>1.5.4</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
             <!-- end::plugin-livingdoc[] -->
 
-            <plugin>
+            <!--<plugin>
                 <groupId>com.github.cukedoctor</groupId>
                 <artifactId>cukedoctor-maven-plugin</artifactId>
                 <version>1.0.6</version>
@@ -214,7 +186,7 @@
                         <phase>prepare-package</phase>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
 
             <!-- tag::plugin-asciidoctor[] -->
             <plugin>
@@ -239,8 +211,6 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <sourceDirectory>${project.basedir}/src/main/docs</sourceDirectory>
-                    <sourceDocumentName>index.adoc</sourceDocumentName>
                     <backend>html5</backend>
                     <outputDirectory>${build.directory}/docs</outputDirectory>
                     <requires>
@@ -255,7 +225,7 @@
                         <sectlinks/>
                         <sectanchors>true</sectanchors>
                         <generated>${livingdoc.output}</generated>
-                        <bdd-dir>${project.basedir}/src/test/resources/features</bdd-dir>
+                        <featuresDirectory>${project.basedir}/src/test/resources/features</featuresDirectory>
                     </attributes>
                 </configuration>
                 <executions>
@@ -304,25 +274,6 @@
                         <version>1.0.1</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>com.github.github</groupId>
-                <artifactId>site-maven-plugin</artifactId>
-                <version>0.5</version>
-                <configuration>
-                    <message>Building site for ${project.version}</message>
-                    <path>${project.version}</path>
-                    <merge>true</merge>
-                    <server>github</server>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>site</goal>
-                        </goals>
-                        <phase>site-deploy</phase>
-                    </execution>
-                </executions>
             </plugin>-->
             <!-- end::plugin-integration-site[] -->
         </plugins>
