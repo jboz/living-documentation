@@ -43,18 +43,18 @@ public abstract class Access extends AbstractDomain {
     /**
      * Phone number used.
      */
-    @Glossary(id = 401)
+    @UbiquitousLanguage(id = 401)
     private String phoneNumber;
 
     /**
      * Price of use of the service.
      */
-    @Glossary(id = 402)
+    @UbiquitousLanguage(id = 402)
     private BigDecimal price;
 
     /**
      * Timestamp of use.
      */
-    @Glossary(id = 403)
+    @UbiquitousLanguage(id = 403)
     private ZonedDateTime dateTime = ZonedDateTime.now();
 }
