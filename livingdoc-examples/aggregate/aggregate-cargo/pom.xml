@@ -7,7 +7,7 @@
     <parent>
         <artifactId>aggregate</artifactId>
         <groupId>ch.ifocusit.livingdoc.example</groupId>
-        <version>1.1-SNAPSHOT</version>
+        <version>1.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>aggregate-cargo</artifactId>
@@ -16,22 +16,22 @@
         <dependency>
             <groupId>ch.ifocusit.livingdoc.example</groupId>
             <artifactId>aggregate-shared</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ch.ifocusit.livingdoc.example</groupId>
             <artifactId>aggregate-location</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ch.ifocusit.livingdoc.example</groupId>
             <artifactId>aggregate-voyage</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ch.ifocusit.livingdoc.example</groupId>
             <artifactId>aggregate-sharedhandling</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
