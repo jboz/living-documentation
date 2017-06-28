@@ -20,25 +20,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.access;
-
-import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.time.Duration;
+package ch.ifocusit.telecom.glue;
 
 /**
- * Phone call type access.
+ * @author Julien Boz
  */
-@UbiquitousLanguage(id = 500)
-@Getter
-@Setter
-public class CallAccess extends Access {
-
-    /**
-     * Phone call duration
-     */
-    @UbiquitousLanguage(id = 501)
-    private Duration duration;
+public final class Commons {
+    public static final String PHONE = "(\\d{3} \\d{3} \\d{2} \\d{2})";
+    public static final String MOMENT = "(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2})";
+    public static final String MONTH = "(\\d{4}-\\d{2})";
 }
