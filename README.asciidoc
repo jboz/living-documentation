@@ -89,7 +89,7 @@ SMS type access.
 <plugin>
     <groupId>ch.ifocusit.livingdoc</groupId>
     <artifactId>livingdoc-maven-plugin</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <executions>
         <execution>
             <id>class-diagram</id>
