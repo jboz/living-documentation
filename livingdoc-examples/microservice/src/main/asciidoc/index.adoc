@@ -12,10 +12,14 @@ plantuml::{generated}/diagram.plantuml[format=svg, opts=interactive]
 
 include::{generated}/glossary.adoc[]
 
-== Feature
+== Feature with cukedoctor
 
 include::{generated}/cucumber.adoc[]
 
-== Feature
+== Feature simple gherkin
 
 gherkin::../../test/resources/features/billing.feature[]
+
+== Feature custom gherkin
+
+gherkin::../../test/resources/features/billing.feature[gherkintemplate.erb]

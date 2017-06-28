@@ -1,0 +1,8 @@
+.<%= feature['name'] %>
+|====
+<%if feature.key?('scenarios') %><% feature['scenarios'].each do |scenario| %>| <%= scenario['name'] %>
+    <% end %>
+<% else %>
+    | Nothing to show.
+<% end %>
+|====

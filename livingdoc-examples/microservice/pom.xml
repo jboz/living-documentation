@@ -168,7 +168,7 @@
             </plugin>
             <!-- end::plugin-livingdoc[] -->
 
-            <!--<plugin>
+            <plugin>
                 <groupId>com.github.cukedoctor</groupId>
                 <artifactId>cukedoctor-maven-plugin</artifactId>
                 <version>1.0.6</version>
@@ -186,7 +186,7 @@
                         <phase>prepare-package</phase>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
 
             <!-- tag::plugin-asciidoctor[] -->
             <plugin>
