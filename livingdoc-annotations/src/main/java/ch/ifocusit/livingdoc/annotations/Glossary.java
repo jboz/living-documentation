@@ -20,25 +20,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.access;
+package ch.ifocusit.livingdoc.annotations;
 
-import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.time.Duration;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Phone call type access.
+ * @author Julien Boz
  */
-@UbiquitousLanguage(id = 500)
-@Getter
-@Setter
-public class CallAccess extends Access {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD})
+public @interface Glossary {
 
     /**
-     * Phone call duration
+     * Business ID. Use to link resource and optional mapping file.
      */
-    @UbiquitousLanguage(id = 501)
-    private Duration duration;
+    int id() default -1;
+
+    /**
+     * Business name.
+     */
+    String name() default "";
+
+    /**
+     * Business description.
+     */
+    String description() default "";
+
 }
