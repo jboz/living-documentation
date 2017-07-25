@@ -30,6 +30,7 @@
         <menu name="Living Documentation" ref="livingdoc.html">
             <item name="Conception" href="livingdoc.html#conception"/>
             <item name="Glossary" href="livingdoc.html#glossary"/>
+            <item name="Features" href="livingdoc.html#gherkin"/>
         </menu>
     </body>
 </project>

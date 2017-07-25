@@ -102,6 +102,11 @@
             <artifactId>asciidoctorj-diagram</artifactId>
             <version>1.5.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.domgold.doctools.asciidoctor</groupId>
+            <artifactId>asciidoctor-gherkin-extension</artifactId>
+            <version>1.0.1</version>
+        </dependency>
 
         <!-- tools -->
         <dependency>

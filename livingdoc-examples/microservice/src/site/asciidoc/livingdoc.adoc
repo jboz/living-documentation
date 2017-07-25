@@ -5,9 +5,14 @@ _Micro service around the Bill aggregate_
 [[conception]]
 == Conception
 
-include::{generated}/diagram.adoc[]
+plantuml::{generated}/diagram.plantuml[format=svg, opts=interactive]
 
 [[glossary]]
 == Glossary
 
 include::{generated}/glossary.adoc[]
+
+[[gherkin]]
+== Feature
+
+include::{generated}/gherkin.adoc[]

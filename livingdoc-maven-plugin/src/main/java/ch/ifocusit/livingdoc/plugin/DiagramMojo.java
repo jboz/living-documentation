@@ -108,13 +108,13 @@ public class DiagramMojo extends CommonMojoDefinition {
     /**
      * Header of the diagram
      */
-    @Parameter(defaultValue = "src/main/docs/diagram.header")
+    @Parameter(defaultValue = "src/main/livingdoc/diagram.header")
     private File header;
 
     /**
      * Footer of the diagram
      */
-    @Parameter(defaultValue = "src/main/docs/diagram.footer")
+    @Parameter(defaultValue = "src/main/livingdoc/diagram.footer")
     private File footer;
 
     @Parameter(defaultValue = "false")
