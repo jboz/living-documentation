@@ -150,7 +150,8 @@
                         <goals>
                             <goal>diagram</goal>
                             <goal>glossary</goal>
-                            <goal>gherkin</goal>
+                            <!--<goal>gherkin</goal>-->
+                            <goal>cucumber</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -170,7 +171,7 @@
             </plugin>
             <!-- end::plugin-livingdoc[] -->
 
-            <plugin>
+            <!--<plugin>
                 <groupId>com.github.cukedoctor</groupId>
                 <artifactId>cukedoctor-maven-plugin</artifactId>
                 <version>1.0.6</version>
@@ -188,10 +189,10 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
 
             <!-- tag::plugin-asciidoctor[] -->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>1.5.5</version>
@@ -238,11 +239,11 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <!-- end::plugin-asciidoctor[] -->
 
             <!-- tag::plugin-integration-site[] -->
-            <plugin>
+            <!--<plugin>
                 <artifactId>maven-site-plugin</artifactId>
                 <configuration>
                     <skipDeploy>true</skipDeploy>
@@ -274,7 +275,7 @@
                         <version>1.0.1</version>
                     </dependency>
                 </dependencies>
-            </plugin>
+            </plugin>-->
             <!-- end::plugin-integration-site[] -->
         </plugins>
     </build>

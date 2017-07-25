@@ -107,6 +107,11 @@
             <artifactId>asciidoctor-gherkin-extension</artifactId>
             <version>1.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.cukedoctor</groupId>
+            <artifactId>cukedoctor-maven-plugin</artifactId>
+            <version>1.0.6</version>
+        </dependency>
 
         <!-- tools -->
         <dependency>
