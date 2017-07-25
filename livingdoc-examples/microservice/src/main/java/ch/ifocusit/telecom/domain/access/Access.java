@@ -24,9 +24,7 @@ package ch.ifocusit.telecom.domain.access;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -35,9 +33,7 @@ import java.time.ZonedDateTime;
  * Use of telecom service.
  */
 @UbiquitousLanguage(id = 400)
-@Getter
-@Setter
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
+@Data
 public abstract class Access extends AbstractDomain {
 
     /**

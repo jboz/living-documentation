@@ -52,7 +52,7 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
 
     @Override
     protected String getTitle() {
-        return "UbiquitousLanguage";
+        return "Glossary";
     }
 
     @Override
@@ -87,6 +87,6 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
 
         asciiDocBuilder.textLine(text.replace("\\r\\n", NEWLINE).replace("\\n", NEWLINE));
         asciiDocBuilder.textLine(def.getDescription());
-        asciiDocBuilder.textLine("");
+        asciiDocBuilder.textLine(StringUtils.EMPTY);
     }
 }
