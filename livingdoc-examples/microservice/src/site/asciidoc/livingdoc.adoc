@@ -12,6 +12,7 @@ plantuml::{generated}/diagram.plantuml[format=svg, opts=interactive]
 
 include::{generated}/glossary.adoc[]
 
+[[gherkin]]
 == Feature
 
-gherkin::{bdd-dir}/billing.feature[]
+include::{generated}/gherkin.adoc[]

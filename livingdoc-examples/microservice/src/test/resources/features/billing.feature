@@ -1,7 +1,7 @@
 Feature: Billing content
 
   In order to be *informed*
-  As a telecom customer
+  As a _telecom customer_
   I want to show mensual reporting
 
   Scenario: show service access details

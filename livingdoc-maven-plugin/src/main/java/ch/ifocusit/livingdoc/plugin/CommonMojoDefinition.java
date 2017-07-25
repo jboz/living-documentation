@@ -76,9 +76,6 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
     @Parameter(defaultValue = "html")
     protected Format format;
 
-    @Parameter
-    protected Template template;
-
     public enum Format {
         asciidoc, adoc, html, plantuml
     }

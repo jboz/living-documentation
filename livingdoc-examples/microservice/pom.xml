@@ -149,6 +149,7 @@
                         <goals>
                             <goal>diagram</goal>
                             <goal>glossary</goal>
+                            <goal>gherkin</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -162,7 +163,8 @@
                     </excludes>
                     <interactive>true</interactive>
                     <!-- link template defined here to match with the link definition in diagram -->
-                    <linkTemplate>../../livingdoc.html#glossaryid-{0}</linkTemplate><!-- relative link from svg diagram, so level up -->
+                    <linkTemplate>../../livingdoc.html#glossaryid-{0}
+                    </linkTemplate><!-- relative link from svg diagram, so level up -->
                     <glossaryTemplate>\n\n[[glossaryid-{0}]]\n=== {1} ^{0}^</glossaryTemplate>
                 </configuration>
             </plugin>
@@ -180,10 +182,10 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <phase>${livingdoc.phase}</phase>
                         <goals>
                             <goal>execute</goal>
                         </goals>
-                        <phase>prepare-package</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -225,7 +227,6 @@
                         <sectlinks/>
                         <sectanchors>true</sectanchors>
                         <generated>${livingdoc.output}</generated>
-                        <featuresDirectory>${project.basedir}/src/test/resources/features</featuresDirectory>
                     </attributes>
                 </configuration>
                 <executions>
@@ -241,7 +242,7 @@
             <!-- end::plugin-asciidoctor[] -->
 
             <!-- tag::plugin-integration-site[] -->
-            <!--<plugin>
+            <plugin>
                 <artifactId>maven-site-plugin</artifactId>
                 <configuration>
                     <skipDeploy>true</skipDeploy>
@@ -253,7 +254,6 @@
                             <imagesoutdir>${project.build.directory}/site/images/generated</imagesoutdir>
                             <imagesdir>./images/generated</imagesdir>
                             <generated>${livingdoc.output}</generated>
-                            <bdd-dir>${project.basedir}/src/test/resources/features</bdd-dir>
                         </attributes>
                     </asciidoc>
                 </configuration>
@@ -274,7 +274,7 @@
                         <version>1.0.1</version>
                     </dependency>
                 </dependencies>
-            </plugin>-->
+            </plugin>
             <!-- end::plugin-integration-site[] -->
         </plugins>
     </build>
