@@ -133,6 +133,8 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
 
     /**
      * Implementation main method.
+     *
+     * @param domainObjects : objects to serialize, already sorted and filtered
      */
     protected abstract void executeMojo(Stream<DomainObject> domainObjects);
 

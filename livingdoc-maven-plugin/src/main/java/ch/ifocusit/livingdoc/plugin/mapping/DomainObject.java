@@ -57,8 +57,8 @@ public class DomainObject implements Comparable<DomainObject> {
     }
 
     /**
-     * The full name of a domain object is it's qualified name like Class.field.</br>
-     * If the domain object is mapped, i.e. it has been translated by a business glossary file, then the fullName is only the translated name.</br>
+     * The full name of a domain object is it's qualified name like Class.field.
+     * If the domain object is mapped, i.e. it has been translated by a business glossary file, then the fullName is only the translated name.
      * Parent class name is not showed because the field should already be fully qualified by it's translation.
      *
      * @return the full name as it will be represented in the glossary.

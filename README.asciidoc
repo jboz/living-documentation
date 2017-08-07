@@ -17,11 +17,10 @@ Create a living documentation from the code automatically. Easily customizable.
 
 With or without annotations.
 
-== Generate a conception diagram
+== Generate a conception diagram (svg format with link supported !)
 image::conception-diagram.png[Asciidoctor Diagram javaClasses diagram]
 
-
-== And a business glossary (with asciidoc syntax)
+== And a business glossary (with asciidoc syntax, also in table format)
 
 [[glossaryid-100]]
 === Bill ^100^
@@ -82,7 +81,7 @@ Phone call duration
 === SmsAccess ^600^
 SMS type access.
 
-== Maven configuration :
+== With a light maven configuration :
 [source,xml]
 ----
 <plugin>
@@ -109,6 +108,6 @@ SMS type access.
 </plugin>
 ----
 
-See https://github.com/jboz/living-documentation/tree/master/livingdoc-examples[livingdoc-examples] for more uses cases.
+See *https://github.com/jboz/living-documentation/tree/master/livingdoc-examples[livingdoc-examples]* for more uses cases.
 
 You can also integrate gherkin files like this example : link:images/example_microservice_index.html.png[Microservice example generated index file]

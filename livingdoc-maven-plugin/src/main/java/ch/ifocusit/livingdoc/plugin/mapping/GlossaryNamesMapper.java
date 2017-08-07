@@ -81,7 +81,10 @@ public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesM
     }
 
     /**
-     * equilvalent to {@link DomainObject#getFullName()}
+     * Equilvalent to {@link DomainObject#getFullName()}
+     *
+     * @param field : java field to treat
+     * @return fully classified field name (i.e. ParentClassName.fieldName string)
      */
     public String getFieldFullName(Field field) {
         return field.getDeclaringClass().getSimpleName() + "." + field.getName();
