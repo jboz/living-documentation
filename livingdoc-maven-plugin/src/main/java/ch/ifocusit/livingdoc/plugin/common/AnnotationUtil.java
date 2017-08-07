@@ -20,10 +20,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.common;
+package ch.ifocusit.livingdoc.plugin.common;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.Optional;
 
 /**
- * Base class of all domain object.
+ * @author Julien Boz
  */
-public abstract class AbstractDomain {
+public class AnnotationUtil {
+
+    public static <T extends Annotation> Optional<T> tryFind(Field field, Class<T> annotationClass) {
+        return annotationClass == null ? Optional.empty() : field.isAnnotationPresent(annotationClass) ?
+                Optional.of(field.getAnnotation(annotationClass)) : Optional.empty();
+    }
+
+    public static <T extends Annotation> Optional<T> tryFind(Class clazz, Class<T> annotationClass) {
+        return annotationClass == null ? Optional.empty() : clazz.isAnnotationPresent(annotationClass) ?
+                Optional.of(annotationClass.cast(clazz.getAnnotation(annotationClass))) : Optional.empty();
+    }
 }

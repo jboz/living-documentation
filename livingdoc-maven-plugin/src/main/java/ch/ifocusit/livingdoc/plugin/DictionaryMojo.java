@@ -22,17 +22,20 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import ch.ifocusit.livingdoc.plugin.mapping.MappingDefinition;
+import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
+ * Glossary of domain objects in a table representation.
+ *
  * @author Julien Boz
  */
 @Mojo(name = "dictionary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
@@ -49,27 +52,15 @@ public class DictionaryMojo extends CommonGlossaryMojoDefinition {
     }
 
     @Override
-    protected void executeMojo() {
-        // regroup all mapping definition
-        List<MappingDefinition> definitions = new ArrayList<>();
+    protected void executeMojo(Stream<DomainObject> domainObjects) {
 
-        getClasses().forEach(javaClass -> {
-            // browse fields
-            javaClass.getFields().stream()
-                    .filter(this::hasAnnotation) // if annotated
-                    .forEach(javaField -> {
-                        // add field entry
-                        definitions.add(map(javaField, javaField.getName(), javaField.getComment()));
-                    });
-        });
-
-        List<String> rows = definitions.stream()
-                // sort
-                .sorted()
-                // distinct on "business key"
-                .filter(distinctByKey())
+        List<String> rows = domainObjects
                 // map to List<String>
-                .map(def -> newArrayList(defaultString(def.getId(), "UNDEFINED"), def.getName(), def.getDescription()))
+                .map(def -> {
+                    // set empty content if no glossary id defined
+                    String idColumn = def.getId() == null ? EMPTY : formatAndLink(GLOSSARY_LINK_INLINE_ID, def);
+                    return newArrayList(idColumn, formatAndLink(GLOSSARY_LINK_INLINE_NAME, def), def.getDescription());
+                })
                 // join List<String> with "|"
                 .map(field -> field.stream().collect(Collectors.joining("|")))
                 .collect(Collectors.toList());

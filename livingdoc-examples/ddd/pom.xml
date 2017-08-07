@@ -46,14 +46,15 @@
                         <phase>package</phase>
                         <goals>
                             <goal>diagram</goal>
+                            <goal>glossary</goal>
+                            <goal>dictionary</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
                     <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
-                    <diagramType>plantuml</diagramType>
+                    <interactive>true</interactive>
                     <outputDirectory>${build.directory}</outputDirectory>
-                    <outputFilename>domain.adoc</outputFilename>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>

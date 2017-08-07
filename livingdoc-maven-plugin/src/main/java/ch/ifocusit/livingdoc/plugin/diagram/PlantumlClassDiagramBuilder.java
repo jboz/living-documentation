@@ -23,7 +23,7 @@
 package ch.ifocusit.livingdoc.plugin.diagram;
 
 import ch.ifocusit.livingdoc.annotations.RootAggregate;
-import ch.ifocusit.livingdoc.plugin.AnnotationUtils;
+import ch.ifocusit.livingdoc.plugin.common.AnnotationUtil;
 import ch.ifocusit.livingdoc.plugin.domain.Color;
 import ch.ifocusit.livingdoc.plugin.mapping.GlossaryNamesMapper;
 import ch.ifocusit.plantuml.classdiagram.ClassDiagramBuilder;
@@ -58,7 +58,7 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
             protected JavaClazz createJavaClass(Class clazz) {
                 JavaClazz javaClass = super.createJavaClass(clazz);
                 if (rootAggregateColor != null) {
-                    AnnotationUtils.tryFind(clazz, RootAggregate.class).ifPresent(annot ->
+                    AnnotationUtil.tryFind(clazz, RootAggregate.class).ifPresent(annot ->
                             javaClass.setBackgroundColor(rootAggregateColor.getBackgroundColor())
                                     .setBorderColor(rootAggregateColor.getBorderColor()));
                 }
@@ -89,6 +89,9 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
     }
 
     public PlantumlClassDiagramBuilder filterOnAnnotation(Class<? extends Annotation> annotation) {
+        if (annotation == null) {
+            return this; // nothing to do
+        }
         // create class predicate
         additionalClassPredicate = additionalClassPredicate.and(classInfo -> classInfo.load().isAnnotationPresent(annotation));
         // add field predicate

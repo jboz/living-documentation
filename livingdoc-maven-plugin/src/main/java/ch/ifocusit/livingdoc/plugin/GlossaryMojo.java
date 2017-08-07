@@ -22,28 +22,22 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import ch.ifocusit.livingdoc.plugin.mapping.MappingDefinition;
+import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Stream;
+
+import static org.apache.commons.lang3.StringUtils.defaultString;
 
 /**
+ * Glossary of domain objects in a title/content representation.
+ *
  * @author Julien Boz
  */
 @Mojo(name = "glossary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
 public class GlossaryMojo extends CommonGlossaryMojoDefinition {
-
-    public static final String NEWLINE = System.getProperty("line.separator");
-    public static final String HEADER = "[[glossaryid-{0}]]\n=== #{0}# - {1}";
-    public static final String HEADER_LITE = "[[glossaryid-{0}]]\n=== {1}";
-
-    @Parameter
-    private String glossaryTemplate;
 
     @Override
     protected String getDefaultFilename() {
@@ -56,37 +50,17 @@ public class GlossaryMojo extends CommonGlossaryMojoDefinition {
     }
 
     @Override
-    protected void executeMojo() {
-        // regroup all mapping definition
-        List<MappingDefinition> definitions = new ArrayList<>();
-
-        getClasses().forEach(javaClass -> {
-            // add class entry
-            definitions.add(map(javaClass, javaClass.getName(), javaClass.getComment()));
-
-            // browse fields
-            javaClass.getFields().stream()
-                    .filter(this::hasAnnotation) // if annotated
-                    .forEach(javaField -> {
-                        // add field entry
-                        definitions.add(map(javaField, javaField.getName(), javaField.getComment()));
-                    });
-        });
-
-        // sort definitions before add asciidoc entries
-        definitions.stream().sorted().filter(distinctByKey()).forEach(this::addGlossarEntry);
+    protected void executeMojo(Stream<DomainObject> domainObjects) {
+        // add asciidoc entries
+        domainObjects.forEach(this::addGlossarEntry);
     }
 
-    private void addGlossarEntry(MappingDefinition def) {
-        String text = MessageFormat.format(def.getId() == null ? HEADER_LITE : HEADER,
-                defaultString(def.getId(), idFromName(def)), def.getName());
-
-        if (StringUtils.isNotBlank(glossaryTemplate)) {
-            text = MessageFormat.format(glossaryTemplate, defaultString(def.getId(), idFromName(def)), def.getName());
-        }
-
-        asciiDocBuilder.textLine(text.replace("\\r\\n", NEWLINE).replace("\\n", NEWLINE));
-        asciiDocBuilder.textLine(def.getDescription());
+    private void addGlossarEntry(DomainObject domainObject) {
+        asciiDocBuilder.textLine(
+                formatAndLink(
+                        defaultString(glossaryTitleTemplate, domainObject.getId() != null ? GLOSSARY_LINK_TITLE : GLOSSARY_LINK_TITLE_LITE),
+                        domainObject));
+        asciiDocBuilder.textLine(domainObject.getDescription());
         asciiDocBuilder.textLine(StringUtils.EMPTY);
     }
 }

@@ -52,10 +52,10 @@
                     <excludes>
                         <exclude>.*\.shared.*</exclude><!-- exclude shared package -->
                     </excludes>
+                    <onlyAnnotated>true</onlyAnnotated>
                     <interactive>true</interactive>
-                    <!-- link template defined here to match with the link definition in diagram -->
-                    <linkTemplate>../../livingdoc.html#glossaryid-{0}</linkTemplate><!-- relative link from svg diagram, so level up -->
-                    <glossaryTemplate>\n\n[[glossaryid-{0}]]\n=== {1}</glossaryTemplate>
+                    <!-- relative link from svg diagram, so level up -->
+                    <diagramLinkPage>../../livingdoc.html</diagramLinkPage>
                 </configuration>
             </plugin>
             <plugin>

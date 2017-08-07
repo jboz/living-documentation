@@ -111,4 +111,4 @@ SMS type access.
 
 See https://github.com/jboz/living-documentation/tree/master/livingdoc-examples[livingdoc-examples] for more uses cases.
 
-You can also integrate gherkin file like this example : link:images/example_microservice_index.html.png[Microservice example generated index file]
+You can also integrate gherkin files like this example : link:images/example_microservice_index.html.png[Microservice example generated index file]

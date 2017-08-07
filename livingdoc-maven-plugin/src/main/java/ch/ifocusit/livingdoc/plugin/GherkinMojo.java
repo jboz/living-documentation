@@ -61,7 +61,7 @@ public class GherkinMojo extends CommonMojoDefinition {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
+        AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
         if (Format.html.equals(format)) {
             asciiDocBuilder.sectionTitleLevel1("Business requirements");
         }

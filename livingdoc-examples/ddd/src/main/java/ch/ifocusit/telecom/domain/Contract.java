@@ -24,9 +24,19 @@ package ch.ifocusit.telecom.domain;
 
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
 
+/**
+ * Telecom contract
+ */
 public class Contract extends AbstractDomain {
 
+    /**
+     * Contract identifier.
+     * Generate by the system and communicate to client.
+     */
     private Long id;
+    /**
+     * Contract customer.
+     */
     private Customer customer;
 
     public Long getId() {

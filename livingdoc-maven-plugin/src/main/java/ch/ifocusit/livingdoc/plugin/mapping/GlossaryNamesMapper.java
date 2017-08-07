@@ -23,7 +23,8 @@
 package ch.ifocusit.livingdoc.plugin.mapping;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.livingdoc.plugin.AnnotationUtils;
+import ch.ifocusit.livingdoc.plugin.common.AnchorUtil;
+import ch.ifocusit.livingdoc.plugin.common.AnnotationUtil;
 import ch.ifocusit.plantuml.classdiagram.NamesMapper;
 import ch.ifocusit.plantuml.classdiagram.model.Link;
 import org.simpleflatmapper.csv.CsvParser;
@@ -32,7 +33,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
  */
 public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesMapper {
 
-    List<MappingDefinition> mappings = new ArrayList<>();
+    List<DomainObject> mappings = new ArrayList<>();
     private Class<A> annotation;
 
     private String linkTemplate;
@@ -53,48 +53,49 @@ public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesM
         this.linkTemplate = linkTemplate;
 
         if (file != null) {
-            mappings = CsvParser.mapTo(MappingDefinition.class)
+            mappings = CsvParser.mapTo(DomainObject.class)
                     .stream(new FileReader(file))
                     .collect(Collectors.toList());
         }
     }
 
     private Optional<String> getName(int id) {
-        return mappings.stream().filter(def -> def.getId() == id).findFirst().map(MappingDefinition::getName);
+        return mappings.stream().filter(def -> def.getId() == id).findFirst().map(DomainObject::getName);
     }
 
     @Override
     public String getClassName(Class aClass) {
-        int id = AnnotationUtils.tryFind(aClass, annotation).map(UbiquitousLanguage::id).orElse(-1);
+        int id = AnnotationUtil.tryFind(aClass, annotation).map(UbiquitousLanguage::id).orElse(-1);
         return getName(id).orElse(NamesMapper.super.getClassName(aClass));
     }
 
     @Override
     public Optional<Link> getClassLink(Class aClass) {
-        return Optional.of(create(getClassName(aClass), AnnotationUtils.tryFind(aClass, annotation)));
+        return Optional.of(create(getClassName(aClass), aClass.getSimpleName(), AnnotationUtil.tryFind(aClass, annotation)));
     }
 
     @Override
     public String getFieldName(Field field) {
-        int id = AnnotationUtils.tryFind(field, annotation).map(UbiquitousLanguage::id).orElse(-1);
+        int id = AnnotationUtil.tryFind(field, annotation).map(UbiquitousLanguage::id).orElse(-1);
         return getName(id).orElse(NamesMapper.super.getFieldName(field));
+    }
+
+    /**
+     * equilvalent to {@link DomainObject#getFullName()}
+     */
+    public String getFieldFullName(Field field) {
+        return field.getDeclaringClass().getSimpleName() + "." + field.getName();
     }
 
     @Override
     public Optional<Link> getFieldLink(Field field) {
-        return Optional.of(create(getFieldName(field), AnnotationUtils.tryFind(field, annotation)));
+        return Optional.of(create(getFieldName(field), getFieldFullName(field), AnnotationUtil.tryFind(field, annotation)));
     }
 
-    private Link create(String name, Optional<A> annotation) {
+    private Link create(String name, String fullName, Optional<A> annotation) {
         Link link = new Link();
         link.setLabel(name);
-        String anchor = annotation.map(annot -> annot.id() == -1 ? linkFromName(name) : String.valueOf(annot.id()))
-                .orElse(linkFromName(name));
-        link.setUrl(MessageFormat.format(linkTemplate, anchor));
+        link.setUrl(AnchorUtil.formatLink(linkTemplate, annotation.map(a -> a.id()).orElse(null), fullName));
         return link;
-    }
-
-    private String linkFromName(String name) {
-        return name.replaceAll(" ", "");
     }
 }

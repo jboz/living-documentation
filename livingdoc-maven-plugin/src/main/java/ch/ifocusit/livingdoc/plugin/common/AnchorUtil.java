@@ -20,10 +20,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.common;
+package ch.ifocusit.livingdoc.plugin.common;
+
+import java.text.MessageFormat;
+
+import static ch.ifocusit.livingdoc.plugin.common.AsciidocUtil.NEWLINE;
+import static ch.ifocusit.livingdoc.plugin.common.StringUtil.defaultString;
 
 /**
- * Base class of all domain object.
+ * @author Julien Boz
  */
-public abstract class AbstractDomain {
+public class AnchorUtil {
+
+    private static String cleanName(String name) {
+        return name.replaceAll(" ", "-").replaceAll("\\.", "_");
+    }
+
+    public static String formatLink(String linkTemplate, Integer id, String name) {
+        return MessageFormat.format(linkTemplate, defaultString(id, cleanName(name)), name)
+                .replace("\\r\\n", NEWLINE).replace("\\n", NEWLINE);
+    }
 }

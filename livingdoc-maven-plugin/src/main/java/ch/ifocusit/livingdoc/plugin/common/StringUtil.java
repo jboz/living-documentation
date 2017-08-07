@@ -20,10 +20,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.common;
+package ch.ifocusit.livingdoc.plugin.common;
 
 /**
- * Base class of all domain object.
+ * @author Julien Boz
  */
-public abstract class AbstractDomain {
+public class StringUtil {
+
+    public static String defaultString(Integer id, String defaultString) {
+        return id == null ? defaultString : String.valueOf(id);
+    }
 }

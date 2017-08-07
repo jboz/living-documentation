@@ -28,9 +28,19 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Customer of the telecom service
+ */
 public class Customer extends AbstractDomain {
 
+    /**
+     * Name of the customer.
+     */
     private String name;
+
+    /**
+     * Customer's contracts.
+     */
     private Set<Contract> contracts = new HashSet<>();
 
     public String getName() {

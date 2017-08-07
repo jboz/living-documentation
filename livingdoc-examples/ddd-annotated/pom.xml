@@ -62,11 +62,10 @@
                 </executions>
                 <configuration>
                     <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
-                    <onlyGlossary>true</onlyGlossary>
+                    <onlyAnnotated>true</onlyAnnotated>
                     <diagramType>plantuml</diagramType>
                     <format>html</format>
                     <interactive>true</interactive>
-                    <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
                     <glossaryMapping>src/docs/business-glossary.csv</glossaryMapping>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>

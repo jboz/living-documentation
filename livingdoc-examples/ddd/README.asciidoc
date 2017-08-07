@@ -7,6 +7,8 @@ This is a simple DDD project around the telecom aggregate
 The maven plugin is use to generate dynamically the domain class diagram :
 
 image::domain.png[]
+image::glossary.png[]
+image::dictionnary.png[]
 
 == Maven configuration :
 [source,xml]
@@ -14,21 +16,21 @@ image::domain.png[]
 <plugin>
     <groupId>ch.ifocusit.livingdoc</groupId>
     <artifactId>livingdoc-maven-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <executions>
         <execution>
             <id>class-diagram</id>
             <phase>package</phase>
             <goals>
                 <goal>diagram</goal>
+                <goal>glossary</goal>
+                <goal>dictionary</goal>
             </goals>
         </execution>
     </executions>
     <configuration>
         <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
-        <diagramType>plantuml</diagramType>
+        <interactive>true</interactive>
         <outputDirectory>${build.directory}</outputDirectory>
-        <outputFilename>domain.adoc</outputFilename>
         <excludes>
             <exclude>.*domain.common.*</exclude>
         </excludes>

@@ -64,28 +64,16 @@ public class DiagramMojo extends CommonMojoDefinition {
     private DiagramImageType diagramImageType;
 
     /**
-     * Extract only class/field/method annotated with @UbiquitousLanguage
-     */
-    @Parameter(defaultValue = "false")
-    private boolean onlyGlossary = false;
-
-    /**
      * Add link into diagram to glossary
      */
     @Parameter(defaultValue = "true")
     private boolean withLink = true;
 
     /**
-     * File to use for UbiquitousLanguage mapping.
-     */
-    @Parameter
-    private File glossaryMapping;
-
-    /**
      * Link template to use in diagram.
      */
-    @Parameter(defaultValue = "glossary.html#glossaryid-{0}")
-    private String linkTemplate;
+    @Parameter(defaultValue = "glossary.html")
+    private String diagramLinkPage;
 
     /**
      * Class color for @{@link ch.ifocusit.livingdoc.annotations.RootAggregate} class.
@@ -146,7 +134,7 @@ public class DiagramMojo extends CommonMojoDefinition {
             case html:
             case adoc:
             case asciidoc:
-                AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
+                AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
                 if (Format.html.equals(format)) {
                     asciiDocBuilder.documentTitle("Class diagram");
                 }
@@ -172,11 +160,11 @@ public class DiagramMojo extends CommonMojoDefinition {
             case plantuml:
                 PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes,
                         rootAggregateColor, header, footer);
-                if (onlyGlossary) {
+                if (onlyAnnotated) {
                     builder.filterOnAnnotation(UbiquitousLanguage.class);
                 }
                 if (withLink && !DiagramImageType.png.equals(diagramImageType)) {
-                    builder.mapNames(glossaryMapping, UbiquitousLanguage.class, linkTemplate);
+                    builder.mapNames(glossaryMapping, UbiquitousLanguage.class, diagramLinkPage + "#" + glossaryAnchorTemplate);
                 }
                 return builder.generate();
             default:

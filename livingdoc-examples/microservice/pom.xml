@@ -162,8 +162,9 @@
                         <exclude>.*\.domain.common\..*</exclude>
                         <exclude>.*JAXRSConfiguration</exclude>
                     </excludes>
+                    <onlyAnnotated>true</onlyAnnotated>
                     <interactive>true</interactive><!-- allow links in diagram, see -->
-                    <linkTemplate>../index.html#glossaryid-{0}</linkTemplate><!-- all sections will be in index file -->
+                    <diagramLinkPage>../index.html</diagramLinkPage><!-- all sections will be in index file -->
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->

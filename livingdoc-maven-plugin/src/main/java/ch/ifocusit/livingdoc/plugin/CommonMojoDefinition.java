@@ -22,72 +22,90 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import ch.ifocusit.livingdoc.plugin.common.Template;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.repository.RepositorySystem;
-import org.apache.maven.settings.Settings;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.OptionsBuilder;
 import org.asciidoctor.SafeMode;
-import org.eclipse.aether.impl.ArtifactResolver;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 /**
  * @author Julien Boz
  */
 public abstract class CommonMojoDefinition extends AbstractMojo {
+    public static final String GLOSSARY_ANCHOR = "glossaryid-{0}";
 
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
-    protected MavenProject project;
+    MavenProject project;
 
     @Component
-    protected RepositorySystem repositorySystem;
+    RepositorySystem repositorySystem;
 
     /**
      * Directory where the glossary will be generated
      */
     @Parameter(defaultValue = "${project.build.directory}/generated-docs", required = true)
-    protected File outputDirectory;
+    private File outputDirectory;
 
     /**
      * Output filename
      */
     @Parameter
-    protected String outputFilename;
+    private String outputFilename;
 
     /**
      * Output format of the glossary (default html, others : adoc)
      */
     @Parameter(defaultValue = "html")
-    protected Format format;
+    Format format;
+
+//    /**
+//     * Header of the generated asciidoc file
+//     */
+//    @Parameter
+//    private File headerAsciidoc;
+//
+//    /**
+//     * Footer of generated asciidoc file
+//     */
+//    @Parameter
+//    private File footerAsciidoc;
+
+    /**
+     * Temple for glossary anchor.
+     */
+    @Parameter(defaultValue = GLOSSARY_ANCHOR)
+    String glossaryAnchorTemplate;
+
+    /**
+     * File to use for UbiquitousLanguage mapping.
+     */
+    @Parameter
+    File glossaryMapping;
+
+    /**
+     * Indicate that only annotated classes/fields will be used.
+     */
+    @Parameter(defaultValue = "false")
+    boolean onlyAnnotated = false;
 
     public enum Format {
         asciidoc, adoc, html, plantuml
     }
 
-    void write(final String newValue, final File output) throws MojoExecutionException {
-        write(newValue, output, null);
-    }
-
-    void write(final String newValue, final File output, Template template) throws MojoExecutionException {
-        // update content
-        final String newContent = template == null ? newValue : template.process(newValue);
-
+    void write(final String newContent, final File output) throws MojoExecutionException {
         // create output
         try {
             output.getParentFile().mkdirs();
@@ -116,18 +134,25 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
 
     protected abstract String getDefaultFilename();
 
-    protected String getFilename() {
+    private String getFilename() {
         return StringUtils.defaultIfBlank(outputFilename, getDefaultFilename());
     }
 
-    protected String getFilenameWithoutExtension() {
+    String getFilenameWithoutExtension() {
         String filename = getFilename();
         return filename.indexOf(".") > 0 ? filename.substring(0, filename.lastIndexOf(".")) : filename;
     }
 
-    protected File getOutput(Format desiredExtension) {
+    File getOutput(Format desiredExtension) {
         String filename = StringUtils.defaultIfBlank(outputFilename, getDefaultFilename());
         filename = filename.endsWith("." + desiredExtension.name()) ? filename : filename + "." + desiredExtension;
         return new File(outputDirectory, filename);
+    }
+
+    AsciiDocBuilder createAsciiDocBuilder() {
+        AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
+        asciiDocBuilder.textLine(":sectlinks:");
+        asciiDocBuilder.textLine(":sectanchors:");
+        return asciiDocBuilder;
     }
 }
