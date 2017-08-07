@@ -2,7 +2,7 @@
 image:https://travis-ci.org/jboz/living-documentation.svg?branch=master["Build Status", link="https://travis-ci.org/jboz/living-documentation"]
 image:https://img.shields.io/badge/PRs-welcome-brightgreen.svg["Make a pull request", link="http://makeapullrequest.com"]
 image:https://img.shields.io/github/license/jboz/living-documentation.svg[License]
-image:https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-annotations/badge.svg?style=plastic["Maven Central", link="https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-annotations"]
+image:https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-annotations/badge.svg?style=flat["Maven Central", link="https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-annotations"]
 
 = Living documentation annotations
 
