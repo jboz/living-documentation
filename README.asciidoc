@@ -3,6 +3,8 @@ ifndef::imagesdir[:imagesdir: images]
 image:https://travis-ci.org/jboz/living-documentation.svg?branch=master["Build Status", link="https://travis-ci.org/jboz/living-documentation"]
 image:https://img.shields.io/badge/PRs-welcome-brightgreen.svg["Make a pull request", link="http://makeapullrequest.com"]
 image:https://img.shields.io/github/license/jboz/living-documentation.svg[License]
+image:https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-maven-plugin/badge.svg["Maven Central : livingdoc-maven-plugin", link="https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-maven-plugin"]
+image:https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-annotations/badge.svg?style=plastic["Maven Central : livingdoc-annotations", link="https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-annotations"]
 
 Read CONTRIBUTING file to contrib and check the the backlog on the trello board : https://trello.com/b/pabtQSZG/living-documentation
 
@@ -16,6 +18,10 @@ See examples to show the powerfull ! You'll be able to generate beautiful diagra
 Create a living documentation from the code automatically. Easily customizable.
 
 With or without annotations.
+
+This java project is made of :
+1. Some java https://github.com/jboz/living-documentation/tree/master/livingdoc-annotations[annotations] (like https://github.com/jboz/living-documentation/blob/master/livingdoc-annotations/src/main/java/ch/ifocusit/livingdoc/annotations/UbiquitousLanguage.java[UbiquitousLanguage] annotation), but not mandatory
+2. A fully customizable https://github.com/jboz/living-documentation/tree/master/livingdoc-maven-plugin[maven plugin]
 
 == Generate a conception diagram (svg format with link supported !)
 image::conception-diagram.png[Asciidoctor Diagram javaClasses diagram]
