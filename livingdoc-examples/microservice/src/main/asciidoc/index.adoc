@@ -6,17 +6,13 @@ _Micro service around the Bill aggregate_
 
 == Conception
 
-plantuml::{generated}/diagram.plantuml[format=svg, opts=interactive]
+//plantuml::{generated}/diagram.plantuml[format=svg, opts=interactive]
+include::{generated}/diagram.adoc[]
 
 == Glossary
 
 include::{generated}/glossary.adoc[]
 
-== Feature from gherkin
+== Business Behavior
 
-gherkin::../../test/resources/features/billing.feature[gherkintemplate.erb]
-//include::{generated}/gherkin.adoc[]
-
-== Feature from cucumber
-
-include::{generated}/cucumber.adoc[]
+include::{generated}/gherkin.adoc[]

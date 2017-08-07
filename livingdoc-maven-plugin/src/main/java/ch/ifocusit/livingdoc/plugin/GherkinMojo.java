@@ -68,6 +68,9 @@ public class GherkinMojo extends CommonMojoDefinition {
         asciiDocBuilder.textLine(StringUtils.EMPTY);
         features.forEach(path -> {
             try {
+                if (Files.notExists(Paths.get(path))) {
+                    return;
+                }
                 Files.walk(Paths.get(path))
                         .filter(p -> p.toString().endsWith(".feature"))
                         .map(Path::toString)

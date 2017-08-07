@@ -156,39 +156,17 @@
                 </executions>
                 <configuration>
                     <outputDirectory>${livingdoc.output}</outputDirectory>
-                    <format>plantuml</format>
                     <packageRoot>ch.ifocusit.telecom</packageRoot>
+                    <format>adoc</format><!-- the next plugin will generate a HTML index file -->
                     <excludes>
                         <exclude>.*\.domain.common\..*</exclude>
                         <exclude>.*JAXRSConfiguration</exclude>
                     </excludes>
-                    <interactive>true</interactive>
-                    <!-- link template defined here to match with the link definition in diagram -->
-                    <linkTemplate>../../livingdoc.html#glossaryid-{0}</linkTemplate><!-- relative link from svg diagram, so level up -->
-                    <glossaryTemplate>\n\n[[glossaryid-{0}]]\n=== {1} ^{0}^</glossaryTemplate>
+                    <interactive>true</interactive><!-- allow links in diagram, see -->
+                    <linkTemplate>../index.html#glossaryid-{0}</linkTemplate><!-- all sections will be in index file -->
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->
-
-            <plugin>
-                <groupId>com.github.cukedoctor</groupId>
-                <artifactId>cukedoctor-maven-plugin</artifactId>
-                <version>1.0.6</version>
-                <configuration>
-                    <outputFileName>cucumber</outputFileName>
-                    <outputDir>${livingdoc.generated}</outputDir>
-                    <docVersion>${project.version}</docVersion>
-                    <featuresDir>target/cucumber</featuresDir>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>${livingdoc.phase}</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
             <!-- tag::plugin-asciidoctor[] -->
             <plugin>
@@ -240,42 +218,6 @@
                 </executions>
             </plugin>
             <!-- end::plugin-asciidoctor[] -->
-
-            <!-- tag::plugin-integration-site[] -->
-            <plugin>
-                <artifactId>maven-site-plugin</artifactId>
-                <configuration>
-                    <skipDeploy>true</skipDeploy>
-                    <asciidoc>
-                        <requires>
-                            <require>asciidoctor-diagram</require>
-                        </requires>
-                        <attributes>
-                            <imagesoutdir>${project.build.directory}/site/images/generated</imagesoutdir>
-                            <imagesdir>./images/generated</imagesdir>
-                            <generated>${livingdoc.output}</generated>
-                        </attributes>
-                    </asciidoc>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctor-maven-plugin</artifactId>
-                        <version>1.5.5</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctorj-diagram</artifactId>
-                        <version>1.5.4</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>com.github.domgold.doctools.asciidoctor</groupId>
-                        <artifactId>asciidoctor-gherkin-extension</artifactId>
-                        <version>1.0.1</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            <!-- end::plugin-integration-site[] -->
         </plugins>
     </build>
 </project>
