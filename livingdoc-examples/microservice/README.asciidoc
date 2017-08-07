@@ -7,4 +7,4 @@ launch *mvn package* and open *target/docs/index.html* file.
 
 Here is a screenshot of the generate index file :
 
-image::../../images/global_index.png[Complete index file,width=200,link="../../images/global_index.png"]
+image::../../images/example_microservice_index.html.png[Complete index file,width=200,link="../../images/example_microservice_index.html.png"]
