@@ -35,6 +35,12 @@ public class Color {
     @Parameter
     private String borderColor;
 
+    public static Color from(String bg, String border) {
+        Color color = new Color();
+        color.backgroundColor = bg;
+        color.borderColor = border;
+        return color;
+    }
 
     public String getBackgroundColor() {
         return backgroundColor;
@@ -42,12 +48,5 @@ public class Color {
 
     public String getBorderColor() {
         return borderColor;
-    }
-
-    public static Color from(String bg, String border) {
-        Color color = new Color();
-        color.backgroundColor = bg;
-        color.borderColor = border;
-        return color;
     }
 }

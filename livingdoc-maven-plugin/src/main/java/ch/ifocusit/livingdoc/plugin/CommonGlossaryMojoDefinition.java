@@ -69,25 +69,30 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
     static final String GLOSSARY_LINK_TITLE_LITE = "[[{2}]]\n=== {1}";
     static final String GLOSSARY_LINK_INLINE_ID = "<<{2},{0}>>";
     static final String GLOSSARY_LINK_INLINE_NAME = "<<{2},{1}>>";
-
-    /**
-     * List of source directories to browse
-     */
-    @Parameter(defaultValue = "${project.build.sourceDirectory}")
-    private List<String> sources = new ArrayList<>();
-
-    @Parameter
-    private String packageRoot = EMPTY;
-
     /**
      * Temple for glossary title.
      */
     @Parameter
     protected String glossaryTitleTemplate;
-
     AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
+    /**
+     * List of source directories to browse
+     */
+    @Parameter(defaultValue = "${project.build.sourceDirectory}")
+    private List<String> sources = new ArrayList<>();
+    @Parameter
+    private String packageRoot = EMPTY;
     private JavaProjectBuilder javaDocBuilder;
     private List<DomainObject> mappings;
+
+    private static Function<DomainObject, ?> key() {
+        return def -> def.getId() == null ? def.getName() : def.getId();
+    }
+
+    private static Predicate<DomainObject> distinctByKey() {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(key().apply(t), Boolean.TRUE) == null;
+    }
 
     /**
      * Main method.
@@ -129,6 +134,10 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
         write(asciiDocBuilder);
     }
 
+    // *******************************************************
+    // TOOLS
+    // *******************************************************
+
     protected abstract String getTitle();
 
     /**
@@ -137,10 +146,6 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
      * @param domainObjects : objects to serialize, already sorted and filtered
      */
     protected abstract void executeMojo(Stream<DomainObject> domainObjects);
-
-    // *******************************************************
-    // TOOLS
-    // *******************************************************
 
     private Stream<JavaClass> getClasses() {
         return javaDocBuilder.getClasses().stream()
@@ -171,6 +176,10 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
         return mappings == null || !id.isPresent() ? Optional.empty() : mappings.stream().filter(def -> id.get().equals(def.getId())).findFirst();
     }
 
+    // *******************************************************
+    // CLASSLOADING
+    // *******************************************************
+
     private String getName(JavaAnnotatedElement annotatedElement, String defaultValue) {
         return getMapping(annotatedElement).map(DomainObject::getName).orElse(defaultValue);
     }
@@ -178,10 +187,6 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
     private String getDescription(JavaAnnotatedElement annotatedElemen, String defaultValue) {
         return getMapping(annotatedElemen).map(DomainObject::getDescription).orElse(defaultValue);
     }
-
-    // *******************************************************
-    // CLASSLOADING
-    // *******************************************************
 
     private JavaProjectBuilder buildJavaProjectBuilder() throws MojoExecutionException {
         JavaProjectBuilder javaDocBuilder = new JavaProjectBuilder();
@@ -194,6 +199,10 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
 
         return javaDocBuilder;
     }
+
+    // *******************************************************
+    // FILTERING
+    // *******************************************************
 
     private void loadSourcesDependencies(JavaProjectBuilder javaDocBuilder) {
 
@@ -234,20 +243,6 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
                 getLog().warn("Unable to load jar source " + artifact, e);
             }
         });
-    }
-
-    // *******************************************************
-    // FILTERING
-    // *******************************************************
-
-
-    private static Function<DomainObject, ?> key() {
-        return def -> def.getId() == null ? def.getName() : def.getId();
-    }
-
-    private static Predicate<DomainObject> distinctByKey() {
-        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
-        return t -> seen.putIfAbsent(key().apply(t), Boolean.TRUE) == null;
     }
 
     // *******************************************************

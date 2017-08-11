@@ -43,13 +43,12 @@ public abstract class AbstractClassDiagramBuilder {
 
     private static final String TEST = "Test";
     private static final String PACKAGE_INFO = "package-info";
-    private final String IT = "IT";
-
     protected final MavenProject project;
     protected final String prefix;
     protected final String[] excludes;
     protected final File header;
     protected final File footer;
+    private final String IT = "IT";
 
     public AbstractClassDiagramBuilder(MavenProject project, String prefix, String[] excludes, File header, File footer) {
         this.project = project;

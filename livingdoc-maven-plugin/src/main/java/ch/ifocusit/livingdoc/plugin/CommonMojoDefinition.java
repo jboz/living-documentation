@@ -52,24 +52,21 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
 
     @Component
     RepositorySystem repositorySystem;
-
-    /**
-     * Directory where the glossary will be generated
-     */
-    @Parameter(defaultValue = "${project.build.directory}/generated-docs", required = true)
-    private File outputDirectory;
-
-    /**
-     * Output filename
-     */
-    @Parameter
-    private String outputFilename;
-
     /**
      * Output format of the glossary (default html, others : adoc)
      */
     @Parameter(defaultValue = "html")
     Format format;
+    /**
+     * Temple for glossary anchor.
+     */
+    @Parameter(defaultValue = GLOSSARY_ANCHOR)
+    String glossaryAnchorTemplate;
+    /**
+     * File to use for UbiquitousLanguage mapping.
+     */
+    @Parameter
+    File glossaryMapping;
 
 //    /**
 //     * Header of the generated asciidoc file
@@ -82,28 +79,21 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
 //     */
 //    @Parameter
 //    private File footerAsciidoc;
-
-    /**
-     * Temple for glossary anchor.
-     */
-    @Parameter(defaultValue = GLOSSARY_ANCHOR)
-    String glossaryAnchorTemplate;
-
-    /**
-     * File to use for UbiquitousLanguage mapping.
-     */
-    @Parameter
-    File glossaryMapping;
-
     /**
      * Indicate that only annotated classes/fields will be used.
      */
     @Parameter(defaultValue = "false")
     boolean onlyAnnotated = false;
-
-    public enum Format {
-        asciidoc, adoc, html, plantuml
-    }
+    /**
+     * Directory where the glossary will be generated
+     */
+    @Parameter(defaultValue = "${project.build.directory}/generated-docs", required = true)
+    private File outputDirectory;
+    /**
+     * Output filename
+     */
+    @Parameter
+    private String outputFilename;
 
     void write(final String newContent, final File output) throws MojoExecutionException {
         // create output
@@ -154,5 +144,9 @@ public abstract class CommonMojoDefinition extends AbstractMojo {
         asciiDocBuilder.textLine(":sectlinks:");
         asciiDocBuilder.textLine(":sectanchors:");
         return asciiDocBuilder;
+    }
+
+    public enum Format {
+        asciidoc, adoc, html, plantuml
     }
 }

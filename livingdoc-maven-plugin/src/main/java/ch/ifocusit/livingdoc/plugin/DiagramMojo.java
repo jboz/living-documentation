@@ -108,14 +108,6 @@ public class DiagramMojo extends CommonMojoDefinition {
     @Parameter(defaultValue = "false")
     private boolean interactive = false;
 
-    public enum DiagramType {
-        plantuml;
-    }
-
-    public enum DiagramImageType {
-        png, svg, txt;
-    }
-
     @Override
     protected String getDefaultFilename() {
         return "diagram";
@@ -170,5 +162,13 @@ public class DiagramMojo extends CommonMojoDefinition {
             default:
                 throw new NotImplementedException(String.format("format %s is not implemented yet", diagramType));
         }
+    }
+
+    public enum DiagramType {
+        plantuml;
+    }
+
+    public enum DiagramImageType {
+        png, svg, txt;
     }
 }
