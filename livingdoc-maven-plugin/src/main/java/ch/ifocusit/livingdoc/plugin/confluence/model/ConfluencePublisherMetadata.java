@@ -57,4 +57,8 @@ public class ConfluencePublisherMetadata {
         this.pages = pages;
     }
 
+    @RuntimeUse
+    public void addPage(ConfluencePageMetadata confluencePageMetadata) {
+        pages.add(confluencePageMetadata);
+    }
 }

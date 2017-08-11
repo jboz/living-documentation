@@ -24,6 +24,8 @@ package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.confluence.ConfluencePublisher;
 import ch.ifocusit.livingdoc.plugin.confluence.client.ConfluenceRestClient;
+import ch.ifocusit.livingdoc.plugin.confluence.model.ConfluencePageMetadata;
+import ch.ifocusit.livingdoc.plugin.confluence.model.ConfluencePublisherMetadata;
 import ch.ifocusit.livingdoc.plugin.domain.Publish;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -32,6 +34,10 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * @author Julien Boz
@@ -57,13 +63,39 @@ public class PublishMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         switch (publishProvider) {
             default:
-                publishConfluence();
+                try {
+                    publishConfluence(readMetadata());
+                } catch (IOException e) {
+                    throw new MojoExecutionException("error reading asciidoc directory", e);
+                }
         }
     }
 
-    private void publishConfluence() {
+    private ConfluencePublisherMetadata readMetadata() throws IOException {
+        ConfluencePublisherMetadata confluencePublisherMetadata = new ConfluencePublisherMetadata();
+
+        confluencePublisherMetadata.setSpaceKey(publish.getSpaceKey());
+        confluencePublisherMetadata.setAncestorId(publish.getAncestorId());
+
+        Files.walk(Paths.get(publish.getAsciidocFolder().getAbsolutePath()))
+        .filter(path -> path.getFileName().endsWith(".html"))
+        .forEach(path -> {
+            ConfluencePageMetadata confluencePageMetadata = new ConfluencePageMetadata();
+            confluencePageMetadata.setTitle(path.getFileName().toString());
+            // TODO convert aasciidoc to html
+            // TODO manage attachment
+            confluencePageMetadata.setContentFilePath(path.toUri().toString());
+            confluencePublisherMetadata.addPage(confluencePageMetadata);
+        });
+
+        return confluencePublisherMetadata;
+    }
+
+    private void publishConfluence(ConfluencePublisherMetadata confluencePublisherMetadata) {
+
+
         ConfluenceRestClient confluenceRestClient = new ConfluenceRestClient(publish.getEndpoint(), httpClient(), publish.getUsername(), publish.getPassword());
-        ConfluencePublisher confluencePublisher = new ConfluencePublisher(confluencePublisherMetadata, confluenceRestClient, publish.getAsciidocRootFolder().getAbsolutePath());
+        ConfluencePublisher confluencePublisher = new ConfluencePublisher(confluencePublisherMetadata, confluenceRestClient, publish.getAsciidocFolder().getAbsolutePath());
         confluencePublisher.publish();
     }
 
