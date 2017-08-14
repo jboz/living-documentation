@@ -3,7 +3,7 @@ package ch.ifocusit.livingdoc.plugin.publish;
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractAsciidoctorMojo.Format;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Options;
 import org.asciidoctor.ast.Title;
@@ -68,7 +68,7 @@ public class HtmlPostProcessor {
     }
 
     private Function<String, String> unescapeCdataHtmlContent() {
-        return (content) -> replaceAll(content, CDATA_PATTERN, (matchResult) -> StringEscapeUtils.unescapeHtml(matchResult.group()));
+        return (content) -> replaceAll(content, CDATA_PATTERN, (matchResult) -> StringEscapeUtils.unescapeHtml4(matchResult.group()));
     }
 
     private String deriveAttachmentName(String path) {
