@@ -193,7 +193,7 @@
                 </dependencies>
                 <configuration>
                     <backend>html5</backend>
-                    <outputDirectory>${build.directory}/docs</outputDirectory>
+                    <outputDirectory>${project.build.directory}/docs</outputDirectory>
                     <requires>
                         <require>asciidoctor-diagram</require>
                     </requires>

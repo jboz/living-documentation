@@ -64,12 +64,6 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
     protected File outputDirectory;
 
     /**
-     * Directory where the images will be generated
-     */
-    @Parameter(defaultValue = "${project.build.directory}/generated-docs/images", required = true)
-    private File imagesOutputDirectory;
-
-    /**
      * Templates directories.
      */
     @Parameter(defaultValue = "${project.build.directory}/asciidoc-templates", readonly = true)
@@ -96,8 +90,6 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
     }
 
     protected Asciidoctor createAsciidoctor() {
-        extractTemplatesFromJar();
-
         Asciidoctor asciidoctor = Asciidoctor.Factory.create();
         asciidoctor.requireLibrary("asciidoctor-diagram");
         return asciidoctor;
@@ -106,9 +98,11 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
     protected Options options() {
         this.asciidocTemplates.mkdirs();
 
+        String imagesOutputDirectory = outputDirectory.getAbsolutePath();
+
         Map<String, Object> attributes = new HashMap<>();
-        attributes.put("imagesoutdir", imagesOutputDirectory.getAbsolutePath());
-        attributes.put("outdir", imagesOutputDirectory.getAbsolutePath());
+        attributes.put("imagesoutdir", imagesOutputDirectory);
+        attributes.put("outdir", imagesOutputDirectory);
 
         return OptionsBuilder.options()
                 .backend("html5")
