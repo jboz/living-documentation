@@ -22,6 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -40,7 +41,7 @@ import java.util.List;
  * @author Julien Boz
  */
 @Mojo(name = "gherkin", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
-public class GherkinMojo extends CommonMojoDefinition {
+public class GherkinMojo extends AbstractDocsGeneratorMojo {
 
     /**
      * List of source directories to browse

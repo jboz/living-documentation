@@ -22,7 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin.diagram;
 
-import ch.ifocusit.livingdoc.plugin.common.ClassLoaderUtil;
+import ch.ifocusit.livingdoc.plugin.utils.ClassLoaderUtil;
 import com.google.common.reflect.ClassPath;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;

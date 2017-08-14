@@ -22,84 +22,108 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import ch.ifocusit.livingdoc.plugin.confluence.ConfluencePublisher;
-import ch.ifocusit.livingdoc.plugin.confluence.client.ConfluenceRestClient;
-import ch.ifocusit.livingdoc.plugin.confluence.model.ConfluencePageMetadata;
-import ch.ifocusit.livingdoc.plugin.confluence.model.ConfluencePublisherMetadata;
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractAsciidoctorMojo;
 import ch.ifocusit.livingdoc.plugin.domain.Publish;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.maven.plugin.AbstractMojo;
+import ch.ifocusit.livingdoc.plugin.publish.HtmlPostProcessor;
+import ch.ifocusit.livingdoc.plugin.publish.PublishProvider;
+import ch.ifocusit.livingdoc.plugin.publish.confluence.ConfluenceProvider;
+import ch.ifocusit.livingdoc.plugin.publish.model.Page;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.codehaus.swizzle.confluence.SwizzleException;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Julien Boz
  */
 @Mojo(name = "publish")
-public class PublishMojo extends AbstractMojo {
+public class PublishMojo extends AbstractAsciidoctorMojo {
 
-    private Provider publishProvider = Provider.CONFLUENCE;
+    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
+    @Parameter(defaultValue = "${plugin.artifactMap}", required = true, readonly = true)
+    private Map<String, Artifact> pluginArtifactMap;
+
+    @Parameter(required = true)
     private Publish publish = new Publish();
-
-    private static CloseableHttpClient httpClient() {
-        RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectionRequestTimeout(20 * 1000)
-                .setConnectTimeout(20 * 1000)
-                .build();
-
-        return HttpClients.custom()
-                .setDefaultRequestConfig(requestConfig)
-                .build();
-    }
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        switch (publishProvider) {
-            default:
-                try {
-                    publishConfluence(readMetadata());
-                } catch (IOException e) {
-                    throw new MojoExecutionException("error reading asciidoc directory", e);
-                }
+        extractTemplatesFromJar();
+        try {
+            PublishProvider provider = null;
+            switch (publish.getProvider()) {
+                default:
+                    provider = new ConfluenceProvider(publish.getEndpoint(), publish.getUsername(), publish.getPassword());
+            }
+
+            List<Page> pages = readHtmlPages();
+            publish(provider, pages);
+        } catch (Exception e) {
+            throw new MojoExecutionException("Unexpected error", e);
         }
     }
 
-    private ConfluencePublisherMetadata readMetadata() throws IOException {
-        ConfluencePublisherMetadata confluencePublisherMetadata = new ConfluencePublisherMetadata();
+    /**
+     * @return html pages
+     * @throws IOException
+     */
+    private List<Page> readHtmlPages() throws IOException {
 
-        confluencePublisherMetadata.setSpaceKey(publish.getSpaceKey());
-        confluencePublisherMetadata.setAncestorId(publish.getAncestorId());
+        List<Page> pages = new ArrayList<>();
 
-        Files.walk(Paths.get(publish.getAsciidocFolder().getAbsolutePath()))
-        .filter(path -> path.getFileName().endsWith(".html"))
-        .forEach(path -> {
-            ConfluencePageMetadata confluencePageMetadata = new ConfluencePageMetadata();
-            confluencePageMetadata.setTitle(path.getFileName().toString());
-            // TODO convert aasciidoc to html
-            // TODO manage attachment
-            confluencePageMetadata.setContentFilePath(path.toUri().toString());
-            confluencePublisherMetadata.addPage(confluencePageMetadata);
+        Files.walk(Paths.get(publish.getDocFolder().getAbsolutePath()))
+                .filter(path -> FilenameUtils.isExtension(path.getFileName().toString(), new String[]{Format.adoc.name(), Format.asciidoc.name(), Format.html.name()}))
+                .forEach(path -> {
+                    try {
+                        Map<String, String> attachmentCollector = new HashMap<>();
+
+                        HtmlPostProcessor htmlProcessor = getPostProcessor();
+
+                        Page page = new Page();
+                        page.setSpaceKey(publish.getSpaceKey());
+                        page.setParentId(publish.getAncestorId());
+                        page.setTitle(htmlProcessor.getPageTitle(path));
+                        String content = htmlProcessor.process(path, attachmentCollector);
+                        page.setContent(content);
+                        // TODO manage attachment
+
+                        pages.add(page);
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException("error reading file", e);
+                    }
+                });
+
+        return pages;
+    }
+
+    private HtmlPostProcessor getPostProcessor() {
+        return new HtmlPostProcessor(createAsciidoctor(), options());
+    }
+
+    private void publish(PublishProvider provider, List<Page> pages) throws MalformedURLException, SwizzleException {
+
+        pages.stream().forEach(page -> {
+            // check if parent exists
+            // check if page exists
+            if (provider.exists(page)) {
+                // upload page
+                provider.update(page);
+            } else {
+                // upload page
+                provider.insert(page);
+            }
         });
-
-        return confluencePublisherMetadata;
-    }
-
-    private void publishConfluence(ConfluencePublisherMetadata confluencePublisherMetadata) {
-
-
-        ConfluenceRestClient confluenceRestClient = new ConfluenceRestClient(publish.getEndpoint(), httpClient(), publish.getUsername(), publish.getPassword());
-        ConfluencePublisher confluencePublisher = new ConfluencePublisher(confluencePublisherMetadata, confluenceRestClient, publish.getAsciidocFolder().getAbsolutePath());
-        confluencePublisher.publish();
-    }
-
-    enum Provider {
-        CONFLUENCE;
     }
 }

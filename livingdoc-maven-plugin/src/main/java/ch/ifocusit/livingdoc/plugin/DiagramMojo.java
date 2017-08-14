@@ -23,6 +23,7 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
 import ch.ifocusit.livingdoc.plugin.diagram.PlantumlClassDiagramBuilder;
 import ch.ifocusit.livingdoc.plugin.domain.Cluster;
 import ch.ifocusit.livingdoc.plugin.domain.Color;
@@ -41,7 +42,7 @@ import java.util.List;
  * @author Julien Boz
  */
 @Mojo(name = "diagram", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
-public class DiagramMojo extends CommonMojoDefinition {
+public class DiagramMojo extends AbstractDocsGeneratorMojo {
 
     private static final Color DEFAULT_ROOT_COLOR = Color.from("wheat", null);
 
@@ -132,7 +133,7 @@ public class DiagramMojo extends CommonMojoDefinition {
                 }
                 switch (diagramType) {
                     case plantuml:
-                        asciiDocBuilder.textLine(String.format("[plantuml, %s, format=%s, opts=interactive]", getFilenameWithoutExtension(), diagramImageType));
+                        asciiDocBuilder.textLine(String.format("[plantuml, %s, format=%s, opts=interactive]", getOutputFilename(), diagramImageType));
                 }
                 asciiDocBuilder.textLine("----");
                 asciiDocBuilder.textLine(diagram);
@@ -142,7 +143,7 @@ public class DiagramMojo extends CommonMojoDefinition {
                 break;
 
             case plantuml:
-                write(diagram, getOutput(Format.plantuml));
+                write(diagram, getOutput(getOutputFilename(), Format.plantuml));
         }
     }
 

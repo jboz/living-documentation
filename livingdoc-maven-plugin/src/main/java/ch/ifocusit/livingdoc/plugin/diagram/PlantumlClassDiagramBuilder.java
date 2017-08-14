@@ -23,7 +23,7 @@
 package ch.ifocusit.livingdoc.plugin.diagram;
 
 import ch.ifocusit.livingdoc.annotations.RootAggregate;
-import ch.ifocusit.livingdoc.plugin.common.AnnotationUtil;
+import ch.ifocusit.livingdoc.plugin.utils.AnnotationUtil;
 import ch.ifocusit.livingdoc.plugin.domain.Color;
 import ch.ifocusit.livingdoc.plugin.mapping.GlossaryNamesMapper;
 import ch.ifocusit.plantuml.classdiagram.ClassDiagramBuilder;
