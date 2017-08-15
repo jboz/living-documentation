@@ -20,33 +20,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.domain;
+package ch.ifocusit.livingdoc.plugin.publish;
 
-import org.apache.maven.plugins.annotations.Parameter;
+import ch.ifocusit.livingdoc.plugin.publish.model.Page;
 
 /**
  * @author Julien Boz
  */
-public class Color {
+public interface PublishProvider {
 
-    @Parameter
-    private String backgroundColor;
+    public boolean exists(Page page);
 
-    @Parameter
-    private String borderColor;
+    public void update(Page page);
 
-    public static Color from(String bg, String border) {
-        Color color = new Color();
-        color.backgroundColor = bg;
-        color.borderColor = border;
-        return color;
-    }
-
-    public String getBackgroundColor() {
-        return backgroundColor;
-    }
-
-    public String getBorderColor() {
-        return borderColor;
-    }
+    public void insert(Page page);
 }

@@ -20,24 +20,34 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.common;
+package ch.ifocusit.livingdoc.plugin.utils;
 
-import java.text.MessageFormat;
-
-import static ch.ifocusit.livingdoc.plugin.common.AsciidocUtil.NEWLINE;
-import static ch.ifocusit.livingdoc.plugin.common.StringUtil.defaultString;
+import java.io.*;
+import java.nio.file.Path;
+import java.util.stream.Collectors;
 
 /**
  * @author Julien Boz
  */
-public class AnchorUtil {
+public final class InputStreamUtils {
 
-    private static String cleanName(String name) {
-        return name.replaceAll(" ", "-").replaceAll("\\.", "_");
+    private InputStreamUtils() {
+        throw new UnsupportedOperationException("Utils class cannot be instantiated");
     }
 
-    public static String formatLink(String linkTemplate, Integer id, String name) {
-        return MessageFormat.format(linkTemplate, defaultString(id, cleanName(name)), name)
-                .replace("\\r\\n", NEWLINE).replace("\\n", NEWLINE);
+    public static String inputStreamAsString(InputStream is) {
+        try (BufferedReader buffer = new BufferedReader(new InputStreamReader(is))) {
+            return buffer.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            throw new RuntimeException("Could not convert InputStream to String ", e);
+        }
+    }
+
+    public static FileInputStream fileInputStream(Path filePath) {
+        try {
+            return new FileInputStream(filePath.toFile());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Could not find attachment ", e);
+        }
     }
 }

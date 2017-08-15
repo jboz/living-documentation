@@ -23,8 +23,8 @@
 package ch.ifocusit.livingdoc.plugin.mapping;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.livingdoc.plugin.common.AnchorUtil;
-import ch.ifocusit.livingdoc.plugin.common.AnnotationUtil;
+import ch.ifocusit.livingdoc.plugin.utils.AnchorUtil;
+import ch.ifocusit.livingdoc.plugin.utils.AnnotationUtil;
 import ch.ifocusit.plantuml.classdiagram.NamesMapper;
 import ch.ifocusit.plantuml.classdiagram.model.Link;
 import org.simpleflatmapper.csv.CsvParser;

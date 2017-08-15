@@ -20,12 +20,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin;
+package ch.ifocusit.livingdoc.plugin.baseMojo;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.livingdoc.plugin.common.AnchorUtil;
-import ch.ifocusit.livingdoc.plugin.common.ClassLoaderUtil;
 import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
+import ch.ifocusit.livingdoc.plugin.utils.AnchorUtil;
+import ch.ifocusit.livingdoc.plugin.utils.ClassLoaderUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaAnnotatedElement;
 import com.thoughtworks.qdox.model.JavaAnnotation;
@@ -56,38 +56,43 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ch.ifocusit.livingdoc.plugin.common.StringUtil.defaultString;
+import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.defaultString;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * @author Julien Boz
  */
-public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition {
+public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
 
     // first parameter is the 'id', the second, the 'name', the third the anchor link
-    static final String GLOSSARY_LINK_TITLE = "[[{2}]]\n=== #{0}# - {1}";
-    static final String GLOSSARY_LINK_TITLE_LITE = "[[{2}]]\n=== {1}";
-    static final String GLOSSARY_LINK_INLINE_ID = "<<{2},{0}>>";
-    static final String GLOSSARY_LINK_INLINE_NAME = "<<{2},{1}>>";
-
-    /**
-     * List of source directories to browse
-     */
-    @Parameter(defaultValue = "${project.build.sourceDirectory}")
-    private List<String> sources = new ArrayList<>();
-
-    @Parameter
-    private String packageRoot = EMPTY;
-
+    protected static final String GLOSSARY_LINK_TITLE = "[[{2}]]\n=== #{0}# - {1}";
+    protected static final String GLOSSARY_LINK_TITLE_LITE = "[[{2}]]\n=== {1}";
+    protected static final String GLOSSARY_LINK_INLINE_ID = "<<{2},{0}>>";
+    protected static final String GLOSSARY_LINK_INLINE_NAME = "<<{2},{1}>>";
     /**
      * Temple for glossary title.
      */
     @Parameter
     protected String glossaryTitleTemplate;
-
-    AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
+    protected AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
+    /**
+     * List of source directories to browse
+     */
+    @Parameter(defaultValue = "${project.build.sourceDirectory}")
+    private List<String> sources = new ArrayList<>();
+    @Parameter
+    private String packageRoot = EMPTY;
     private JavaProjectBuilder javaDocBuilder;
     private List<DomainObject> mappings;
+
+    private static Function<DomainObject, ?> key() {
+        return def -> def.getId() == null ? def.getName() : def.getId();
+    }
+
+    private static Predicate<DomainObject> distinctByKey() {
+        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(key().apply(t), Boolean.TRUE) == null;
+    }
 
     /**
      * Main method.
@@ -129,6 +134,10 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
         write(asciiDocBuilder);
     }
 
+    // *******************************************************
+    // TOOLS
+    // *******************************************************
+
     protected abstract String getTitle();
 
     /**
@@ -137,10 +146,6 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
      * @param domainObjects : objects to serialize, already sorted and filtered
      */
     protected abstract void executeMojo(Stream<DomainObject> domainObjects);
-
-    // *******************************************************
-    // TOOLS
-    // *******************************************************
 
     private Stream<JavaClass> getClasses() {
         return javaDocBuilder.getClasses().stream()
@@ -171,6 +176,10 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
         return mappings == null || !id.isPresent() ? Optional.empty() : mappings.stream().filter(def -> id.get().equals(def.getId())).findFirst();
     }
 
+    // *******************************************************
+    // CLASSLOADING
+    // *******************************************************
+
     private String getName(JavaAnnotatedElement annotatedElement, String defaultValue) {
         return getMapping(annotatedElement).map(DomainObject::getName).orElse(defaultValue);
     }
@@ -178,10 +187,6 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
     private String getDescription(JavaAnnotatedElement annotatedElemen, String defaultValue) {
         return getMapping(annotatedElemen).map(DomainObject::getDescription).orElse(defaultValue);
     }
-
-    // *******************************************************
-    // CLASSLOADING
-    // *******************************************************
 
     private JavaProjectBuilder buildJavaProjectBuilder() throws MojoExecutionException {
         JavaProjectBuilder javaDocBuilder = new JavaProjectBuilder();
@@ -194,6 +199,10 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
 
         return javaDocBuilder;
     }
+
+    // *******************************************************
+    // FILTERING
+    // *******************************************************
 
     private void loadSourcesDependencies(JavaProjectBuilder javaDocBuilder) {
 
@@ -237,27 +246,13 @@ public abstract class CommonGlossaryMojoDefinition extends CommonMojoDefinition 
     }
 
     // *******************************************************
-    // FILTERING
-    // *******************************************************
-
-
-    private static Function<DomainObject, ?> key() {
-        return def -> def.getId() == null ? def.getName() : def.getId();
-    }
-
-    private static Predicate<DomainObject> distinctByKey() {
-        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
-        return t -> seen.putIfAbsent(key().apply(t), Boolean.TRUE) == null;
-    }
-
-    // *******************************************************
     // LINKING
     // *******************************************************
 
     /**
      * @return a formatted text with an asciidoc anchor.
      */
-    String formatAndLink(String textTemplate, DomainObject domainObject) {
+    protected String formatAndLink(String textTemplate, DomainObject domainObject) {
         String anchorLink = AnchorUtil.formatLink(glossaryAnchorTemplate, domainObject.getId(), domainObject.getFullName());
         return MessageFormat.format(textTemplate, defaultString(domainObject.getId(), EMPTY), domainObject.getFullName(), anchorLink);
     }

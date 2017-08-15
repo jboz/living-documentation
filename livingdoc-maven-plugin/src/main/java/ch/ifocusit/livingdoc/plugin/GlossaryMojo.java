@@ -22,6 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
 import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -37,7 +38,7 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
  * @author Julien Boz
  */
 @Mojo(name = "glossary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
-public class GlossaryMojo extends CommonGlossaryMojoDefinition {
+public class GlossaryMojo extends AbstractGlossaryMojo {
 
     @Override
     protected String getDefaultFilename() {

@@ -20,12 +20,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.common;
+package ch.ifocusit.livingdoc.plugin.publish.confluence.client.model;
 
 /**
+ * @author Alain Sahli
+ * @author Christian Stettler
  * @author Julien Boz
  */
-public class AsciidocUtil {
+public class PropertyPayload {
 
-    public static final String NEWLINE = System.getProperty("line.separator");
+    private String key;
+    private String value;
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
 }

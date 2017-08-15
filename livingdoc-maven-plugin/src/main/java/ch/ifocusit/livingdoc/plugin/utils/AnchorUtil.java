@@ -20,24 +20,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.common;
+package ch.ifocusit.livingdoc.plugin.utils;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.util.Optional;
+import java.text.MessageFormat;
+
+import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
+import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.defaultString;
 
 /**
  * @author Julien Boz
  */
-public class AnnotationUtil {
+public class AnchorUtil {
 
-    public static <T extends Annotation> Optional<T> tryFind(Field field, Class<T> annotationClass) {
-        return annotationClass == null ? Optional.empty() : field.isAnnotationPresent(annotationClass) ?
-                Optional.of(field.getAnnotation(annotationClass)) : Optional.empty();
+    private static String cleanName(String name) {
+        return name.replaceAll(" ", "-").replaceAll("\\.", "_");
     }
 
-    public static <T extends Annotation> Optional<T> tryFind(Class clazz, Class<T> annotationClass) {
-        return annotationClass == null ? Optional.empty() : clazz.isAnnotationPresent(annotationClass) ?
-                Optional.of(annotationClass.cast(clazz.getAnnotation(annotationClass))) : Optional.empty();
+    public static String formatLink(String linkTemplate, Integer id, String name) {
+        return MessageFormat.format(linkTemplate, defaultString(id, cleanName(name)), name)
+                .replace("\\r\\n", NEWLINE).replace("\\n", NEWLINE);
     }
 }

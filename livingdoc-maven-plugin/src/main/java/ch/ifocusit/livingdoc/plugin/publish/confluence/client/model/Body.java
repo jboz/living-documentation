@@ -20,33 +20,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.domain;
-
-import org.apache.maven.plugins.annotations.Parameter;
+package ch.ifocusit.livingdoc.plugin.publish.confluence.client.model;
 
 /**
+ * @author Alain Sahli
  * @author Julien Boz
  */
-public class Color {
+public class Body {
 
-    @Parameter
-    private String backgroundColor;
+    private Storage storage;
 
-    @Parameter
-    private String borderColor;
-
-    public static Color from(String bg, String border) {
-        Color color = new Color();
-        color.backgroundColor = bg;
-        color.borderColor = border;
-        return color;
+    public Storage getStorage() {
+        return this.storage;
     }
 
-    public String getBackgroundColor() {
-        return backgroundColor;
+    public void setStorage(Storage storage) {
+        this.storage = storage;
     }
 
-    public String getBorderColor() {
-        return borderColor;
-    }
 }

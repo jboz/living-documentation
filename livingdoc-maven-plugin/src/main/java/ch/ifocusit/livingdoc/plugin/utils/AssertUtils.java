@@ -20,33 +20,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.domain;
-
-import org.apache.maven.plugins.annotations.Parameter;
+package ch.ifocusit.livingdoc.plugin.utils;
 
 /**
- * @author Julien Boz
+ * @author Alain Sahli
  */
-public class Color {
+public final class AssertUtils {
 
-    @Parameter
-    private String backgroundColor;
-
-    @Parameter
-    private String borderColor;
-
-    public static Color from(String bg, String border) {
-        Color color = new Color();
-        color.backgroundColor = bg;
-        color.borderColor = border;
-        return color;
+    private AssertUtils() {
+        throw new UnsupportedOperationException("Utils class cannot be instantiated");
     }
 
-    public String getBackgroundColor() {
-        return backgroundColor;
-    }
-
-    public String getBorderColor() {
-        return borderColor;
+    public static void assertMandatoryParameter(boolean assertion, String parameterName) {
+        if (!assertion) {
+            throw new IllegalArgumentException(parameterName + " must be set");
+        }
     }
 }

@@ -20,14 +20,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.common;
+package ch.ifocusit.livingdoc.plugin.publish.confluence.client;
 
 /**
- * @author Julien Boz
+ * @author Alain Sahli
  */
-public class StringUtil {
+@SuppressWarnings("WeakerAccess")
+public class MultipleResultsException extends RuntimeException {
 
-    public static String defaultString(Integer id, String defaultString) {
-        return id == null ? defaultString : String.valueOf(id);
-    }
 }

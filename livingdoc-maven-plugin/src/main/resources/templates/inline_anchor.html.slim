@@ -1,0 +1,16 @@
+- case type
+- when :xref
+  ac:link
+    ri:page ri:content-title=target
+    ac:plain-text-link-body
+      <![CDATA[#{(xref_text || %([#{attr :refid}]))}]]>
+- when :link
+  - if uriish? target
+    a href=target
+      =text
+  - else
+    ac:link
+      ri:attachment ri:filename=target
+      - if target != text
+        ac:plain-text-link-body
+          <![CDATA[#{text}]]>

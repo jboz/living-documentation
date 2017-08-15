@@ -22,6 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
 import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
@@ -39,7 +40,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  * @author Julien Boz
  */
 @Mojo(name = "dictionary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
-public class DictionaryMojo extends CommonGlossaryMojoDefinition {
+public class DictionaryMojo extends AbstractGlossaryMojo {
 
     @Override
     protected String getDefaultFilename() {

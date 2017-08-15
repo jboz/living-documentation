@@ -20,33 +20,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.domain;
+package ch.ifocusit.livingdoc.plugin.utils;
 
-import org.apache.maven.plugins.annotations.Parameter;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.Optional;
 
 /**
  * @author Julien Boz
  */
-public class Color {
+public class AnnotationUtil {
 
-    @Parameter
-    private String backgroundColor;
-
-    @Parameter
-    private String borderColor;
-
-    public static Color from(String bg, String border) {
-        Color color = new Color();
-        color.backgroundColor = bg;
-        color.borderColor = border;
-        return color;
+    public static <T extends Annotation> Optional<T> tryFind(Field field, Class<T> annotationClass) {
+        return annotationClass == null ? Optional.empty() : field.isAnnotationPresent(annotationClass) ?
+                Optional.of(field.getAnnotation(annotationClass)) : Optional.empty();
     }
 
-    public String getBackgroundColor() {
-        return backgroundColor;
-    }
-
-    public String getBorderColor() {
-        return borderColor;
+    public static <T extends Annotation> Optional<T> tryFind(Class clazz, Class<T> annotationClass) {
+        return annotationClass == null ? Optional.empty() : clazz.isAnnotationPresent(annotationClass) ?
+                Optional.of(annotationClass.cast(clazz.getAnnotation(annotationClass))) : Optional.empty();
     }
 }
