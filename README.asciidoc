@@ -26,65 +26,13 @@ This java project is made of :
 image::conception-diagram.png[Asciidoctor Diagram javaClasses diagram]
 
 == And a business glossary (with asciidoc syntax, also in table format)
+like this example : https://github.com/jboz/living-documentation/tree/master/livingdoc-examples/microservice/
 
-[[glossaryid-100]]
-=== Bill ^100^
-*Monthly* bill.
-[NOTE]
-Generate by the system at contract birth date.
+== Add gherkin description :
+You can also integrate gherkin files like this example : link:images/example_microservice_index.html.png[Microservice example generated index file]
 
-[[glossaryid-101]]
-=== month ^101^
-Facturation month.
-
-[[glossaryid-200]]
-===== Contract ^200^
-Telecom contract
-
-[[glossaryid-201]]
-=== id ^201^
-Contract identifier.
-Generate by the system and communicate to client.
-
-[[glossaryid-202]]
-=== effectDate ^202^
-Contract effect date.
-
-[[glossaryid-300]]
-=== Customer ^300^
-Customer of the telecom service
-
-[[glossaryid-301]]
-=== name ^301^
-Name of the customer.
-
-[[glossaryid-400]]
-=== Access ^400^
-Use of telecom service.
-
-[[glossaryid-401]]
-=== phoneNumber ^401^
-Phone number used.
-
-[[glossaryid-402]]
-=== price ^402^
-Price of use of the service.
-
-[[glossaryid-403]]
-=== dateTime ^403^
-Timestamp of use.
-
-[[glossaryid-500]]
-=== CallAccess ^500^
-Phone call type access.
-
-[[glossaryid-501]]
-=== duration ^501^
-Phone call duration
-
-[[glossaryid-600]]
-=== SmsAccess ^600^
-SMS type access.
+== Also allow to publish generated docs to confluence :
+Publish specific HTML version to Altassian Conlluence Server.
 
 == With a light maven configuration :
 [source,xml]
@@ -115,4 +63,3 @@ SMS type access.
 
 See *https://github.com/jboz/living-documentation/tree/master/livingdoc-examples[livingdoc-examples]* for more uses cases.
 
-You can also integrate gherkin files like this example : link:images/example_microservice_index.html.png[Microservice example generated index file]
