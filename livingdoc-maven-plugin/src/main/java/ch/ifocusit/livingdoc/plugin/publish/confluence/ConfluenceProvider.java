@@ -1,75 +1,75 @@
 package ch.ifocusit.livingdoc.plugin.publish.confluence;
 
 import ch.ifocusit.livingdoc.plugin.publish.PublishProvider;
+import ch.ifocusit.livingdoc.plugin.publish.confluence.client.ConfluencePage;
+import ch.ifocusit.livingdoc.plugin.publish.confluence.client.ConfluenceRestClient;
+import ch.ifocusit.livingdoc.plugin.publish.confluence.client.NotFoundException;
 import ch.ifocusit.livingdoc.plugin.publish.model.Page;
-import com.softwareleaf.confluence.rest.ConfluenceClient;
-import com.softwareleaf.confluence.rest.model.*;
 import org.apache.commons.codec.digest.DigestUtils;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.nio.file.Path;
 
 public class ConfluenceProvider implements PublishProvider {
 
-    final ConfluenceClient client;
+    final ConfluenceRestClient client;
 
     public ConfluenceProvider(String endpoint, String username, String password) {
-        client = ConfluenceClient.builder()
-                .baseURL(endpoint).username(username).password(password)
-                .build();
+        client = new ConfluenceRestClient(endpoint, username, password);
     }
 
     @Override
     public boolean exists(final Page page) {
-        ContentResultList contentBySpaceKeyAndTitle = searchContentWithoutBody(page.getSpaceKey(), page.getTitle());
-        return contentBySpaceKeyAndTitle.getSize() > 0;
-    }
-
-    private ContentResultList searchContentWithoutBody(String spaceKey, String title) {
-        return client.getContentBySpaceKeyAndTitle(spaceKey, title);
+        try {
+            client.getPageByTitle(page.getSpaceKey(), page.getTitle());
+            return true;
+        } catch (NotFoundException e) {
+            return false;
+        }
     }
 
     @Override
     public void update(final Page page) {
-        Content existingPage = getContentByTitle(page.getSpaceKey(), page.getTitle());
-        String oldContent = existingPage.getBody().getStorage().getValue();
+        String contentId = client.getPageByTitle(page.getSpaceKey(), page.getTitle());
+        ConfluencePage existingPage = client.getPageWithContentAndVersionById(contentId);
+        String oldContent = existingPage.getContent();
 
         String newContentHash = DigestUtils.sha256Hex(page.getContent());
         String oldContentHash = DigestUtils.sha256Hex(oldContent);
         if (!oldContentHash.equals(newContentHash)) {
-            Body body = new Body(new Storage(page.getContent(), Storage.Representation.STORAGE.toString()));
-            existingPage.setBody(body);
-            existingPage.setSpace(new Space(page.getSpaceKey()));
-            existingPage.getVersion().setNumber(existingPage.getVersion().getNumber() + 1);
-            client.putContent(existingPage);
+            client.updatePage(contentId, page.getParentId(), page.getTitle(), page.getContent(),
+                    (int) (existingPage.getVersion() + 1));
 
-            // TODO deleteConfluenceAttachmentsNotPresentUnderPage(contentId, page.getAttachments());
-            // TODO addAttachments(contentId, page.getContentFilePath(), page.getAttachments());
+            // remove all attachement
+            client.getAttachments(contentId).forEach(attachment -> client.deleteAttachment(attachment.getId()));
+            // add attachements
+            page.getAttachements().forEach(attachement ->
+                    client.addAttachment(contentId, attachement.getName(), fileInputStream(attachement.getFile()))
+            );
         } else {
             // TODO log INFO
             System.out.println("Page with title=" + page.getTitle() + " did not change.");
         }
     }
 
-    public Content getContentByTitle(String spaceKey, String title) {
-        ContentResultList pageByTitle = searchContentWithoutBody(spaceKey, title);
-        if (pageByTitle.getSize() > 0) {
-            Content[] contents = pageByTitle.getContents();
-            return client.getContentById(contents[0].getId());
-        }
-        throw new IllegalStateException("Could not find find page with title=" + title + " in space=" + spaceKey);
-    }
-
     @Override
     public void insert(final Page page) {
-        // configure page
-        Content newContent = new Content();
-        newContent.setType(Type.PAGE);
-        newContent.setSpace(new Space(page.getSpaceKey()));
-        newContent.setTitle(page.getTitle());
-        newContent.setBody(new Body(new Storage(page.getContent(), Storage.Representation.STORAGE.toString())));
-
-        Parent parent = new Parent(page.getParentId(), Type.PAGE.toString());
-        newContent.setAncestors(new Parent[]{parent});
-
         // post page to confluence.
-        client.postContent(newContent);
+        String contentId = client.addPageUnderAncestor(page.getSpaceKey(), page.getParentId(), page.getTitle(), page.getContent());
+
+        // add attachements
+        page.getAttachements().forEach(attachement ->
+                client.addAttachment(contentId, attachement.getName(), fileInputStream(attachement.getFile()))
+        );
     }
+
+    private static FileInputStream fileInputStream(Path filePath) {
+        try {
+            return new FileInputStream(filePath.toFile());
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Could not find attachment ", e);
+        }
+    }
+
 }

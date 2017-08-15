@@ -34,7 +34,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.codehaus.swizzle.confluence.SwizzleException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -95,9 +94,11 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
                         page.setSpaceKey(publish.getSpaceKey());
                         page.setParentId(publish.getAncestorId());
                         page.setTitle(htmlProcessor.getPageTitle(path));
+                        page.setFile(path);
                         String content = htmlProcessor.process(path, attachmentCollector);
                         page.setContent(content);
-                        // TODO manage attachment
+
+                        attachmentCollector.forEach(page::addAttachement);
 
                         pages.add(page);
                     } catch (IOException e) {
@@ -112,7 +113,7 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
         return new HtmlPostProcessor(createAsciidoctor(), options());
     }
 
-    private void publish(PublishProvider provider, List<Page> pages) throws MalformedURLException, SwizzleException {
+    private void publish(PublishProvider provider, List<Page> pages) throws MalformedURLException {
 
         pages.stream().forEach(page -> {
             // check if parent exists
