@@ -20,12 +20,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.publish.confluence.client;
+package ch.ifocusit.livingdoc.plugin.publish.confluence.client.model;
 
 /**
  * @author Alain Sahli
+ * @author Julien Boz
  */
-@SuppressWarnings("WeakerAccess")
-public class MultipleResultsException extends RuntimeException {
+public class Body {
+
+    private Storage storage;
+
+    public Storage getStorage() {
+        return this.storage;
+    }
+
+    public void setStorage(Storage storage) {
+        this.storage = storage;
+    }
 
 }

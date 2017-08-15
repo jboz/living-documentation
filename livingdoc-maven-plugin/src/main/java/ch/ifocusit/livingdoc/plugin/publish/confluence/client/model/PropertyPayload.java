@@ -20,37 +20,32 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.publish.confluence.client;
-
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-
-import static ch.ifocusit.livingdoc.plugin.utils.InputStreamUtils.inputStreamAsString;
+package ch.ifocusit.livingdoc.plugin.publish.confluence.client.model;
 
 /**
  * @author Alain Sahli
  * @author Christian Stettler
  * @author Julien Boz
  */
-class RequestFailedException extends RuntimeException {
+public class PropertyPayload {
 
-    private static final String SPACE = " ";
+    private String key;
+    private String value;
 
-    RequestFailedException(HttpRequest request, HttpResponse response) {
-        super(response.getStatusLine().getStatusCode() + SPACE
-                + response.getStatusLine().getReasonPhrase() + SPACE
-                + request.getRequestLine().getMethod() + SPACE
-                + request.getRequestLine().getUri() + SPACE
-                + failedResponseContent(response)
-        );
+    public String getKey() {
+        return key;
     }
 
-    private static String failedResponseContent(HttpResponse response) {
-        try {
-            return inputStreamAsString(response.getEntity().getContent());
-        } catch (Exception ignored) {
-            return "";
-        }
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
 }

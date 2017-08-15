@@ -20,12 +20,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.publish.confluence.client;
+package ch.ifocusit.livingdoc.plugin.publish.confluence.client.model;
 
 /**
  * @author Alain Sahli
+ * @author Julien Boz
  */
-@SuppressWarnings("WeakerAccess")
-public class MultipleResultsException extends RuntimeException {
+public class Ancestor {
+
+    private String id;
+
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
 }

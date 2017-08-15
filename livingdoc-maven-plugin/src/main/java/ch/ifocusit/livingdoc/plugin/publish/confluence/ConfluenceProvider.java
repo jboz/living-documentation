@@ -1,3 +1,25 @@
+/*
+ * Living Documentation
+ *
+ * Copyright (C) 2017 Focus IT
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package ch.ifocusit.livingdoc.plugin.publish.confluence;
 
 import ch.ifocusit.livingdoc.plugin.publish.PublishProvider;
@@ -5,12 +27,12 @@ import ch.ifocusit.livingdoc.plugin.publish.confluence.client.ConfluencePage;
 import ch.ifocusit.livingdoc.plugin.publish.confluence.client.ConfluenceRestClient;
 import ch.ifocusit.livingdoc.plugin.publish.confluence.client.NotFoundException;
 import ch.ifocusit.livingdoc.plugin.publish.model.Page;
-import org.apache.commons.codec.digest.DigestUtils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.nio.file.Path;
+import static ch.ifocusit.livingdoc.plugin.utils.InputStreamUtils.fileInputStream;
 
+/**
+ * @author Julien Boz
+ */
 public class ConfluenceProvider implements PublishProvider {
 
     final ConfluenceRestClient client;
@@ -35,12 +57,12 @@ public class ConfluenceProvider implements PublishProvider {
         ConfluencePage existingPage = client.getPageWithContentAndVersionById(contentId);
         String oldContent = existingPage.getContent();
 
-        String newContentHash = DigestUtils.sha256Hex(page.getContent());
-        String oldContentHash = DigestUtils.sha256Hex(oldContent);
-        if (!oldContentHash.equals(newContentHash)) {
-            client.updatePage(contentId, page.getParentId(), page.getTitle(), page.getContent(),
-                    (int) (existingPage.getVersion() + 1));
+        // TODO check why content even upload
+        if (!oldContent.equals(page.getContent())) {
+            client.updatePage(contentId, page.getParentId(), page.getTitle(), page.getContent(), existingPage.getVersion() + 1);
 
+            // TODO update attachement if possible
+            // TODO remove attachement not present
             // remove all attachement
             client.getAttachments(contentId).forEach(attachment -> client.deleteAttachment(attachment.getId()));
             // add attachements
@@ -62,14 +84,6 @@ public class ConfluenceProvider implements PublishProvider {
         page.getAttachements().forEach(attachement ->
                 client.addAttachment(contentId, attachement.getName(), fileInputStream(attachement.getFile()))
         );
-    }
-
-    private static FileInputStream fileInputStream(Path filePath) {
-        try {
-            return new FileInputStream(filePath.toFile());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Could not find attachment ", e);
-        }
     }
 
 }
