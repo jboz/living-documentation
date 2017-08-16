@@ -175,7 +175,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <outputDirectory>${livingdoc.output}</outputDirectory>
+                    <generatedDocsDirectory>${livingdoc.output}</generatedDocsDirectory>
                     <packageRoot>ch.ifocusit.telecom</packageRoot>
                     <format>adoc</format><!-- the next plugin will generate a HTML index file -->
                     <excludes>
