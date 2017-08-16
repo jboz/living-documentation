@@ -42,7 +42,6 @@
                 <groupId>javax</groupId>
                 <artifactId>javaee-api</artifactId>
                 <version>7.0</version>
-                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -145,13 +144,34 @@
                 <artifactId>livingdoc-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>class-diagram-domain</id>
+                        <id>domain</id>
                         <phase>${livingdoc.phase}</phase>
                         <goals>
                             <goal>diagram</goal>
                             <goal>glossary</goal>
                             <goal>gherkin</goal>
                         </goals>
+                        <configuration>
+                            <diagramHeader>${project.basedir}/src/main/livingdoc/diagram-conception.header</diagramHeader>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>service</id>
+                        <phase>${livingdoc.phase}</phase>
+                        <goals>
+                            <goal>diagram</goal>
+                        </goals>
+                        <configuration>
+                            <outputFilename>diagram-services</outputFilename>
+                            <format>plantuml</format>
+                            <interactive>false</interactive>
+                            <excludes>
+                                <exclude>.*\.domain\..*</exclude>
+                                <exclude>.*JAXRSConfiguration</exclude>
+                                <exclude>.*ListBillRepository</exclude>
+                            </excludes>
+                            <onlyAnnotated>false</onlyAnnotated>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
@@ -165,6 +185,8 @@
                     <onlyAnnotated>true</onlyAnnotated>
                     <interactive>true</interactive><!-- allow links in diagram, see -->
                     <diagramLinkPage>../index.html</diagramLinkPage><!-- all sections will be in index file -->
+                    <glossaryTitleTemplate>[[{2}]]\n=== {1} ^glossary_id={0}^</glossaryTitleTemplate>
+                    <gherkinOptions>{templates}/gherkin_template.erb</gherkinOptions>
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->
@@ -206,6 +228,7 @@
                         <sectlinks/>
                         <sectanchors>true</sectanchors>
                         <generated>${livingdoc.output}</generated>
+                        <templates>${project.basedir}/src/main/livingdoc</templates>
                     </attributes>
                 </configuration>
                 <executions>

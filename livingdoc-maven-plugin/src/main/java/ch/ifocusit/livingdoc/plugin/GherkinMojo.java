@@ -50,10 +50,10 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     private List<String> features;
 
     /**
-     * Options like use a custom template.
+     * Options like use a custom template (template=path_to_my_template.erb).
      */
     @Parameter(defaultValue = "")
-    private String options;
+    private String gherkinOptions;
 
     @Override
     protected String getDefaultFilename() {
@@ -76,7 +76,7 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
                         .filter(p -> p.toString().endsWith(".feature"))
                         .map(Path::toString)
                         // add a line into adoc
-                        .forEach(p -> asciiDocBuilder.textLine(String.format("gherkin::%s[%s]", p, options)));
+                        .forEach(p -> asciiDocBuilder.textLine(String.format("gherkin::%s[%s]", p, gherkinOptions)));
             } catch (IOException e) {
                 throw new IllegalStateException(String.format("Error browsing %s", path), e);
             }

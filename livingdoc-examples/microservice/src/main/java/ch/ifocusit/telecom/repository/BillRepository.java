@@ -24,37 +24,19 @@ package ch.ifocusit.telecom.repository;
 
 import ch.ifocusit.telecom.domain.Bill;
 
-import javax.enterprise.context.RequestScoped;
 import java.time.YearMonth;
-import java.util.*;
+import java.util.Optional;
 
 /**
- * Base on file system bill repository.
- *
  * @author Julien Boz
  */
-@RequestScoped
-public class ListBillRespository implements BillRespository {
+public interface BillRepository {
 
-    private final List<Bill> bills = new ArrayList<>();
+    public Bill add(Bill bill);
 
-    @Override
-    public void clear() {
-        bills.clear();
-    }
+    public Optional<Bill> retreiveLastBill();
 
-    public Bill add(Bill bill) {
-        bills.add(bill);
-        return bill;
-    }
+    public void clear();
 
-    @Override
-    public Optional<Bill> retreiveLastBill() {
-        return bills.stream().sorted(Comparator.comparing(Bill::getMonth).reversed()).findFirst();
-    }
-
-    @Override
-    public Optional<Bill> get(YearMonth month) {
-        return bills.stream().filter(bill -> Objects.equals(bill.getMonth(), month)).findFirst();
-    }
+    public Optional<Bill>  get(YearMonth parse);
 }

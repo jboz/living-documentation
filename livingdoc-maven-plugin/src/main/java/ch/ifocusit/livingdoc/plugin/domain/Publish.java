@@ -2,8 +2,6 @@ package ch.ifocusit.livingdoc.plugin.domain;
 
 import org.apache.maven.plugins.annotations.Parameter;
 
-import java.io.File;
-
 public class Publish {
 
     public enum Provider {
@@ -15,9 +13,6 @@ public class Publish {
      */
     @Parameter(required = true, defaultValue = "confluence")
     private Provider provider = Provider.confluence;
-
-    @Parameter(defaultValue = "${project.build.directory}/generated-docs", required = true)
-    private File docFolder;
 
     @Parameter(required = true)
     private String endpoint;
@@ -36,10 +31,6 @@ public class Publish {
 
     public Provider getProvider() {
         return provider;
-    }
-
-    public File getDocFolder() {
-        return docFolder;
     }
 
     public String getEndpoint() {

@@ -22,6 +22,8 @@
  */
 package ch.ifocusit.livingdoc.plugin.utils;
 
+import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
+
 /**
  * @author Julien Boz
  */
@@ -29,5 +31,9 @@ public class StringUtil {
 
     public static String defaultString(Integer id, String defaultString) {
         return id == null ? defaultString : String.valueOf(id);
+    }
+
+    public static String interpretNewLine(String text) {
+        return text.replace("\\r\\n", NEWLINE).replace("\\n", NEWLINE);
     }
 }

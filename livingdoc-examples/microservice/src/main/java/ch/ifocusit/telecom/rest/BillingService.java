@@ -23,7 +23,7 @@
 package ch.ifocusit.telecom.rest;
 
 import ch.ifocusit.telecom.domain.Bill;
-import ch.ifocusit.telecom.repository.BillRespository;
+import ch.ifocusit.telecom.repository.BillRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -49,7 +49,7 @@ import java.util.Optional;
 public class BillingService {
 
     @Inject
-    private BillRespository billRespository;
+    private BillRepository repository;
 
     @GET
     @Path("/whoami")
@@ -66,7 +66,7 @@ public class BillingService {
             @ApiResponse(code = 404, message = "Billing not found")}
     )
     public Response getBill(@PathParam("month") final String month, @Context Request request) {
-        Optional<Bill> bill = billRespository.get(YearMonth.parse(month));
+        Optional<Bill> bill = repository.get(YearMonth.parse(month));
 
         if (!bill.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();

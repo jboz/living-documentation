@@ -46,7 +46,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
 
     private static final Color DEFAULT_ROOT_COLOR = Color.from("wheat", null);
 
-    @Parameter(required = true)
+    @Parameter(defaultValue = "${project.groupId}.${project.artifactId}.domain", required = true)
     private String packageRoot;
 
     @Parameter
@@ -68,7 +68,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
      * Add link into diagram to glossary
      */
     @Parameter(defaultValue = "true")
-    private boolean withLink = true;
+    private boolean diagramWithLink = true;
 
     /**
      * Link template to use in diagram.
@@ -97,14 +97,14 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     /**
      * Header of the diagram
      */
-    @Parameter(defaultValue = "src/main/livingdoc/diagram.header")
-    private File header;
+    @Parameter(defaultValue = "${project.basedir}/src/main/livingdoc/diagram.header")
+    private File diagramHeader;
 
     /**
      * Footer of the diagram
      */
-    @Parameter(defaultValue = "src/main/livingdoc/diagram.footer")
-    private File footer;
+    @Parameter(defaultValue = "${project.basedir}/src/main/livingdoc/diagram.footer")
+    private File diagramFooter;
 
     @Parameter(defaultValue = "false")
     private boolean interactive = false;
@@ -117,7 +117,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (interactive) {
-            withLink = true;
+            diagramWithLink = true;
             diagramImageType = DiagramImageType.svg;
         }
         // generate diagram
@@ -152,11 +152,11 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
         switch (diagramType) {
             case plantuml:
                 PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes,
-                        rootAggregateColor, header, footer);
+                        rootAggregateColor, diagramHeader, diagramFooter);
                 if (onlyAnnotated) {
                     builder.filterOnAnnotation(UbiquitousLanguage.class);
                 }
-                if (withLink && !DiagramImageType.png.equals(diagramImageType)) {
+                if (diagramWithLink && !DiagramImageType.png.equals(diagramImageType)) {
                     builder.mapNames(glossaryMapping, UbiquitousLanguage.class, diagramLinkPage + "#" + glossaryAnchorTemplate);
                 }
                 return builder.generate();

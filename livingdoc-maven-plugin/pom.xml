@@ -92,7 +92,7 @@
         <dependency>
             <groupId>ch.ifocusit</groupId>
             <artifactId>plantuml-builder</artifactId>
-            <version>1.1</version>
+            <version>1.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.qdox</groupId>

@@ -54,7 +54,7 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
     @Parameter(defaultValue = "${plugin.artifactMap}", required = true, readonly = true)
     private Map<String, Artifact> pluginArtifactMap;
 
-    @Parameter(required = true)
+    @Parameter
     private Publish publish = new Publish();
 
     @Override
@@ -82,7 +82,7 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
 
         List<Page> pages = new ArrayList<>();
 
-        Files.walk(Paths.get(publish.getDocFolder().getAbsolutePath()))
+        Files.walk(Paths.get(generatedDocsDirectory.getAbsolutePath()))
                 .filter(path -> FilenameUtils.isExtension(path.getFileName().toString(), new String[]{Format.adoc.name(), Format.asciidoc.name(), Format.html.name()}))
                 .forEach(path -> {
                     try {
