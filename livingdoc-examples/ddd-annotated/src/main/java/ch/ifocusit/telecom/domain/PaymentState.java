@@ -23,51 +23,20 @@
 package ch.ifocusit.telecom.domain;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.livingdoc.annotations.RootAggregate;
-import ch.ifocusit.telecom.domain.access.Access;
-import ch.ifocusit.telecom.domain.common.AbstractDomain;
-
-import java.time.YearMonth;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
- * *Monthly* bill.
- * [NOTE]
- * Generate by the system at contract birth date.
- *
- * @since 2017-03-01
+ * Bill payment state values.
  */
-@RootAggregate
-@UbiquitousLanguage(id = 100)
-public class Bill extends AbstractDomain {
-
+@UbiquitousLanguage(id = 700)
+public enum PaymentState {
     /**
-     * Facturation month.
+     * Wainting payment by the client.
      */
-    @UbiquitousLanguage(id = 101)
-    private YearMonth month;
-
+    @UbiquitousLanguage(id = 701)
+    WAITING,
     /**
-     * Contract concerned by the bill.
+     * Client has payed.
      */
-    @UbiquitousLanguage(id = 200)
-    private Contract contract;
-
-    /**
-     * Bill contents.
-     */
-    @UbiquitousLanguage(id = 400)
-    private Set<Access> accesses = new HashSet<>();
-
-    /**
-     * Bill payment state
-     */
-    @UbiquitousLanguage(id = 700)
-    private PaymentState paymentState;
-
-    /**
-     * Flag that indicate whenever the bill has been sended to the customer.
-     */
-    private boolean customerInformed;
+    @UbiquitousLanguage(id = 702)
+    DONE;
 }

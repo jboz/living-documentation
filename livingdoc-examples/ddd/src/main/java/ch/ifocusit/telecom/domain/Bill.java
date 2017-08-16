@@ -54,6 +54,11 @@ public class Bill extends AbstractDomain {
      */
     private Set<Access> accesses = new HashSet<>();
 
+    /**
+     * Bill payment state
+     */
+    private PaymentState paymentState;
+
     public Contract getContract() {
         return contract;
     }
