@@ -10,6 +10,7 @@ import org.apache.commons.lang.Validate;
 @UbiquitousLanguage
 public final class TrackingId implements ValueObject<TrackingId> {
 
+    @UbiquitousLanguage
     private String id;
 
     /**

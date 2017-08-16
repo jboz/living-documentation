@@ -17,8 +17,11 @@ import java.util.Date;
 @UbiquitousLanguage
 public class RouteSpecification extends AbstractSpecification<Itinerary> implements ValueObject<RouteSpecification> {
 
+    @UbiquitousLanguage
     private Location origin;
+    @UbiquitousLanguage
     private Location destination;
+    @UbiquitousLanguage
     private Date arrivalDeadline;
 
     /**

@@ -19,6 +19,8 @@ public final class UnLocode implements ValueObject<UnLocode> {
     // Country code is exactly two letters.
     // Location code is usually three letters, but may contain the numbers 2-9 as well
     private static final Pattern VALID_PATTERN = Pattern.compile("[a-zA-Z]{2}[a-zA-Z2-9]{3}");
+
+    @UbiquitousLanguage
     private String unlocode;
 
     /**

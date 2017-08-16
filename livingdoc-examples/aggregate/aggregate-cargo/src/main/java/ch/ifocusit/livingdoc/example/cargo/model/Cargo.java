@@ -48,12 +48,18 @@ import org.apache.commons.lang.Validate;
 @UbiquitousLanguage
 public class Cargo implements Entity<Cargo> {
 
+    @UbiquitousLanguage
     private TrackingId trackingId;
+    @UbiquitousLanguage
     private Location origin;
+    @UbiquitousLanguage
     private RouteSpecification routeSpecification;
+    @UbiquitousLanguage
     private Itinerary itinerary;
+    @UbiquitousLanguage
     private Delivery delivery;
     // Auto-generated surrogate key
+    @UbiquitousLanguage
     private Long id;
 
     public Cargo(final TrackingId trackingId, final RouteSpecification routeSpecification) {

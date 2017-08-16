@@ -20,8 +20,11 @@ public class Itinerary implements ValueObject<Itinerary> {
 
     static final Itinerary EMPTY_ITINERARY = new Itinerary();
     private static final Date END_OF_DAYS = new Date(Long.MAX_VALUE);
+
+    @UbiquitousLanguage
     private List<Leg> legs = Collections.emptyList();
     // Auto-generated surrogate key
+    @UbiquitousLanguage
     private Long id;
 
     /**
