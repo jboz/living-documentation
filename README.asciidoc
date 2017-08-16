@@ -11,16 +11,17 @@ Read CONTRIBUTING file to contrib and check the the backlog on the trello board 
 
 This project is intended to provide some tools to allow a nice Living Documentation.
 
-_Inspired by https://livingdocumentation.github.io/livingdoc-maven-plugin/intro.html_
+It based on http://asciidoctor.org/docs/what-is-asciidoc/[Asciidoctor], https://github.com/jboz/plantuml-builder[Plantuml Builder], and other nice tools...
 
-See examples to show the powerfull ! You'll be able to generate beautiful diagrams with a simple configuration.
+See examples to show the powerfull ! You'll be able to generate beautiful documents with a simple configuration.
 Create a living documentation from the code automatically. Easily customizable.
 
 With or without annotations.
 
 This java project is made of :
-1. Some java https://github.com/jboz/living-documentation/tree/master/livingdoc-annotations[annotations] (like https://github.com/jboz/living-documentation/blob/master/livingdoc-annotations/src/main/java/ch/ifocusit/livingdoc/annotations/UbiquitousLanguage.java[UbiquitousLanguage] annotation), but not mandatory
-2. A fully customizable https://github.com/jboz/living-documentation/tree/master/livingdoc-maven-plugin[maven plugin]
+
+. Some java https://github.com/jboz/living-documentation/tree/master/livingdoc-annotations[annotations] (like https://github.com/jboz/living-documentation/blob/master/livingdoc-annotations/src/main/java/ch/ifocusit/livingdoc/annotations/UbiquitousLanguage.java[UbiquitousLanguage] annotation), but not mandatory
+. A fully customizable https://github.com/jboz/living-documentation/tree/master/livingdoc-maven-plugin[maven plugin]
 
 == Generate a conception diagram (svg format with link supported !)
 image::conception-diagram.png[Asciidoctor Diagram javaClasses diagram]
