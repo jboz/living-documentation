@@ -6,8 +6,11 @@ _Micro service around the Bill aggregate_
 
 == Conception
 
-//plantuml::{generated}/diagram.plantuml[format=svg, opts=interactive]
 include::{generated}/diagram.adoc[]
+
+== Exposed services
+
+plantuml::{generated}/diagram-services.plantuml[]
 
 == Glossary
 

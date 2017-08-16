@@ -50,7 +50,12 @@
                     <packageRoot>ch.ifocusit.livingdoc.example</packageRoot>
                     <format>adoc</format>
                     <excludes>
-                        <exclude>.*\.shared.*</exclude><!-- exclude shared package -->
+                        <!-- exclude shared package -->
+                        <exclude>.*\.shared.*</exclude>
+                        <!-- exclude some methods shared on different objects -->
+                        <exclude>.*sameValueAs.*</exclude>
+                        <exclude>.*sameIdentityAs.*</exclude>
+                        <exclude>.*idString.*</exclude>
                     </excludes>
                     <onlyAnnotated>true</onlyAnnotated>
                     <interactive>true</interactive>

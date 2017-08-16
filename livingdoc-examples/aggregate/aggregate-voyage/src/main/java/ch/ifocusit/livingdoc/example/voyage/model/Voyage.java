@@ -21,9 +21,13 @@ public class Voyage implements Entity<Voyage> {
     public static final Voyage NONE = new Voyage(
             new VoyageNumber(""), Schedule.EMPTY
     );
+
+    @UbiquitousLanguage
     private VoyageNumber voyageNumber;
+    @UbiquitousLanguage
     private Schedule schedule;
     // Needed by Hibernate
+    @UbiquitousLanguage
     private Long id;
 
     public Voyage(final VoyageNumber voyageNumber, final Schedule schedule) {

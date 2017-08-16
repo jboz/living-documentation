@@ -98,7 +98,7 @@ public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesM
     private Link create(String name, String fullName, Optional<A> annotation) {
         Link link = new Link();
         link.setLabel(name);
-        link.setUrl(AnchorUtil.formatLink(linkTemplate, annotation.map(a -> a.id()).orElse(null), fullName));
+        link.setUrl(AnchorUtil.formatLink(linkTemplate, annotation.map(a -> a.id() == -1 ? null : a.id()).orElse(null), fullName));
         return link;
     }
 }

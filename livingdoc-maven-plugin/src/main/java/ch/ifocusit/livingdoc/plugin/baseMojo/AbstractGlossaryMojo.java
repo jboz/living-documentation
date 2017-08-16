@@ -46,7 +46,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -57,6 +56,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.defaultString;
+import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.interpretNewLine;
+import static java.text.MessageFormat.format;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
@@ -254,7 +255,7 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
      */
     protected String formatAndLink(String textTemplate, DomainObject domainObject) {
         String anchorLink = AnchorUtil.formatLink(glossaryAnchorTemplate, domainObject.getId(), domainObject.getFullName());
-        return MessageFormat.format(textTemplate, defaultString(domainObject.getId(), EMPTY), domainObject.getFullName(), anchorLink);
+        return interpretNewLine(format(textTemplate, defaultString(domainObject.getId(), EMPTY), domainObject.getFullName(), anchorLink));
     }
 
     // *******************************************************

@@ -22,10 +22,9 @@
  */
 package ch.ifocusit.livingdoc.plugin.utils;
 
-import java.text.MessageFormat;
-
-import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
 import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.defaultString;
+import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.interpretNewLine;
+import static java.text.MessageFormat.format;
 
 /**
  * @author Julien Boz
@@ -37,7 +36,6 @@ public class AnchorUtil {
     }
 
     public static String formatLink(String linkTemplate, Integer id, String name) {
-        return MessageFormat.format(linkTemplate, defaultString(id, cleanName(name)), name)
-                .replace("\\r\\n", NEWLINE).replace("\\n", NEWLINE);
+        return interpretNewLine(format(linkTemplate, defaultString(id, cleanName(name)), name));
     }
 }

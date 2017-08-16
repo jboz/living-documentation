@@ -8,7 +8,13 @@ import ch.ifocusit.livingdoc.example.shared.ValueObject;
  */
 @UbiquitousLanguage
 public enum RoutingStatus implements ValueObject<RoutingStatus> {
-    NOT_ROUTED, ROUTED, MISROUTED;
+
+    @UbiquitousLanguage
+    NOT_ROUTED,
+    @UbiquitousLanguage
+    ROUTED,
+    @UbiquitousLanguage
+    MISROUTED;
 
     @Override
     public boolean sameValueAs(final RoutingStatus other) {

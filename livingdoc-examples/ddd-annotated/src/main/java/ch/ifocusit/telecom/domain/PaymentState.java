@@ -20,23 +20,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.repository;
+package ch.ifocusit.telecom.domain;
 
-import ch.ifocusit.telecom.domain.Bill;
-
-import java.time.YearMonth;
-import java.util.Optional;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 
 /**
- * @author Julien Boz
+ * Bill payment state values.
  */
-public interface BillRespository {
-
-    public Bill add(Bill bill);
-
-    public Optional<Bill> retreiveLastBill();
-
-    public void clear();
-
-    public Optional<Bill>  get(YearMonth parse);
+@UbiquitousLanguage(id = 700)
+public enum PaymentState {
+    /**
+     * Wainting payment by the client.
+     */
+    @UbiquitousLanguage(id = 701)
+    WAITING,
+    /**
+     * Client has payed.
+     */
+    @UbiquitousLanguage(id = 702)
+    DONE;
 }

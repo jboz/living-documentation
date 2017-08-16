@@ -61,7 +61,7 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
      * Directory where the documents will be generated
      */
     @Parameter(defaultValue = "${project.build.directory}/generated-docs", required = true)
-    protected File outputDirectory;
+    protected File generatedDocsDirectory;
 
     /**
      * Templates directories.
@@ -70,11 +70,11 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
     private File asciidocTemplates;
 
     protected void write(AsciiDocBuilder asciiDocBuilder, Format format, String outputFilename) throws MojoExecutionException {
-        outputDirectory.mkdirs();
+        generatedDocsDirectory.mkdirs();
         File output = getOutput(outputFilename, Format.adoc);
         try {
             // write adco file
-            asciiDocBuilder.writeToFile(outputDirectory.getAbsolutePath(), FilenameUtils.removeExtension(outputFilename), StandardCharsets.UTF_8);
+            asciiDocBuilder.writeToFile(generatedDocsDirectory.getAbsolutePath(), FilenameUtils.removeExtension(outputFilename), StandardCharsets.UTF_8);
             if (Format.html.equals(format)) {
                 // convert adoc to html
                 createAsciidoctor().convertFile(output, options());
@@ -86,7 +86,7 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
 
     protected File getOutput(String filename, AbstractDocsGeneratorMojo.Format desiredExtension) {
         filename = FilenameUtils.isExtension(filename, desiredExtension.name()) ? filename : filename + "." + desiredExtension;
-        return new File(outputDirectory, filename);
+        return new File(generatedDocsDirectory, filename);
     }
 
     protected Asciidoctor createAsciidoctor() {
@@ -98,7 +98,7 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
     protected Options options() {
         this.asciidocTemplates.mkdirs();
 
-        String imagesOutputDirectory = outputDirectory.getAbsolutePath();
+        String imagesOutputDirectory = generatedDocsDirectory.getAbsolutePath();
 
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("imagesoutdir", imagesOutputDirectory);
@@ -107,7 +107,7 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
         return OptionsBuilder.options()
                 .backend("html5")
                 .safe(UNSAFE)
-                .baseDir(outputDirectory)
+                .baseDir(generatedDocsDirectory)
                 .templateDirs(asciidocTemplates)
                 .attributes(attributes)
                 .get();

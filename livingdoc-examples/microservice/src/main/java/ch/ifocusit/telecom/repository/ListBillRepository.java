@@ -20,20 +20,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.livingdoc.plugin.utils;
+package ch.ifocusit.telecom.repository;
 
-import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
+import ch.ifocusit.telecom.domain.Bill;
+
+import javax.enterprise.context.RequestScoped;
+import java.time.YearMonth;
+import java.util.*;
 
 /**
+ * Base on file system bill repository.
+ *
  * @author Julien Boz
  */
-public class StringUtil {
+@RequestScoped
+public class ListBillRepository implements BillRepository {
 
-    public static String defaultString(Integer id, String defaultString) {
-        return id == null ? defaultString : String.valueOf(id);
+    private final List<Bill> bills = new ArrayList<>();
+
+    @Override
+    public void clear() {
+        bills.clear();
     }
 
-    public static String interpretNewLine(String text) {
-        return text.replace("\\r\\n", NEWLINE).replace("\\n", NEWLINE);
+    public Bill add(Bill bill) {
+        bills.add(bill);
+        return bill;
+    }
+
+    @Override
+    public Optional<Bill> retreiveLastBill() {
+        return bills.stream().sorted(Comparator.comparing(Bill::getMonth).reversed()).findFirst();
+    }
+
+    @Override
+    public Optional<Bill> get(YearMonth month) {
+        return bills.stream().filter(bill -> Objects.equals(bill.getMonth(), month)).findFirst();
     }
 }

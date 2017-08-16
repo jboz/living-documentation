@@ -14,3 +14,6 @@ id,name,description
 500,Appel téléphonique,
 501,durée,Durée de l'appel téléphonique
 600,SMS,SMS
+700,Paiement,Etat de paiement de la fature
+701,Paiement.En attente,Le facture est en attente de paiement
+702,Paiement.Payé,La facture à été payé par le client

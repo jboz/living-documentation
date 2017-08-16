@@ -61,6 +61,12 @@ public class Bill extends AbstractDomain {
     private Set<Access> accesses = new HashSet<>();
 
     /**
+     * Bill payment state
+     */
+    @UbiquitousLanguage(id = 700)
+    private PaymentState paymentState;
+
+    /**
      * Flag that indicate whenever the bill has been sended to the customer.
      */
     private boolean customerInformed;

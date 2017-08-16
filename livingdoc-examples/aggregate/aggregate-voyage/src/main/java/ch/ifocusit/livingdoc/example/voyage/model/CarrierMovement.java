@@ -21,11 +21,17 @@ public final class CarrierMovement implements ValueObject<CarrierMovement> {
             Location.UNKNOWN, Location.UNKNOWN,
             new Date(0), new Date(0)
     );
+
+    @UbiquitousLanguage
     private Location departureLocation;
+    @UbiquitousLanguage
     private Location arrivalLocation;
+    @UbiquitousLanguage
     private Date departureTime;
+    @UbiquitousLanguage
     private Date arrivalTime;
     // Auto-generated surrogate key
+    @UbiquitousLanguage
     private Long id;
 
     /**
