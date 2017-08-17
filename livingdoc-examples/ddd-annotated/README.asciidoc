@@ -25,6 +25,15 @@ image::dictionary.png[]
 public class Bill {
     [...]
 }
+
+@UbiquitousLanguage(id = 200)
+public class Contract extends AbstractDomain {
+
+    @UbiquitousLanguage(id = 201)
+    private String id;
+
+    [...]
+}
 ----
 
 Annotations dependency :

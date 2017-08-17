@@ -66,10 +66,12 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
 
     // first parameter is the 'id', the second, the 'name', the third the anchor link
-    protected static final String GLOSSARY_LINK_TITLE = "[[{2}]]\n=== #{0}# - {1}";
+    protected static final String GLOSSARY_LINK_TITLE = "[[{2}]]\n=== [small]#{0}# - {1}";
     protected static final String GLOSSARY_LINK_TITLE_LITE = "[[{2}]]\n=== {1}";
     protected static final String GLOSSARY_LINK_INLINE_ID = "<<{2},{0}>>";
     protected static final String GLOSSARY_LINK_INLINE_NAME = "<<{2},{1}>>";
+    private static final String JAVAX_VALIDATION_CONSTRAINTS = "javax.validation.constraints.";
+    private static final String HIBERNATE_VALIDATION_CONSTRAINTS = "org.hibernate.validator.constraints.";
     /**
      * Temple for glossary title.
      */
@@ -101,9 +103,7 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         javaDocBuilder = buildJavaProjectBuilder();
-        if (Format.html.equals(format)) {
-            asciiDocBuilder.sectionTitleLevel1(getTitle());
-        }
+        appendTitle(asciiDocBuilder);
 
         if (glossaryMapping != null) {
             try {
@@ -281,6 +281,11 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
         DomainObject domainObject = createMappingDefinition(model, model.getName());
         domainObject.setParentName(model.getDeclaringClass().getName());
         domainObject.setNamespace(model.getDeclaringClass().getPackageName());
+        model.getAnnotations().stream()
+                .filter(annot -> annot.getType().getFullyQualifiedName().startsWith(JAVAX_VALIDATION_CONSTRAINTS)
+                        || annot.getType().getFullyQualifiedName().startsWith(HIBERNATE_VALIDATION_CONSTRAINTS))
+                .map(annot -> annot.toString().replace(JAVAX_VALIDATION_CONSTRAINTS, "").replace(HIBERNATE_VALIDATION_CONSTRAINTS, ""))
+                .forEach(annot -> domainObject.addAnnotation(annot));
         return domainObject;
     }
 }

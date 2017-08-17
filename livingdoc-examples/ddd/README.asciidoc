@@ -30,7 +30,7 @@ image::dictionnary.png[]
     <configuration>
         <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
         <interactive>true</interactive>
-        <outputDirectory>${project.build.directory}</outputDirectory>
+        <generatedDocsDirectory>${project.build.directory}</generatedDocsDirectory>
         <excludes>
             <exclude>.*domain.common.*</exclude>
         </excludes>

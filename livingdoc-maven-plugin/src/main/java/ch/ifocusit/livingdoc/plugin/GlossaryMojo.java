@@ -24,13 +24,16 @@ package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
 import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.apache.commons.lang3.StringUtils.defaultString;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Glossary of domain objects in a title/content representation.
@@ -40,28 +43,38 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
 @Mojo(name = "glossary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
 public class GlossaryMojo extends AbstractGlossaryMojo {
 
+    @Parameter(defaultValue = "glossary", required = true)
+    private String glossaryOutputFilename;
+
+    @Parameter(defaultValue = "= Glossary")
+    private String glossaryTitle;
+
     @Override
-    protected String getDefaultFilename() {
-        return "glossary";
+    protected String getOutputFilename() {
+        return glossaryOutputFilename;
     }
 
     @Override
     protected String getTitle() {
-        return "Glossary";
+        return glossaryTitle;
     }
 
     @Override
     protected void executeMojo(Stream<DomainObject> domainObjects) {
-        // add asciidoc entries
-        domainObjects.forEach(this::addGlossarEntry);
-    }
 
-    private void addGlossarEntry(DomainObject domainObject) {
-        asciiDocBuilder.textLine(
-                formatAndLink(
-                        defaultString(glossaryTitleTemplate, domainObject.getId() != null ? GLOSSARY_LINK_TITLE : GLOSSARY_LINK_TITLE_LITE),
-                        domainObject));
-        asciiDocBuilder.textLine(domainObject.getDescription());
-        asciiDocBuilder.textLine(StringUtils.EMPTY);
+        List<String> rows = domainObjects
+                // map to List<String>
+                .map(def -> {
+                    // set empty content if no glossary id defined
+                    String idColumn = def.getId() == null ? EMPTY : formatAndLink(GLOSSARY_LINK_INLINE_ID, def);
+                    return newArrayList(idColumn, formatAndLink(GLOSSARY_LINK_INLINE_NAME, def), def.getFullDescription());
+                })
+                // join List<String> with "|"
+                .map(field -> field.stream().collect(Collectors.joining("|")))
+                .collect(Collectors.toList());
+        // add table header row
+        rows.add(0, "id|name|description");
+
+        asciiDocBuilder.tableWithHeaderRow(rows);
     }
 }

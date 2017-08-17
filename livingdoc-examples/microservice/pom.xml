@@ -187,6 +187,10 @@
                     <diagramLinkPage>../index.html</diagramLinkPage><!-- all sections will be in index file -->
                     <glossaryTitleTemplate>[[{2}]]\n=== {1} ^glossary_id={0}^</glossaryTitleTemplate>
                     <gherkinOptions>{templates}/gherkin_template.erb</gherkinOptions>
+                    <!-- no titles -->
+                    <diagramTitle/>
+                    <glossaryTitle/>
+                    <gherkinTitle/>
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->

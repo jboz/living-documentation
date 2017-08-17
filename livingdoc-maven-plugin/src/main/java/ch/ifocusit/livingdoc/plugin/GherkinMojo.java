@@ -55,18 +55,29 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     @Parameter(defaultValue = "")
     private String gherkinOptions;
 
+    @Parameter(defaultValue = "gherkin", required = true)
+    private String gherkinOutputFilename;
+
+    @Parameter(defaultValue = "= Business Behavior")
+    private String gherkinTitle;
+
     @Override
-    protected String getDefaultFilename() {
-        return "gherkin";
+    protected String getOutputFilename() {
+        return gherkinOutputFilename;
+    }
+
+    @Override
+    protected String getTitle() {
+        return gherkinTitle;
     }
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
-        if (Format.html.equals(format)) {
-            asciiDocBuilder.sectionTitleLevel1("Business requirements");
+        if (StringUtils.isNotBlank(getTitle())) {
+            asciiDocBuilder.textLine(getTitle()).newLine();
         }
-        asciiDocBuilder.textLine(StringUtils.EMPTY);
+
         features.forEach(path -> {
             try {
                 if (Files.notExists(Paths.get(path))) {
