@@ -162,7 +162,7 @@
                             <goal>diagram</goal>
                         </goals>
                         <configuration>
-                            <outputFilename>diagram-services</outputFilename>
+                            <diagramOutputFilename>diagram-services</diagramOutputFilename>
                             <format>plantuml</format>
                             <interactive>false</interactive>
                             <excludes>

@@ -30,7 +30,7 @@ image::conception-diagram.png[Asciidoctor Diagram javaClasses diagram]
 like this example : https://github.com/jboz/living-documentation/tree/master/livingdoc-examples/microservice/
 
 == Add gherkin description :
-You can also integrate gherkin files like this example : link:images/example_microservice_index.html.png[Microservice example generated index file]
+You can also integrate gherkin files like this example : link:livingdoc-examples/microservice/images/example_microservice_index.html.png[Microservice example generated index file]
 
 == Also allow to publish generated docs to confluence :
 Publish specific HTML version to Altassian Conlluence Server.
