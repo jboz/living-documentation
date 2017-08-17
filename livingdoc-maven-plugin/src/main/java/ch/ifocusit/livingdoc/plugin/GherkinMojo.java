@@ -58,7 +58,7 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     @Parameter(defaultValue = "gherkin", required = true)
     private String gherkinOutputFilename;
 
-    @Parameter(defaultValue = "= Business Behavior")
+    @Parameter
     private String gherkinTitle;
 
     @Override

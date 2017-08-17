@@ -112,7 +112,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     @Parameter(defaultValue = "diagram", required = true)
     private String diagramOutputFilename;
 
-    @Parameter(defaultValue = "= Classes Diagram")
+    @Parameter
     private String diagramTitle;
 
     @Override

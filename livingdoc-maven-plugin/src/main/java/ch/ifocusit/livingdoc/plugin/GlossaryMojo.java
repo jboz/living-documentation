@@ -46,7 +46,7 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     @Parameter(defaultValue = "glossary", required = true)
     private String glossaryOutputFilename;
 
-    @Parameter(defaultValue = "= Glossary")
+    @Parameter
     private String glossaryTitle;
 
     @Override

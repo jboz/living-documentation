@@ -70,6 +70,9 @@
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>
+                    <diagramTitle>= Classes Diagram</diagramTitle>
+                    <dictionaryTitle>= Dictionary</dictionaryTitle>
+                    <glossaryTitle>= Glossary</glossaryTitle>
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->

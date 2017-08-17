@@ -42,19 +42,19 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
 public class DictionaryMojo extends AbstractGlossaryMojo {
 
     @Parameter(defaultValue = "dictionary", required = true)
-    private String dictionnaryOutputFilename;
+    private String dictionaryOutputFilename;
 
-    @Parameter(defaultValue = "= Dictionnary")
-    private String dictionnaryTitle;
+    @Parameter
+    private String dictionaryTitle;
 
     @Override
     protected String getOutputFilename() {
-        return dictionnaryOutputFilename;
+        return dictionaryOutputFilename;
     }
 
     @Override
     protected String getTitle() {
-        return dictionnaryTitle;
+        return dictionaryTitle;
     }
 
     @Override
