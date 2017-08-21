@@ -23,14 +23,19 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
-import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
+import com.thoughtworks.qdox.model.JavaAnnotatedElement;
+import com.thoughtworks.qdox.model.JavaClass;
+import com.thoughtworks.qdox.model.JavaField;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
+
+import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Glossary of domain objects in a table representation.
@@ -46,6 +51,9 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     @Parameter
     private String glossaryTitle;
 
+    @Parameter(defaultValue = "Object Name|Attribute name|Type|Constraints|Default Value|Description")
+    private String glossaryColumnsName;
+
     @Override
     protected String getOutputFilename() {
         return glossaryOutputFilename;
@@ -57,26 +65,61 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     }
 
     @Override
-    protected void executeMojo(Stream<DomainObject> domainObjects) {
+    protected void executeMojo() {
 
         List<String> rows = new ArrayList<>();
-        getClasses().forEach(javaClass -> {
+        getClasses().forEach(clazz -> {
             // add class entry
-            DomainObject clazz = map(javaClass);
-            rows.add(clazz.getName() + "|||" + clazz.getDescription() + "|" + clazz.getAnnotations());
+            rows.add(getLinkableName(clazz) + "||" + (clazz.isEnum() ? "Enumeration" : EMPTY) + "|" + getAnnotations(clazz) + "||" + getDescription(clazz));
 
             // browse fields
-            javaClass.getFields().stream()
+            clazz.getFields().stream()
                     .filter(this::hasAnnotation) // if annotated
-                    .forEach(javaField -> {
+                    .forEach(field -> {
                         // add field entry
-                        DomainObject field = map(javaField);
-                        rows.add("|" + field.getName() + "|" + field.getType() + "|" + field.getDescription() + "|" + clazz.getAnnotations());
+                        rows.add("|" + getLinkableName(field) + "|" + getLinkedType(field)
+                                + "|" + getAnnotations(field) + "|" + field.getInitializationExpression()
+                                + "|" + getDescription(field));
                     });
         });
 
-        rows.add(0, "Objet|Attribut|Type|Description|Contraintes");
+        rows.add(0, glossaryColumnsName);
 
         asciiDocBuilder.tableWithHeaderRow(rows);
+    }
+
+    private String getAnnotations(JavaAnnotatedElement model) {
+        return model.getAnnotations().stream()
+                .filter(annot -> annot.getType().getFullyQualifiedName().startsWith(JAVAX_VALIDATION_CONSTRAINTS)
+                        || annot.getType().getFullyQualifiedName().startsWith(HIBERNATE_VALIDATION_CONSTRAINTS))
+                .map(annot -> annot.toString().replace(JAVAX_VALIDATION_CONSTRAINTS, "").replace(HIBERNATE_VALIDATION_CONSTRAINTS, ""))
+                .collect(Collectors.joining(NEWLINE + NEWLINE));
+    }
+
+    private String getLinkableName(JavaClass model) {
+        return getAnchor(model.getName()) + getName(model, model.getName());
+    }
+
+    private String getLinkableName(JavaField model) {
+        return getAnchor(model.getDeclaringClass().getName() + "." + model.getName()) + getName(model, model.getName());
+    }
+
+    private String getLinkedType(JavaField javaField) {
+        if (javaField.isEnumConstant()) {
+            return EMPTY;
+        }
+        String name = javaField.getType().getName();
+        if (getClasses().anyMatch(javaField.getType()::equals)) {
+            // type class is in the same domain, create a relative link
+            name = "<<glossaryid-" + javaField.getType().getName() + "," + javaField.getType().getName() + ">>";
+        }
+        if (javaField.getType().isEnum()) {
+            name += ", Enumeration";
+        }
+        return name;
+    }
+
+    private String getAnchor(String path) {
+        return "anchor:glossaryid-" + path + "[]";
     }
 }

@@ -71,8 +71,8 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
     protected static final String GLOSSARY_LINK_TITLE_LITE = "[[{2}]]" + NEWLINE + "=== {1}";
     protected static final String GLOSSARY_LINK_INLINE_ID = "<<{2},{0}>>";
     protected static final String GLOSSARY_LINK_INLINE_NAME = "<<{2},{1}>>";
-    private static final String JAVAX_VALIDATION_CONSTRAINTS = "javax.validation.constraints.";
-    private static final String HIBERNATE_VALIDATION_CONSTRAINTS = "org.hibernate.validator.constraints.";
+    protected static final String JAVAX_VALIDATION_CONSTRAINTS = "javax.validation.constraints.";
+    protected static final String HIBERNATE_VALIDATION_CONSTRAINTS = "org.hibernate.validator.constraints.";
 
     /**
      * Temple for glossary title.
@@ -97,7 +97,7 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
         return def -> def.getId() == null ? def.getName() : def.getId();
     }
 
-    private static Predicate<DomainObject> distinctByKey() {
+    protected static Predicate<DomainObject> distinctByKey() {
         Map<Object, Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(key().apply(t), Boolean.TRUE) == null;
     }
@@ -119,24 +119,8 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
                 throw new MojoExecutionException("error reading mappings file", e);
             }
         }
+        executeMojo();
 
-        // regroup all mapping definition
-        List<DomainObject> definitions = new ArrayList<>();
-
-        getClasses().forEach(javaClass -> {
-            // add class entry
-            definitions.add(map(javaClass));
-
-            // browse fields
-            javaClass.getFields().stream()
-                    .filter(this::hasAnnotation) // if annotated
-                    .forEach(javaField -> {
-                        // add field entry
-                        definitions.add(map(javaField));
-                    });
-        });
-
-        executeMojo(definitions.stream().filter(distinctByKey()));
         write(asciiDocBuilder);
     }
 
@@ -148,10 +132,8 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
 
     /**
      * Implementation main method.
-     *
-     * @param domainObjects : objects to serialize, already sorted and filtered
      */
-    protected abstract void executeMojo(Stream<DomainObject> domainObjects);
+    protected abstract void executeMojo();
 
     protected Stream<JavaClass> getClasses() {
         return javaDocBuilder.getClasses().stream()
@@ -186,8 +168,12 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
     // CLASSLOADING
     // *******************************************************
 
-    private String getName(JavaAnnotatedElement annotatedElement, String defaultValue) {
+    protected String getName(JavaAnnotatedElement annotatedElement, String defaultValue) {
         return getMapping(annotatedElement).map(DomainObject::getName).orElse(defaultValue);
+    }
+
+    protected String getDescription(JavaAnnotatedElement element) {
+        return getDescription(element, element.getComment());
     }
 
     private String getDescription(JavaAnnotatedElement annotatedElemen, String defaultValue) {
@@ -271,7 +257,7 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
         DomainObject domainObject = new DomainObject();
         domainObject.setId(getGlossaryId(model).orElse(null));
         domainObject.setName(getName(model, name));
-        domainObject.setDescription(getDescription(model, model.getComment()));
+        domainObject.setDescription(getDescription(model));
         domainObject.setMapped(getMapping(model).isPresent());
         return domainObject;
     }
@@ -290,9 +276,9 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
                 .filter(annot -> annot.getType().getFullyQualifiedName().startsWith(JAVAX_VALIDATION_CONSTRAINTS)
                         || annot.getType().getFullyQualifiedName().startsWith(HIBERNATE_VALIDATION_CONSTRAINTS))
                 .map(annot -> annot.toString().replace(JAVAX_VALIDATION_CONSTRAINTS, "").replace(HIBERNATE_VALIDATION_CONSTRAINTS, ""))
-                .forEach(annot -> domainObject.addAnnotation(annot));
+                .forEach(domainObject::addAnnotation);
         if (!model.isEnumConstant()) {
-            domainObject.setType(model.getType().getName());
+            domainObject.setType(model.getType());
         }
         return domainObject;
     }

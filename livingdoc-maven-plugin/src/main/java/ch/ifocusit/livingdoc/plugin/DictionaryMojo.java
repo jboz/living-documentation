@@ -29,6 +29,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
@@ -58,9 +60,26 @@ public class DictionaryMojo extends AbstractGlossaryMojo {
     }
 
     @Override
-    protected void executeMojo(Stream<DomainObject> domainObjects) {
+    protected void executeMojo() {
+
+        // regroup all mapping definition
+        List<DomainObject> definitions = new ArrayList<>();
+
+        getClasses().forEach(javaClass -> {
+            // add class entry
+            definitions.add(map(javaClass));
+
+            // browse fields
+            javaClass.getFields().stream()
+                    .filter(this::hasAnnotation) // if annotated
+                    .forEach(javaField -> {
+                        // add field entry
+                        definitions.add(map(javaField));
+                    });
+        });
+
         // add asciidoc entries
-        domainObjects.forEach(this::addGlossarEntry);
+        definitions.stream().filter(distinctByKey()).forEach(this::addGlossarEntry);
     }
 
     private void addGlossarEntry(DomainObject domainObject) {

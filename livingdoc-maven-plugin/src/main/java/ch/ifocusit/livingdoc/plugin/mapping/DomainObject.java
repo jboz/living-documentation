@@ -2,6 +2,7 @@ package ch.ifocusit.livingdoc.plugin.mapping;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
+import com.thoughtworks.qdox.model.JavaClass;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -19,7 +20,7 @@ public class DomainObject implements Comparable<DomainObject> {
     private String parentName;
     private String name;
     private String description;
-    private String type;
+    private JavaClass type;
     private List<String> annotations = new ArrayList<>();
     /**
      * Indicate that this definition is mapped with a domain translation file
@@ -46,7 +47,7 @@ public class DomainObject implements Comparable<DomainObject> {
     }
 
     public String getAnnotations() {
-        return annotations.stream().collect(Collectors.joining(NEWLINE));
+        return annotations.stream().collect(Collectors.joining(NEWLINE + NEWLINE));
     }
 
     public String getFullDescription() {
@@ -81,11 +82,11 @@ public class DomainObject implements Comparable<DomainObject> {
         this.annotations.add(annotation);
     }
 
-    public void setType(final String type) {
+    public void setType(final JavaClass type) {
         this.type = type;
     }
 
-    public String getType() {
+    public JavaClass getType() {
         return type;
     }
 
