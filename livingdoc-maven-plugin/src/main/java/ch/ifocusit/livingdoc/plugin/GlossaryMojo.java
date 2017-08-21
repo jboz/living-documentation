@@ -23,6 +23,9 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.thoughtworks.qdox.model.JavaAnnotatedElement;
 import com.thoughtworks.qdox.model.JavaClass;
 import com.thoughtworks.qdox.model.JavaField;
@@ -30,8 +33,11 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
@@ -67,25 +73,36 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     @Override
     protected void executeMojo() {
 
-        List<String> rows = new ArrayList<>();
-        getClasses().forEach(clazz -> {
-            // add class entry
-            rows.add(getLinkableName(clazz) + "||" + (clazz.isEnum() ? "Enumeration" : EMPTY) + "|" + getAnnotations(clazz) + "||" + getDescription(clazz));
+        Map<String, Object> scopes = new HashMap<>();
+        scopes.put("classes", getClasses().map(javaClass ->
+                ch.ifocusit.livingdoc.plugin.glossary.JavaClass.from(javaClass, this::hasAnnotation)).collect(Collectors.toList()));
 
-            // browse fields
-            clazz.getFields().stream()
-                    .filter(this::hasAnnotation) // if annotated
-                    .forEach(field -> {
-                        // add field entry
-                        rows.add("|" + getLinkableName(field) + "|" + getLinkedType(field)
-                                + "|" + getAnnotations(field) + "|" + field.getInitializationExpression()
-                                + "|" + getDescription(field));
-                    });
-        });
+        Writer writer = new StringWriter();
+        MustacheFactory mf = new DefaultMustacheFactory();
+        Mustache mustache = mf.compile(new InputStreamReader(getClass().getResourceAsStream("/default_glossary_template.mustache")), "glossary");
+        mustache.execute(writer, scopes);
 
-        rows.add(0, glossaryColumnsName);
+        asciiDocBuilder.textLine(writer.toString());
 
-        asciiDocBuilder.tableWithHeaderRow(rows);
+//        List<String> rows = new ArrayList<>();
+//        getClasses().forEach(clazz -> {
+//            // add class entry
+//            rows.add(getLinkableName(clazz) + "||" + (clazz.isEnum() ? "Enumeration" : EMPTY) + "|" + getAnnotations(clazz) + "||" + getDescription(clazz));
+//
+//            // browse fields
+//            clazz.getFields().stream()
+//                    .filter(this::hasAnnotation) // if annotated
+//                    .forEach(field -> {
+//                        // add field entry
+//                        rows.add("|" + getLinkableName(field) + "|" + getLinkedType(field)
+//                                + "|" + getAnnotations(field) + "|" + field.getInitializationExpression()
+//                                + "|" + getDescription(field));
+//                    });
+//        });
+//
+//        rows.add(0, glossaryColumnsName);
+//
+//        asciiDocBuilder.tableWithHeaderRow(rows);
     }
 
     private String getAnnotations(JavaAnnotatedElement model) {

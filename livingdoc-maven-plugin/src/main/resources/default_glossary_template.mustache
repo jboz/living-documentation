@@ -1,0 +1,26 @@
+[cols="1,1,1,1,1,3",options="header"]
+|===
+|Object Name
+|Attribute name
+|Type
+|Constraints
+|Default
+|Description
+
+{{#classes}}
+    |{{linkableName}}
+    |
+    |{{type}}
+    |{{annotations}}
+    |
+    |{{description}}
+    {{#fields}}
+        |
+        |{{linkableName}}
+        |{{linkedType}}
+        |{{annotations}}
+        |{{model.initializationExpression}}
+        |{{description}}
+    {{/fields}}
+{{/classes}}
+|===

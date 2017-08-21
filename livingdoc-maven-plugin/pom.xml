@@ -105,6 +105,11 @@
             <artifactId>markup-document-builder</artifactId>
             <version>0.1.5</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.spullara.mustache.java</groupId>
+            <artifactId>compiler</artifactId>
+            <version>0.9.5</version>
+        </dependency>
 
         <!-- asciidoctor -->
         <dependency>
