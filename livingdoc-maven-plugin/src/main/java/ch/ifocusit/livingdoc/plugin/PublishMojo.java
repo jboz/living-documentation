@@ -115,7 +115,7 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
 
     private void publish(PublishProvider provider, List<Page> pages) throws MalformedURLException {
 
-        pages.stream().forEach(page -> {
+        pages.stream().sorted().forEach(page -> {
             // check if parent exists
             // check if page exists
             if (provider.exists(page)) {

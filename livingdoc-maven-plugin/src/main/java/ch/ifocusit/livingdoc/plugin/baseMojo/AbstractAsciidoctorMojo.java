@@ -48,6 +48,7 @@ import static org.asciidoctor.SafeMode.UNSAFE;
  */
 public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
 
+    protected static final String TEMPLATES_OUTPUT = "${project.build.directory}/asciidoc-templates";
     private static final String TEMPLATES_CLASSPATH_PATTERN = "templates/*";
 
     public enum Format {
@@ -66,7 +67,7 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
     /**
      * Templates directories.
      */
-    @Parameter(defaultValue = "${project.build.directory}/asciidoc-templates", readonly = true)
+    @Parameter(defaultValue = TEMPLATES_OUTPUT, readonly = true)
     private File asciidocTemplates;
 
     protected void write(AsciiDocBuilder asciiDocBuilder, Format format, String outputFilename) throws MojoExecutionException {

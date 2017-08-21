@@ -34,7 +34,7 @@ import java.util.stream.Stream;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 /**
- * Glossary of domain objects in a table representation.
+ * Glossary of domain objects in a title/content representation.
  *
  * @author Julien Boz
  */

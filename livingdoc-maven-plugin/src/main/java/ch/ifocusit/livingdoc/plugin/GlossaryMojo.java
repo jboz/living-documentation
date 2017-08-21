@@ -28,15 +28,12 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-
 /**
- * Glossary of domain objects in a title/content representation.
+ * Glossary of domain objects in a table representation.
  *
  * @author Julien Boz
  */
@@ -62,18 +59,23 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     @Override
     protected void executeMojo(Stream<DomainObject> domainObjects) {
 
-        List<String> rows = domainObjects
-                // map to List<String>
-                .map(def -> {
-                    // set empty content if no glossary id defined
-                    String idColumn = def.getId() == null ? EMPTY : formatAndLink(GLOSSARY_LINK_INLINE_ID, def);
-                    return newArrayList(idColumn, formatAndLink(GLOSSARY_LINK_INLINE_NAME, def), def.getFullDescription());
-                })
-                // join List<String> with "|"
-                .map(field -> field.stream().collect(Collectors.joining("|")))
-                .collect(Collectors.toList());
-        // add table header row
-        rows.add(0, "id|name|description");
+        List<String> rows = new ArrayList<>();
+        getClasses().forEach(javaClass -> {
+            // add class entry
+            DomainObject clazz = map(javaClass);
+            rows.add(clazz.getName() + "|||" + clazz.getDescription() + "|" + clazz.getAnnotations());
+
+            // browse fields
+            javaClass.getFields().stream()
+                    .filter(this::hasAnnotation) // if annotated
+                    .forEach(javaField -> {
+                        // add field entry
+                        DomainObject field = map(javaField);
+                        rows.add("|" + field.getName() + "|" + field.getType() + "|" + field.getDescription() + "|" + clazz.getAnnotations());
+                    });
+        });
+
+        rows.add(0, "Objet|Attribut|Type|Description|Contraintes");
 
         asciiDocBuilder.tableWithHeaderRow(rows);
     }

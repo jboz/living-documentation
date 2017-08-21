@@ -55,6 +55,7 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
 import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.defaultString;
 import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.interpretNewLine;
 import static java.text.MessageFormat.format;
@@ -66,27 +67,31 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
 
     // first parameter is the 'id', the second, the 'name', the third the anchor link
-    protected static final String GLOSSARY_LINK_TITLE = "[[{2}]]\n=== [small]#{0}# - {1}";
-    protected static final String GLOSSARY_LINK_TITLE_LITE = "[[{2}]]\n=== {1}";
+    protected static final String GLOSSARY_LINK_TITLE = "[[{2}]]" + NEWLINE + "=== [small]#{0}# - {1}";
+    protected static final String GLOSSARY_LINK_TITLE_LITE = "[[{2}]]" + NEWLINE + "=== {1}";
     protected static final String GLOSSARY_LINK_INLINE_ID = "<<{2},{0}>>";
     protected static final String GLOSSARY_LINK_INLINE_NAME = "<<{2},{1}>>";
     private static final String JAVAX_VALIDATION_CONSTRAINTS = "javax.validation.constraints.";
     private static final String HIBERNATE_VALIDATION_CONSTRAINTS = "org.hibernate.validator.constraints.";
+
     /**
      * Temple for glossary title.
      */
     @Parameter
     protected String glossaryTitleTemplate;
-    protected AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
+
     /**
      * List of source directories to browse
      */
     @Parameter(defaultValue = "${project.build.sourceDirectory}")
     private List<String> sources = new ArrayList<>();
+
     @Parameter
     private String packageRoot = EMPTY;
-    private JavaProjectBuilder javaDocBuilder;
-    private List<DomainObject> mappings;
+
+    protected AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
+    protected JavaProjectBuilder javaDocBuilder;
+    protected List<DomainObject> mappings;
 
     private static Function<DomainObject, ?> key() {
         return def -> def.getId() == null ? def.getName() : def.getId();
@@ -131,7 +136,7 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
                     });
         });
 
-        executeMojo(definitions.stream().sorted().filter(distinctByKey()));
+        executeMojo(definitions.stream().filter(distinctByKey()));
         write(asciiDocBuilder);
     }
 
@@ -148,14 +153,14 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
      */
     protected abstract void executeMojo(Stream<DomainObject> domainObjects);
 
-    private Stream<JavaClass> getClasses() {
+    protected Stream<JavaClass> getClasses() {
         return javaDocBuilder.getClasses().stream()
                 .filter(javaClass -> packageRoot == null || javaClass.getPackageName().startsWith(packageRoot))
                 .filter(this::hasAnnotation) // if annotated
                 ;
     }
 
-    private boolean hasAnnotation(JavaAnnotatedElement annotatedElement) {
+    protected boolean hasAnnotation(JavaAnnotatedElement annotatedElement) {
         return !onlyAnnotated || getGlossary(annotatedElement).isPresent();
     }
 
@@ -271,13 +276,13 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
         return domainObject;
     }
 
-    private DomainObject map(JavaClass model) {
+    protected DomainObject map(JavaClass model) {
         DomainObject domainObject = createMappingDefinition(model, model.getName());
         domainObject.setNamespace(model.getPackageName());
         return domainObject;
     }
 
-    private DomainObject map(JavaField model) {
+    protected DomainObject map(JavaField model) {
         DomainObject domainObject = createMappingDefinition(model, model.getName());
         domainObject.setParentName(model.getDeclaringClass().getName());
         domainObject.setNamespace(model.getDeclaringClass().getPackageName());
@@ -286,6 +291,9 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
                         || annot.getType().getFullyQualifiedName().startsWith(HIBERNATE_VALIDATION_CONSTRAINTS))
                 .map(annot -> annot.toString().replace(JAVAX_VALIDATION_CONSTRAINTS, "").replace(HIBERNATE_VALIDATION_CONSTRAINTS, ""))
                 .forEach(annot -> domainObject.addAnnotation(annot));
+        if (!model.isEnumConstant()) {
+            domainObject.setType(model.getType().getName());
+        }
         return domainObject;
     }
 }

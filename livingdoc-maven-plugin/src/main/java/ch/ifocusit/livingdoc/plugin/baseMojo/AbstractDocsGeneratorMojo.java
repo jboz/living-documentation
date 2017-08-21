@@ -114,7 +114,11 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
      * @throws MojoExecutionException
      */
     protected void write(AsciiDocBuilder asciiDocBuilder) throws MojoExecutionException {
-        write(asciiDocBuilder, format, getOutputFilename());
+        write(asciiDocBuilder, getOutputFilename());
+    }
+
+    protected void write(AsciiDocBuilder asciiDocBuilder, String outputFilename) throws MojoExecutionException {
+        write(asciiDocBuilder, format, outputFilename);
     }
 
     protected AsciiDocBuilder createAsciiDocBuilder() {
@@ -128,7 +132,11 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
         String definedTitle = getTitle();
         if (StringUtils.isNotBlank(definedTitle)) {
             String title = definedTitle.startsWith(TITLE_MARKUP) ? definedTitle : TITLE_MARKUP + definedTitle;
-            asciiDocBuilder.textLine(title).newLine();
+            appendTitle(asciiDocBuilder, title);
         }
+    }
+
+    protected void appendTitle(AsciiDocBuilder asciiDocBuilder, String title) {
+        asciiDocBuilder.textLine(title).newLine();
     }
 }

@@ -11,12 +11,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
+
 public class DomainObject implements Comparable<DomainObject> {
     private Integer id;
     private String namespace;
     private String parentName;
     private String name;
     private String description;
+    private String type;
     private List<String> annotations = new ArrayList<>();
     /**
      * Indicate that this definition is mapped with a domain translation file
@@ -42,8 +45,12 @@ public class DomainObject implements Comparable<DomainObject> {
         this.name = name;
     }
 
+    public String getAnnotations() {
+        return annotations.stream().collect(Collectors.joining(NEWLINE));
+    }
+
     public String getFullDescription() {
-        return annotations.stream().collect(Collectors.joining("\r\n")) + (annotations.isEmpty() ? "" : "\r\n\n") + Optional.ofNullable(description).orElse("");
+        return getAnnotations() + (annotations.isEmpty() ? "" : NEWLINE + NEWLINE) + getDescription();
     }
 
     public void setDescription(final String description) {
@@ -51,7 +58,7 @@ public class DomainObject implements Comparable<DomainObject> {
     }
 
     public String getDescription() {
-        return description;
+        return Optional.ofNullable(description).orElse("");
     }
 
     public void setNamespace(String namespace) {
@@ -72,6 +79,14 @@ public class DomainObject implements Comparable<DomainObject> {
 
     public void addAnnotation(String annotation) {
         this.annotations.add(annotation);
+    }
+
+    public void setType(final String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 
     /**
