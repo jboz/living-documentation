@@ -52,17 +52,21 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
      */
     @Parameter(defaultValue = "html")
     protected Format format;
+
     /**
      * Temple for glossary anchor.
      */
     @Parameter(defaultValue = GLOSSARY_ANCHOR)
+    // TODO remove this parameter, no more need to change this behavior
     protected String glossaryAnchorTemplate;
+
     /**
      * File to use for UbiquitousLanguage mapping.
      */
     @Parameter
     protected File glossaryMapping;
 
+    // TODO active header/footer capabilities
 //    /**
 //     * Header of the generated asciidoc file
 //     */

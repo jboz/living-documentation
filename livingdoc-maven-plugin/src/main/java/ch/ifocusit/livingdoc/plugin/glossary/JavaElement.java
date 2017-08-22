@@ -7,8 +7,10 @@ import com.thoughtworks.qdox.model.JavaAnnotation;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo.GLOSSARY_ANCHOR;
 import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
 import static io.github.robwin.markup.builder.asciidoc.AsciiDoc.TABLE_COLUMN_DELIMITER;
+import static java.text.MessageFormat.format;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public interface JavaElement {
@@ -25,12 +27,12 @@ public interface JavaElement {
         return getModel().getComment();
     }
 
-    default String getAnchor() {
-        return "anchor:glossaryid-" + getName() + "[]";
+    default String getAnchor(String id) {
+        return "anchor:" + format(GLOSSARY_ANCHOR, id) + "[]";
     }
 
     default String getLinkableName() {
-        return getAnchor() + getName();
+        return getAnchor(getName()) + getName();
     }
 
     default String getAnnotations() {
@@ -54,7 +56,7 @@ public interface JavaElement {
                 .orElse(Optional.empty());
     }
 
-    default String getIdColumn() {
-        return getGlossaryId().map(id -> TABLE_COLUMN_DELIMITER + String.valueOf(id)).orElse(EMPTY);
+    default String getLinkableIdColumn() {
+        return getGlossaryId().map(id -> TABLE_COLUMN_DELIMITER + getAnchor(String.valueOf(id)) + String.valueOf(id)).orElse(EMPTY);
     }
 }

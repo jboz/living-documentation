@@ -31,7 +31,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
@@ -79,7 +78,7 @@ public class DictionaryMojo extends AbstractGlossaryMojo {
         });
 
         // add asciidoc entries
-        definitions.stream().filter(distinctByKey()).forEach(this::addGlossarEntry);
+        definitions.stream().sorted().filter(distinctByKey()).forEach(this::addGlossarEntry);
     }
 
     private void addGlossarEntry(DomainObject domainObject) {

@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 /**
  * Glossary of domain objects in a table representation.
  *
@@ -53,6 +55,7 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     @Parameter(defaultValue = "Id|Object Name|Attribute name|Type|Description|Constraints|Default Value")
     private String glossaryColumnsName;
 
+    // TODO generalized templating for DictionnaryMojo
     @Parameter
     private File glossaryTemplate;
 
@@ -79,7 +82,8 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
         boolean withId = classes.stream().anyMatch(JavaClass::hasId);
 
         Map<String, Object> scopes = new HashMap<>();
-        scopes.put("glossaryColumnsName", withId ? glossaryColumnsName : glossaryColumnsName.replace("|Id", ""));
+        scopes.put("columnsName", withId ? glossaryColumnsName : glossaryColumnsName.replace("Id|", ""));
+        scopes.put("columnsSize", (withId ? "1," : EMPTY) + "1,1,1,2,1,1");
         scopes.put("classes", classes);
         scopes.put("withLink", glossaryWithLink);
 

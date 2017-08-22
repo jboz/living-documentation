@@ -164,7 +164,6 @@ public class HtmlPostProcessor {
             String htmlTarget = matchResult.group(1);
             String referencedPageTitle = htmlTarget;
             if (htmlTarget.indexOf(".") > -1) {
-                //#glossaryid-StatutAnnonce_ACCEPTE
                 Path referencedPagePath = pagePath.getParent().resolve(
                         Paths.get(htmlTarget.substring(0, htmlTarget.lastIndexOf('.')) + ".adoc"));
                 referencedPageTitle = getPageTitle(referencedPagePath);

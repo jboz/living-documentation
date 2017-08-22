@@ -5,6 +5,8 @@ import com.thoughtworks.qdox.model.JavaClass;
 
 import java.util.List;
 
+import static ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo.GLOSSARY_ANCHOR;
+import static java.text.MessageFormat.format;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class JavaField implements JavaElement {
@@ -45,7 +47,7 @@ public class JavaField implements JavaElement {
         String name = model.getType().getName();
         if (isPartOfDomain()) {
             // type class is in the same domain, create a relative link
-            name = "<<glossaryid-" + model.getType().getName() + "," + model.getType().getName() + ">>";
+            name = "<<" + format(GLOSSARY_ANCHOR, model.getType().getName()) + "," + model.getType().getName() + ">>";
         }
         if (model.getType().isEnum()) {
             name += ", Enumeration";
