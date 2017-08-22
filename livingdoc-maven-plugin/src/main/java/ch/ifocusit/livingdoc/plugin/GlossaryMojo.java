@@ -73,7 +73,7 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     protected void executeMojo() throws Exception {
 
         List<JavaClass> classes = getClasses()
-                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation, getClasses()))
+                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation, getClasses().collect(Collectors.toList())))
                 .collect(Collectors.toList());
 
         boolean withId = classes.stream().anyMatch(JavaClass::hasId);

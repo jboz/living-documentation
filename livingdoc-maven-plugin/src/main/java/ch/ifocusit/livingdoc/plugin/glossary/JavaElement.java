@@ -21,6 +21,10 @@ public interface JavaElement {
 
     JavaAnnotatedElement getModel();
 
+    default String getDescription() {
+        return getModel().getComment();
+    }
+
     default String getAnchor() {
         return "anchor:glossaryid-" + getName() + "[]";
     }

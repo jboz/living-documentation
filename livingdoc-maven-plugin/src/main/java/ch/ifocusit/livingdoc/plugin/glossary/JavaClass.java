@@ -3,7 +3,6 @@ package ch.ifocusit.livingdoc.plugin.glossary;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -32,7 +31,7 @@ public class JavaClass implements JavaElement {
         return fields;
     }
 
-    public static JavaClass from(com.thoughtworks.qdox.model.JavaClass javaClass, Predicate<com.thoughtworks.qdox.model.JavaField> fieldPredicate, Stream<com.thoughtworks.qdox.model.JavaClass> domainClasses) {
+    public static JavaClass from(com.thoughtworks.qdox.model.JavaClass javaClass, Predicate<com.thoughtworks.qdox.model.JavaField> fieldPredicate, List<com.thoughtworks.qdox.model.JavaClass> domainClasses) {
         JavaClass clazz = new JavaClass();
         clazz.model = javaClass;
         clazz.fields = javaClass.getFields().stream()

@@ -3,7 +3,7 @@ package ch.ifocusit.livingdoc.plugin.glossary;
 import com.thoughtworks.qdox.model.JavaAnnotatedElement;
 import com.thoughtworks.qdox.model.JavaClass;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
@@ -53,10 +53,10 @@ public class JavaField implements JavaElement {
         return name;
     }
 
-    public static JavaField of(com.thoughtworks.qdox.model.JavaField javaField, Stream<JavaClass> domainClasses) {
+    public static JavaField of(com.thoughtworks.qdox.model.JavaField javaField, List<JavaClass> domainClasses) {
         JavaField field = new JavaField();
         field.model = javaField;
-        field.partOfDomain = domainClasses.anyMatch(javaField.getType()::equals);
+        field.partOfDomain = domainClasses.stream().anyMatch(javaField.getType()::equals);
         return field;
     }
 }
