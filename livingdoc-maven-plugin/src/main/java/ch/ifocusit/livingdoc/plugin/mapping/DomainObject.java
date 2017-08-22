@@ -2,9 +2,17 @@ package ch.ifocusit.livingdoc.plugin.mapping;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
+import com.thoughtworks.qdox.model.JavaClass;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
 
 public class DomainObject implements Comparable<DomainObject> {
     private Integer id;
@@ -12,6 +20,8 @@ public class DomainObject implements Comparable<DomainObject> {
     private String parentName;
     private String name;
     private String description;
+    private JavaClass type;
+    private List<String> annotations = new ArrayList<>();
     /**
      * Indicate that this definition is mapped with a domain translation file
      */
@@ -36,12 +46,20 @@ public class DomainObject implements Comparable<DomainObject> {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getAnnotations() {
+        return annotations.stream().collect(Collectors.joining(NEWLINE + NEWLINE));
     }
 
-    public void setDescription(String description) {
+    public String getFullDescription() {
+        return getAnnotations() + (annotations.isEmpty() ? "" : NEWLINE + NEWLINE) + getDescription();
+    }
+
+    public void setDescription(final String description) {
         this.description = description;
+    }
+
+    public String getDescription() {
+        return Optional.ofNullable(description).orElse("");
     }
 
     public void setNamespace(String namespace) {
@@ -52,8 +70,24 @@ public class DomainObject implements Comparable<DomainObject> {
         this.parentName = parentName;
     }
 
+    public String getParentName() {
+        return parentName;
+    }
+
     public void setMapped(boolean mapped) {
         this.mapped = mapped;
+    }
+
+    public void addAnnotation(String annotation) {
+        this.annotations.add(annotation);
+    }
+
+    public void setType(final JavaClass type) {
+        this.type = type;
+    }
+
+    public JavaClass getType() {
+        return type;
     }
 
     /**
@@ -73,9 +107,9 @@ public class DomainObject implements Comparable<DomainObject> {
             @Override
             public int compare(DomainObject left, DomainObject right) {
                 return ComparisonChain.start()
-                        .compare(left.getId(), right.getId(), Ordering.natural().nullsFirst())
-                        .compare(left.getName(), right.getName(), Ordering.natural().nullsFirst())
-                        .compare(left.getDescription(), right.getDescription(), Ordering.natural().nullsFirst())
+                        .compare(left.id, right.id, Ordering.natural().nullsFirst())
+                        .compare(left.name, right.name, Ordering.natural().nullsFirst())
+                        .compare(left.description, right.description, Ordering.natural().nullsFirst())
                         .result();
             }
         }.nullsFirst()

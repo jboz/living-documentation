@@ -22,16 +22,18 @@
  */
 package ch.ifocusit.livingdoc.plugin.publish.model;
 
+import com.google.common.collect.Ordering;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-
 
 /**
  * @author Julien Boz
  */
-public class Page {
+public class Page implements Comparable<Page> {
 
     private String spaceKey;
     private String parentId;
@@ -81,6 +83,10 @@ public class Page {
         this.file = file;
     }
 
+    public String getFileName() {
+        return file.getFileName().toString();
+    }
+
     public List<Attachement> getAttachements() {
         return attachements;
     }
@@ -103,5 +109,10 @@ public class Page {
         public Path getFile() {
             return file;
         }
+    }
+
+    @Override
+    public int compareTo(final Page o) {
+        return Ordering.from(Comparator.comparing(Page::getFileName)).compare(this, o);
     }
 }

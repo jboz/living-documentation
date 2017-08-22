@@ -24,50 +24,69 @@ package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
 import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.defaultString;
 
 /**
- * Glossary of domain objects in a table representation.
+ * Glossary of domain objects in a title/content representation.
  *
  * @author Julien Boz
  */
 @Mojo(name = "dictionary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
 public class DictionaryMojo extends AbstractGlossaryMojo {
 
+    @Parameter(defaultValue = "dictionary", required = true)
+    private String dictionaryOutputFilename;
+
+    @Parameter
+    private String dictionaryTitle;
+
     @Override
-    protected String getDefaultFilename() {
-        return "dictionary";
+    protected String getOutputFilename() {
+        return dictionaryOutputFilename;
     }
 
     @Override
     protected String getTitle() {
-        return "Dictionary";
+        return dictionaryTitle;
     }
 
     @Override
-    protected void executeMojo(Stream<DomainObject> domainObjects) {
+    protected void executeMojo() {
 
-        List<String> rows = domainObjects
-                // map to List<String>
-                .map(def -> {
-                    // set empty content if no glossary id defined
-                    String idColumn = def.getId() == null ? EMPTY : formatAndLink(GLOSSARY_LINK_INLINE_ID, def);
-                    return newArrayList(idColumn, formatAndLink(GLOSSARY_LINK_INLINE_NAME, def), def.getDescription());
-                })
-                // join List<String> with "|"
-                .map(field -> field.stream().collect(Collectors.joining("|")))
-                .collect(Collectors.toList());
-        // add table header row
-        rows.add(0, "id|name|description");
+        // regroup all mapping definition
+        List<DomainObject> definitions = new ArrayList<>();
 
-        asciiDocBuilder.tableWithHeaderRow(rows);
+        getClasses().forEach(javaClass -> {
+            // add class entry
+            definitions.add(map(javaClass));
+
+            // browse fields
+            javaClass.getFields().stream()
+                    .filter(this::hasAnnotation) // if annotated
+                    .forEach(javaField -> {
+                        // add field entry
+                        definitions.add(map(javaField));
+                    });
+        });
+
+        // add asciidoc entries
+        definitions.stream().sorted().filter(distinctByKey()).forEach(this::addGlossarEntry);
+    }
+
+    private void addGlossarEntry(DomainObject domainObject) {
+        asciiDocBuilder.textLine(
+                formatAndLink(
+                        defaultString(glossaryTitleTemplate, domainObject.getId() != null ? GLOSSARY_LINK_TITLE : GLOSSARY_LINK_TITLE_LITE),
+                        domainObject));
+        asciiDocBuilder.textLine(domainObject.getFullDescription());
+        asciiDocBuilder.textLine(StringUtils.EMPTY);
     }
 }

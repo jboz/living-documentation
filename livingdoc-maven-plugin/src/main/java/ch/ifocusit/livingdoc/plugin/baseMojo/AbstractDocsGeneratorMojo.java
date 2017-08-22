@@ -22,6 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin.baseMojo;
 
+import io.github.robwin.markup.builder.asciidoc.AsciiDoc;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +42,8 @@ import java.nio.charset.Charset;
 public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo {
     public static final String GLOSSARY_ANCHOR = "glossaryid-{0}";
 
+    private static final String TITLE_MARKUP = AsciiDoc.DOCUMENT_TITLE.toString();
+
     @Component
     protected RepositorySystem repositorySystem;
 
@@ -49,17 +52,21 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
      */
     @Parameter(defaultValue = "html")
     protected Format format;
+
     /**
      * Temple for glossary anchor.
      */
     @Parameter(defaultValue = GLOSSARY_ANCHOR)
+    // TODO remove this parameter, no more need to change this behavior
     protected String glossaryAnchorTemplate;
+
     /**
      * File to use for UbiquitousLanguage mapping.
      */
     @Parameter
     protected File glossaryMapping;
 
+    // TODO active header/footer capabilities
 //    /**
 //     * Header of the generated asciidoc file
 //     */
@@ -79,15 +86,14 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
     protected boolean onlyAnnotated = false;
 
     /**
-     * Output filename
+     * @return the filename is defined by each mojo
      */
-    @Parameter
-    private String outputFilename;
+    protected abstract String getOutputFilename();
 
     /**
-     * @return a default name defined by each mojo
+     * @return the document title is defined by each mojo
      */
-    protected abstract String getDefaultFilename();
+    protected abstract String getTitle();
 
     /**
      * Simple write content to a file.
@@ -112,11 +118,11 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
      * @throws MojoExecutionException
      */
     protected void write(AsciiDocBuilder asciiDocBuilder) throws MojoExecutionException {
-        write(asciiDocBuilder, format, getOutputFilename());
+        write(asciiDocBuilder, getOutputFilename());
     }
 
-    public String getOutputFilename() {
-        return StringUtils.defaultString(outputFilename, getDefaultFilename());
+    protected void write(AsciiDocBuilder asciiDocBuilder, String outputFilename) throws MojoExecutionException {
+        write(asciiDocBuilder, format, outputFilename);
     }
 
     protected AsciiDocBuilder createAsciiDocBuilder() {
@@ -124,5 +130,17 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
         asciiDocBuilder.textLine(":sectlinks:");
         asciiDocBuilder.textLine(":sectanchors:");
         return asciiDocBuilder;
+    }
+
+    protected void appendTitle(AsciiDocBuilder asciiDocBuilder) {
+        String definedTitle = getTitle();
+        if (StringUtils.isNotBlank(definedTitle)) {
+            String title = definedTitle.startsWith(TITLE_MARKUP) ? definedTitle : TITLE_MARKUP + definedTitle;
+            appendTitle(asciiDocBuilder, title);
+        }
+    }
+
+    protected void appendTitle(AsciiDocBuilder asciiDocBuilder, String title) {
+        asciiDocBuilder.textLine(title).newLine();
     }
 }

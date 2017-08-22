@@ -109,9 +109,20 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     @Parameter(defaultValue = "false")
     private boolean interactive = false;
 
+    @Parameter(defaultValue = "diagram", required = true)
+    private String diagramOutputFilename;
+
+    @Parameter
+    private String diagramTitle;
+
     @Override
-    protected String getDefaultFilename() {
-        return "diagram";
+    protected String getOutputFilename() {
+        return diagramOutputFilename;
+    }
+
+    @Override
+    protected String getTitle() {
+        return diagramTitle;
     }
 
     @Override
@@ -128,9 +139,8 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
             case adoc:
             case asciidoc:
                 AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
-                if (Format.html.equals(format)) {
-                    asciiDocBuilder.documentTitle("Class diagram");
-                }
+                appendTitle(asciiDocBuilder);
+
                 switch (diagramType) {
                     case plantuml:
                         asciiDocBuilder.textLine(String.format("[plantuml, %s, format=%s, opts=interactive]", getOutputFilename(), diagramImageType));

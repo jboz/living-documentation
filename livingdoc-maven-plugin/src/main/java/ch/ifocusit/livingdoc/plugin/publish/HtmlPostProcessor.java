@@ -22,13 +22,11 @@
  */
 package ch.ifocusit.livingdoc.plugin.publish;
 
-import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractAsciidoctorMojo.Format;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Options;
-import org.asciidoctor.ast.Title;
 import org.asciidoctor.internal.IOUtils;
 
 import java.io.File;
@@ -39,13 +37,14 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.getTitle;
+import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.isAdoc;
 import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.DOTALL;
 
@@ -86,10 +85,6 @@ public class HtmlPostProcessor {
                 collectAndReplaceAttachmentFileNames(attachmentCollector),
                 unescapeCdataHtmlContent()
         );
-    }
-
-    private boolean isAdoc(Path path) {
-        return FilenameUtils.isExtension(path.toString(), new String[]{Format.adoc.name(), Format.asciidoc.name()});
     }
 
     private Function<String, String> unescapeCdataHtmlContent() {
@@ -138,8 +133,7 @@ public class HtmlPostProcessor {
         }
         try {
             if (isAdoc(path)) {
-                return Optional.ofNullable(asciidoctor.readDocumentHeader(pageContent).getDocumentTitle())
-                        .map(Title::getMain)
+                return getTitle(asciidoctor, pageContent)
                         .orElseThrow(() -> new IllegalStateException("top-level heading or title meta information must be set"));
 
             }
@@ -170,7 +164,6 @@ public class HtmlPostProcessor {
             String htmlTarget = matchResult.group(1);
             String referencedPageTitle = htmlTarget;
             if (htmlTarget.indexOf(".") > -1) {
-                //#glossaryid-StatutAnnonce_ACCEPTE
                 Path referencedPagePath = pagePath.getParent().resolve(
                         Paths.get(htmlTarget.substring(0, htmlTarget.lastIndexOf('.')) + ".adoc"));
                 referencedPageTitle = getPageTitle(referencedPagePath);

@@ -23,45 +23,70 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
-import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
-import org.apache.commons.lang3.StringUtils;
+import ch.ifocusit.livingdoc.plugin.glossary.JavaClass;
+import ch.ifocusit.livingdoc.plugin.utils.MustacheUtil;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import java.util.stream.Stream;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.defaultString;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
- * Glossary of domain objects in a title/content representation.
+ * Glossary of domain objects in a table representation.
  *
  * @author Julien Boz
  */
 @Mojo(name = "glossary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
 public class GlossaryMojo extends AbstractGlossaryMojo {
 
+    private static final String DEFAULT_GLOSSARY_TEMPLATE_MUSTACHE = "/default_glossary_template.mustache";
+    @Parameter(defaultValue = "glossary", required = true)
+    private String glossaryOutputFilename;
+
+    @Parameter
+    private String glossaryTitle;
+
+    @Parameter(defaultValue = "Id|Object Name|Attribute name|Type|Description|Constraints|Default Value")
+    private String glossaryColumnsName;
+
+    // TODO generalized templating for DictionnaryMojo
+    @Parameter
+    private File glossaryTemplate;
+
+    @Parameter(defaultValue = "true")
+    private boolean glossaryWithLink = true;
+
     @Override
-    protected String getDefaultFilename() {
-        return "glossary";
+    protected String getOutputFilename() {
+        return glossaryOutputFilename;
     }
 
     @Override
     protected String getTitle() {
-        return "Glossary";
+        return glossaryTitle;
     }
 
     @Override
-    protected void executeMojo(Stream<DomainObject> domainObjects) {
-        // add asciidoc entries
-        domainObjects.forEach(this::addGlossarEntry);
-    }
+    protected void executeMojo() throws Exception {
 
-    private void addGlossarEntry(DomainObject domainObject) {
-        asciiDocBuilder.textLine(
-                formatAndLink(
-                        defaultString(glossaryTitleTemplate, domainObject.getId() != null ? GLOSSARY_LINK_TITLE : GLOSSARY_LINK_TITLE_LITE),
-                        domainObject));
-        asciiDocBuilder.textLine(domainObject.getDescription());
-        asciiDocBuilder.textLine(StringUtils.EMPTY);
+        List<JavaClass> classes = getClasses()
+                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation, getClasses().collect(Collectors.toList())))
+                .collect(Collectors.toList());
+
+        boolean withId = classes.stream().anyMatch(JavaClass::hasId);
+
+        Map<String, Object> scopes = new HashMap<>();
+        scopes.put("columnsName", withId ? glossaryColumnsName : glossaryColumnsName.replace("Id|", ""));
+        scopes.put("columnsSize", (withId ? "1," : EMPTY) + "1,1,1,2,1,1");
+        scopes.put("classes", classes);
+        scopes.put("withLink", glossaryWithLink);
+
+        asciiDocBuilder.textLine(MustacheUtil.execute(glossaryTemplate, DEFAULT_GLOSSARY_TEMPLATE_MUSTACHE, scopes));
     }
 }
