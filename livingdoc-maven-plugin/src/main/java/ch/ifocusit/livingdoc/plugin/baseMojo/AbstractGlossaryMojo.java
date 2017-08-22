@@ -119,7 +119,11 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
                 throw new MojoExecutionException("error reading mappings file", e);
             }
         }
-        executeMojo();
+        try {
+            executeMojo();
+        } catch (Exception e) {
+            throw new MojoExecutionException("error executing glossary template", e);
+        }
 
         write(asciiDocBuilder);
     }
@@ -133,7 +137,7 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
     /**
      * Implementation main method.
      */
-    protected abstract void executeMojo();
+    protected abstract void executeMojo() throws Exception;
 
     protected Stream<JavaClass> getClasses() {
         return javaDocBuilder.getClasses().stream()

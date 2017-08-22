@@ -1,12 +1,16 @@
 package ch.ifocusit.livingdoc.plugin.glossary;
 
 import com.thoughtworks.qdox.model.JavaAnnotatedElement;
+import com.thoughtworks.qdox.model.JavaClass;
+
+import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class JavaField implements JavaElement {
 
     private com.thoughtworks.qdox.model.JavaField model;
+    private boolean partOfDomain = false;
 
     @Override
     public String getName() {
@@ -15,7 +19,14 @@ public class JavaField implements JavaElement {
 
     @Override
     public String getType() {
-        return model.getType().getName();
+        if (model.isEnumConstant()) {
+            return EMPTY;
+        }
+        String typeName = model.getType().getName();
+        if (model.getType().isEnum()) {
+            typeName += ", Enumeration";
+        }
+        return typeName;
     }
 
     @Override
@@ -23,24 +34,29 @@ public class JavaField implements JavaElement {
         return model;
     }
 
+    public boolean isPartOfDomain() {
+        return partOfDomain;
+    }
+
     public String getLinkedType() {
         if (model.isEnumConstant()) {
             return EMPTY;
         }
         String name = model.getType().getName();
-//        TODO reactive : if (getClasses().anyMatch(model.getType()::equals)) {
+        if (isPartOfDomain()) {
             // type class is in the same domain, create a relative link
             name = "<<glossaryid-" + model.getType().getName() + "," + model.getType().getName() + ">>";
-//        }
+        }
         if (model.getType().isEnum()) {
             name += ", Enumeration";
         }
         return name;
     }
 
-    public static JavaField of(com.thoughtworks.qdox.model.JavaField javaField) {
+    public static JavaField of(com.thoughtworks.qdox.model.JavaField javaField, Stream<JavaClass> domainClasses) {
         JavaField field = new JavaField();
         field.model = javaField;
+        field.partOfDomain = domainClasses.anyMatch(javaField.getType()::equals);
         return field;
     }
 }

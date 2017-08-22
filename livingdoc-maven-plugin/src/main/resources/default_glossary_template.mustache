@@ -1,26 +1,23 @@
-[cols="1,1,1,1,1,3",options="header"]
+[cols="1,1,1,2,1,1",options="header"]
 |===
-|Object Name
-|Attribute name
-|Type
-|Constraints
-|Default
-|Description
+|{{glossaryColumnsName}}
 
 {{#classes}}
+    {{idColumn}}
     |{{linkableName}}
     |
     |{{type}}
+    |{{description}}
     |{{annotations}}
     |
-    |{{description}}
     {{#fields}}
+        {{idColumn}}
         |
         |{{linkableName}}
-        |{{linkedType}}
+        |{{#withLink}}{{linkedType}}{{/withLink}}{{^withLink}}{{type}}{{/withLink}}
+        |{{description}}
         |{{annotations}}
         |{{model.initializationExpression}}
-        |{{description}}
     {{/fields}}
 {{/classes}}
 |===

@@ -1,10 +1,15 @@
 package ch.ifocusit.livingdoc.plugin.glossary;
 
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import com.thoughtworks.qdox.model.JavaAnnotatedElement;
+import com.thoughtworks.qdox.model.JavaAnnotation;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
+import static io.github.robwin.markup.builder.asciidoc.AsciiDoc.TABLE_COLUMN_DELIMITER;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public interface JavaElement {
     String JAVAX_VALIDATION_CONSTRAINTS = "javax.validation.constraints.";
@@ -30,5 +35,22 @@ public interface JavaElement {
                         || annot.getType().getFullyQualifiedName().startsWith(HIBERNATE_VALIDATION_CONSTRAINTS))
                 .map(annot -> annot.toString().replace(JAVAX_VALIDATION_CONSTRAINTS, "").replace(HIBERNATE_VALIDATION_CONSTRAINTS, ""))
                 .collect(Collectors.joining(NEWLINE + NEWLINE));
+    }
+
+    default Optional<JavaAnnotation> getGlossary() {
+        return getModel().getAnnotations().stream()
+                .filter(a -> a.getType().getFullyQualifiedName().endsWith(UbiquitousLanguage.class.getSimpleName()))
+                .findFirst();
+    }
+
+    default Optional<Integer> getGlossaryId() {
+        Optional<JavaAnnotation> annotation = getGlossary();
+        return annotation.map(annot -> annot.getProperty("id") == null ? null :
+                Optional.ofNullable(Integer.valueOf(String.valueOf(annot.getNamedParameter("id")))))
+                .orElse(Optional.empty());
+    }
+
+    default String getIdColumn() {
+        return getGlossaryId().map(id -> TABLE_COLUMN_DELIMITER + String.valueOf(id)).orElse(EMPTY);
     }
 }

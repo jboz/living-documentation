@@ -23,25 +23,17 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
-import com.thoughtworks.qdox.model.JavaAnnotatedElement;
-import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
+import ch.ifocusit.livingdoc.plugin.glossary.JavaClass;
+import ch.ifocusit.livingdoc.plugin.utils.MustacheUtil;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * Glossary of domain objects in a table representation.
@@ -51,14 +43,21 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 @Mojo(name = "glossary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
 public class GlossaryMojo extends AbstractGlossaryMojo {
 
+    private static final String DEFAULT_GLOSSARY_TEMPLATE_MUSTACHE = "/default_glossary_template.mustache";
     @Parameter(defaultValue = "glossary", required = true)
     private String glossaryOutputFilename;
 
     @Parameter
     private String glossaryTitle;
 
-    @Parameter(defaultValue = "Object Name|Attribute name|Type|Constraints|Default Value|Description")
+    @Parameter(defaultValue = "Id|Object Name|Attribute name|Type|Description|Constraints|Default Value")
     private String glossaryColumnsName;
+
+    @Parameter
+    private File glossaryTemplate;
+
+    @Parameter(defaultValue = "true")
+    private boolean glossaryWithLink = true;
 
     @Override
     protected String getOutputFilename() {
@@ -71,72 +70,19 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     }
 
     @Override
-    protected void executeMojo() {
+    protected void executeMojo() throws Exception {
+
+        List<JavaClass> classes = getClasses()
+                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation, getClasses()))
+                .collect(Collectors.toList());
+
+        boolean withId = classes.stream().anyMatch(JavaClass::hasId);
 
         Map<String, Object> scopes = new HashMap<>();
-        scopes.put("classes", getClasses().map(javaClass ->
-                ch.ifocusit.livingdoc.plugin.glossary.JavaClass.from(javaClass, this::hasAnnotation)).collect(Collectors.toList()));
+        scopes.put("glossaryColumnsName", withId ? glossaryColumnsName : glossaryColumnsName.replace("|Id", ""));
+        scopes.put("classes", classes);
+        scopes.put("withLink", glossaryWithLink);
 
-        Writer writer = new StringWriter();
-        MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile(new InputStreamReader(getClass().getResourceAsStream("/default_glossary_template.mustache")), "glossary");
-        mustache.execute(writer, scopes);
-
-        asciiDocBuilder.textLine(writer.toString());
-
-//        List<String> rows = new ArrayList<>();
-//        getClasses().forEach(clazz -> {
-//            // add class entry
-//            rows.add(getLinkableName(clazz) + "||" + (clazz.isEnum() ? "Enumeration" : EMPTY) + "|" + getAnnotations(clazz) + "||" + getDescription(clazz));
-//
-//            // browse fields
-//            clazz.getFields().stream()
-//                    .filter(this::hasAnnotation) // if annotated
-//                    .forEach(field -> {
-//                        // add field entry
-//                        rows.add("|" + getLinkableName(field) + "|" + getLinkedType(field)
-//                                + "|" + getAnnotations(field) + "|" + field.getInitializationExpression()
-//                                + "|" + getDescription(field));
-//                    });
-//        });
-//
-//        rows.add(0, glossaryColumnsName);
-//
-//        asciiDocBuilder.tableWithHeaderRow(rows);
-    }
-
-    private String getAnnotations(JavaAnnotatedElement model) {
-        return model.getAnnotations().stream()
-                .filter(annot -> annot.getType().getFullyQualifiedName().startsWith(JAVAX_VALIDATION_CONSTRAINTS)
-                        || annot.getType().getFullyQualifiedName().startsWith(HIBERNATE_VALIDATION_CONSTRAINTS))
-                .map(annot -> annot.toString().replace(JAVAX_VALIDATION_CONSTRAINTS, "").replace(HIBERNATE_VALIDATION_CONSTRAINTS, ""))
-                .collect(Collectors.joining(NEWLINE + NEWLINE));
-    }
-
-    private String getLinkableName(JavaClass model) {
-        return getAnchor(model.getName()) + getName(model, model.getName());
-    }
-
-    private String getLinkableName(JavaField model) {
-        return getAnchor(model.getDeclaringClass().getName() + "." + model.getName()) + getName(model, model.getName());
-    }
-
-    private String getLinkedType(JavaField javaField) {
-        if (javaField.isEnumConstant()) {
-            return EMPTY;
-        }
-        String name = javaField.getType().getName();
-        if (getClasses().anyMatch(javaField.getType()::equals)) {
-            // type class is in the same domain, create a relative link
-            name = "<<glossaryid-" + javaField.getType().getName() + "," + javaField.getType().getName() + ">>";
-        }
-        if (javaField.getType().isEnum()) {
-            name += ", Enumeration";
-        }
-        return name;
-    }
-
-    private String getAnchor(String path) {
-        return "anchor:glossaryid-" + path + "[]";
+        asciiDocBuilder.textLine(MustacheUtil.execute(glossaryTemplate, DEFAULT_GLOSSARY_TEMPLATE_MUSTACHE, scopes));
     }
 }

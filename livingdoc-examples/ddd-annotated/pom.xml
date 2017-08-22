@@ -73,7 +73,7 @@
                     <diagramTitle>= Classes Diagram</diagramTitle>
                     <dictionaryTitle>= Dictionary</dictionaryTitle>
                     <glossaryTitle>= Glossary</glossaryTitle>
-                    <glossaryColumnsName>Nom de l'objet|Nom de l'attribut|Type|Contraintes|Valeur par défaut|Description</glossaryColumnsName>
+                    <glossaryColumnsName>Nom de l'objet|Nom de l'attribut|Type|Description|Contraintes|Valeur par défaut</glossaryColumnsName>
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->
