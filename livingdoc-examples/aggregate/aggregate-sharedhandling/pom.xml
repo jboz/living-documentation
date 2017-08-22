@@ -7,7 +7,7 @@
     <parent>
         <artifactId>aggregate</artifactId>
         <groupId>ch.ifocusit.livingdoc.example</groupId>
-        <version>1.7-SNAPSHOT</version>
+        <version>1.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>aggregate-sharedhandling</artifactId>
@@ -16,7 +16,7 @@
         <dependency>
             <groupId>ch.ifocusit.livingdoc.example</groupId>
             <artifactId>aggregate-shared</artifactId>
-            <version>1.7-SNAPSHOT</version>
+            <version>1.8-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
