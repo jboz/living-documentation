@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t ifocusit/maven-graphviz .
+docker build -t jboz/maven-graphviz .

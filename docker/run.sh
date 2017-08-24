@@ -5,5 +5,5 @@ docker run -it --rm \
     -v "$(pwd)":/usr/src/mymaven \
     -v "$(pwd)/target:/usr/src/mymaven/target" \
     -w /usr/src/mymaven \
-    ifocusit/maven-graphviz \
+    jboz/maven-graphviz \
     mvn $1
