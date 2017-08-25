@@ -1,3 +1,5 @@
-FROM maven:3.5.0-jdk-8-alpine
+FROM maven:3.5.0-jdk-8
 
-RUN apk --no-cache add graphviz ttf-droid ttf-droid-nonlatin
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		graphviz \
+	&& rm -rf /var/lib/apt/lists/*
