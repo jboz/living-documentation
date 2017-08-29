@@ -88,5 +88,7 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
         scopes.put("withLink", glossaryWithLink);
 
         asciiDocBuilder.textLine(MustacheUtil.execute(glossaryTemplate, DEFAULT_GLOSSARY_TEMPLATE_MUSTACHE, scopes));
+
+        somethingWasGenerated = !classes.isEmpty();
     }
 }

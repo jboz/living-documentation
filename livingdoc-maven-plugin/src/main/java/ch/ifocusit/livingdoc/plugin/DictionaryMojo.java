@@ -88,5 +88,7 @@ public class DictionaryMojo extends AbstractGlossaryMojo {
                         domainObject));
         asciiDocBuilder.textLine(domainObject.getFullDescription());
         asciiDocBuilder.textLine(StringUtils.EMPTY);
+
+        somethingWasGenerated = true;
     }
 }

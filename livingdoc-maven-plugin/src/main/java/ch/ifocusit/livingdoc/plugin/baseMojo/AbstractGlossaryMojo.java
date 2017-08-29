@@ -93,6 +93,8 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
     protected JavaProjectBuilder javaDocBuilder;
     protected List<DomainObject> mappings;
 
+    protected boolean somethingWasGenerated = false;
+
     private static Function<DomainObject, ?> key() {
         return def -> def.getId() == null ? def.getName() : def.getId();
     }
@@ -123,6 +125,10 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
             executeMojo();
         } catch (Exception e) {
             throw new MojoExecutionException("error executing glossary template", e);
+        }
+        if (!somethingWasGenerated) {
+            // nothing generated
+            return;
         }
 
         write(asciiDocBuilder);

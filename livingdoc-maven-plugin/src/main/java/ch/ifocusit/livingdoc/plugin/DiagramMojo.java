@@ -29,6 +29,7 @@ import ch.ifocusit.livingdoc.plugin.domain.Cluster;
 import ch.ifocusit.livingdoc.plugin.domain.Color;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -133,6 +134,11 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
         }
         // generate diagram
         String diagram = generateDiagram();
+
+        if (StringUtils.isBlank(diagram)) {
+            // nothing to generate
+            return;
+        }
 
         switch (format) {
             case html:
