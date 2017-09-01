@@ -49,13 +49,15 @@ public abstract class AbstractClassDiagramBuilder {
     protected final File header;
     protected final File footer;
     private final String IT = "IT";
+    protected final boolean diagramWithDependencies;
 
-    public AbstractClassDiagramBuilder(MavenProject project, String prefix, String[] excludes, File header, File footer) {
+    public AbstractClassDiagramBuilder(MavenProject project, String prefix, String[] excludes, File header, File footer, boolean diagramWithDependencies) {
         this.project = project;
         this.prefix = prefix;
         this.excludes = excludes;
         this.header = header;
         this.footer = footer;
+        this.diagramWithDependencies = diagramWithDependencies;
     }
 
     public abstract AbstractClassDiagramBuilder filterOnAnnotation(Class<? extends Annotation> annotation);

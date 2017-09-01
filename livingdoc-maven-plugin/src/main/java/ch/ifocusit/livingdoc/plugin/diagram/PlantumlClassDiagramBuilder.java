@@ -49,8 +49,9 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
     private Predicate<ClassInfo> additionalClassPredicate = a -> true; // default predicate always true
     private GlossaryNamesMapper namesMapper;
 
-    public PlantumlClassDiagramBuilder(MavenProject project, String prefix, String[] excludes, Color rootAggregateColor, File header, File footer) {
-        super(project, prefix, excludes, header, footer);
+    public PlantumlClassDiagramBuilder(MavenProject project, String prefix, String[] excludes, Color rootAggregateColor, File header, File footer,
+                                       boolean diagramWithDependencies) {
+        super(project, prefix, excludes, header, footer, diagramWithDependencies);
 
         // override creation to change root aggregate class color
         classDiagramBuilder = new ClassDiagramBuilder() {
@@ -84,6 +85,7 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
                 .excludes(excludes)
                 .setHeader(readHeader())
                 .setFooter(readFooter())
+                .withDependencies(diagramWithDependencies)
                 .build();
         return diagram;
     }

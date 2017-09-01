@@ -116,6 +116,15 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     @Parameter
     private String diagramTitle;
 
+    @Parameter
+    private boolean diagramWithDependencies = false;
+
+    @Parameter
+    private boolean diagramShowMethods = true;
+
+    @Parameter
+    private boolean diagramShowFields = true;
+
     @Override
     protected String getOutputFilename() {
         return diagramOutputFilename;
@@ -168,7 +177,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
         switch (diagramType) {
             case plantuml:
                 PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes,
-                        rootAggregateColor, diagramHeader, diagramFooter);
+                        rootAggregateColor, diagramHeader, diagramFooter, diagramWithDependencies);
                 if (onlyAnnotated) {
                     builder.filterOnAnnotation(UbiquitousLanguage.class);
                 }
