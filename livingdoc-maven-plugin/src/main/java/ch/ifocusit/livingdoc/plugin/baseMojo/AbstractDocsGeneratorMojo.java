@@ -40,7 +40,6 @@ import java.nio.charset.Charset;
  * @author Julien Boz
  */
 public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo {
-    public static final String GLOSSARY_ANCHOR = "glossaryid-{0}";
 
     private static final String TITLE_MARKUP = AsciiDoc.DOCUMENT_TITLE.toString();
 
@@ -52,13 +51,6 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
      */
     @Parameter(defaultValue = "html")
     protected Format format;
-
-    /**
-     * Temple for glossary anchor.
-     */
-    @Parameter(defaultValue = GLOSSARY_ANCHOR)
-    // TODO remove this parameter, no more need to change this behavior
-    protected String glossaryAnchorTemplate;
 
     /**
      * File to use for UbiquitousLanguage mapping.

@@ -44,8 +44,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  */
 @Mojo(name = "glossary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
 public class GlossaryMojo extends AbstractGlossaryMojo {
-
     private static final String DEFAULT_GLOSSARY_TEMPLATE_MUSTACHE = "/default_glossary_template.mustache";
+
     @Parameter(defaultValue = "glossary", required = true)
     private String glossaryOutputFilename;
 
@@ -55,7 +55,6 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     @Parameter(defaultValue = "Id|Object Name|Attribute name|Type|Description|Constraints|Default Value")
     private String glossaryColumnsName;
 
-    // TODO generalized templating for DictionnaryMojo
     @Parameter
     private File glossaryTemplate;
 
@@ -76,14 +75,15 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     protected void executeMojo() throws Exception {
 
         List<JavaClass> classes = getClasses()
-                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation, getClasses().collect(Collectors.toList())))
+                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation,
+                        getClasses().collect(Collectors.toList()), this))
                 .collect(Collectors.toList());
 
         boolean withId = classes.stream().anyMatch(JavaClass::hasId);
 
         Map<String, Object> scopes = new HashMap<>();
         scopes.put("columnsName", withId ? glossaryColumnsName : glossaryColumnsName.replace("Id|", ""));
-        scopes.put("columnsSize", (withId ? "1," : EMPTY) + "1,1,1,2,1,1");
+        scopes.put("columnsSize", (withId ? "1," : EMPTY) + "2,2,1,4,1,1");
         scopes.put("classes", classes);
         scopes.put("withLink", glossaryWithLink);
 

@@ -23,16 +23,17 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
-import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
-import org.apache.commons.lang3.StringUtils;
+import ch.ifocusit.livingdoc.plugin.glossary.JavaClass;
+import ch.ifocusit.livingdoc.plugin.utils.MustacheUtil;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.defaultString;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Glossary of domain objects in a title/content representation.
@@ -41,12 +42,19 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
  */
 @Mojo(name = "dictionary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
 public class DictionaryMojo extends AbstractGlossaryMojo {
+    private static final String DEFAULT_DICTIONARY_TEMPLATE_MUSTACHE = "/default_dictionary_template.mustache";
 
     @Parameter(defaultValue = "dictionary", required = true)
     private String dictionaryOutputFilename;
 
     @Parameter
     private String dictionaryTitle;
+
+    @Parameter(defaultValue = "true")
+    private boolean dictionaryWithLink = true;
+
+    @Parameter
+    private File dictionaryTemplate;
 
     @Override
     protected String getOutputFilename() {
@@ -59,36 +67,19 @@ public class DictionaryMojo extends AbstractGlossaryMojo {
     }
 
     @Override
-    protected void executeMojo() {
+    protected void executeMojo() throws Exception {
+        List<JavaClass> classes = getClasses()
+                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation,
+                        getClasses().collect(Collectors.toList()), this))
+                .sorted()
+                .collect(Collectors.toList());
 
-        // regroup all mapping definition
-        List<DomainObject> definitions = new ArrayList<>();
+        Map<String, Object> scopes = new HashMap<>();
+        scopes.put("classes", classes);
+        scopes.put("withLink", dictionaryWithLink);
 
-        getClasses().forEach(javaClass -> {
-            // add class entry
-            definitions.add(map(javaClass));
+        asciiDocBuilder.textLine(MustacheUtil.execute(dictionaryTemplate, DEFAULT_DICTIONARY_TEMPLATE_MUSTACHE, scopes));
 
-            // browse fields
-            javaClass.getFields().stream()
-                    .filter(this::hasAnnotation) // if annotated
-                    .forEach(javaField -> {
-                        // add field entry
-                        definitions.add(map(javaField));
-                    });
-        });
-
-        // add asciidoc entries
-        definitions.stream().sorted().filter(distinctByKey()).forEach(this::addGlossarEntry);
-    }
-
-    private void addGlossarEntry(DomainObject domainObject) {
-        asciiDocBuilder.textLine(
-                formatAndLink(
-                        defaultString(glossaryTitleTemplate, domainObject.getId() != null ? GLOSSARY_LINK_TITLE : GLOSSARY_LINK_TITLE_LITE),
-                        domainObject));
-        asciiDocBuilder.textLine(domainObject.getFullDescription());
-        asciiDocBuilder.textLine(StringUtils.EMPTY);
-
-        somethingWasGenerated = true;
+        somethingWasGenerated = !classes.isEmpty();
     }
 }

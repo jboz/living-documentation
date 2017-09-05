@@ -53,13 +53,13 @@ public class Bill extends AbstractDomain {
     /**
      * Contract concerned by the bill.
      */
-    @UbiquitousLanguage(id = 200)
+    @UbiquitousLanguage(id = 102)
     private Contract contract;
 
     /**
      * Bill contents.
      */
-    @UbiquitousLanguage(id = 400)
+    @UbiquitousLanguage(id = 103)
     private Set<Access> accesses = new HashSet<>();
 
     /**

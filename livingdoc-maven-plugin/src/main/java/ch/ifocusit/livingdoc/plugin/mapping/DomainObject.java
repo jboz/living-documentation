@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class DomainObject implements Comparable<DomainObject> {
     private Integer id;
@@ -98,7 +99,7 @@ public class DomainObject implements Comparable<DomainObject> {
      * @return the full name as it will be represented in the glossary.
      */
     public String getFullName() {
-        return (!mapped && StringUtils.isNoneBlank(parentName) ? parentName + "." : "") + name;
+        return (!mapped && StringUtils.isNoneBlank(parentName) ? parentName + "." : EMPTY) + name;
     }
 
     @Override
