@@ -29,6 +29,7 @@ import ch.ifocusit.livingdoc.plugin.domain.Cluster;
 import ch.ifocusit.livingdoc.plugin.domain.Color;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -94,6 +95,12 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     @Parameter
     private List<Cluster> clusters;
 
+    @Parameter
+    private boolean diagramShowMethods = true;
+
+    @Parameter
+    private boolean diagramShowFields = true;
+
     /**
      * Header of the diagram
      */
@@ -115,6 +122,9 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     @Parameter
     private String diagramTitle;
 
+    @Parameter
+    private boolean diagramWithDependencies = false;
+
     @Override
     protected String getOutputFilename() {
         return diagramOutputFilename;
@@ -133,6 +143,11 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
         }
         // generate diagram
         String diagram = generateDiagram();
+
+        if (StringUtils.isBlank(diagram)) {
+            // nothing to generate
+            return;
+        }
 
         switch (format) {
             case html:
@@ -162,12 +177,13 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
         switch (diagramType) {
             case plantuml:
                 PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes,
-                        rootAggregateColor, diagramHeader, diagramFooter);
+                        rootAggregateColor, diagramHeader, diagramFooter, diagramShowFields, diagramShowMethods,
+                        diagramWithDependencies, diagramLinkPage);
                 if (onlyAnnotated) {
                     builder.filterOnAnnotation(UbiquitousLanguage.class);
                 }
                 if (diagramWithLink && !DiagramImageType.png.equals(diagramImageType)) {
-                    builder.mapNames(glossaryMapping, UbiquitousLanguage.class, diagramLinkPage + "#" + glossaryAnchorTemplate);
+                    builder.mapNames(glossaryMapping);
                 }
                 return builder.generate();
             default:

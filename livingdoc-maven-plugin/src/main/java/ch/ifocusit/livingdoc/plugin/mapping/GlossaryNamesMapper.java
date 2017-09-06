@@ -46,11 +46,8 @@ public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesM
     List<DomainObject> mappings = new ArrayList<>();
     private Class<A> annotation;
 
-    private String linkTemplate;
-
-    public GlossaryNamesMapper(File file, Class<A> annotation, String linkTemplate) throws IOException {
+    public GlossaryNamesMapper(File file, Class<A> annotation) throws IOException {
         this.annotation = annotation;
-        this.linkTemplate = linkTemplate;
 
         if (file != null) {
             mappings = CsvParser.mapTo(DomainObject.class)
@@ -69,10 +66,9 @@ public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesM
         return getName(id).orElse(NamesMapper.super.getClassName(aClass));
     }
 
-    @Override
-    public Optional<Link> getClassLink(Class aClass) {
+/*    public Optional<Link> getClassLink(Class aClass) {
         return Optional.of(create(getClassName(aClass), aClass.getSimpleName(), AnnotationUtil.tryFind(aClass, annotation)));
-    }
+    }*/
 
     @Override
     public String getFieldName(Field field) {
@@ -80,25 +76,25 @@ public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesM
         return getName(id).orElse(NamesMapper.super.getFieldName(field));
     }
 
-    /**
+/*    *//**
      * Equilvalent to {@link DomainObject#getFullName()}
      *
      * @param field : java field to treat
      * @return fully classified field name (i.e. ParentClassName.fieldName string)
-     */
+     *//*
     public String getFieldFullName(Field field) {
-        return field.getDeclaringClass().getSimpleName() + "." + field.getName();
-    }
+        return AnchorUtil.glossaryLink(field.getDeclaringClass().getSimpleName(), field.getName());
+    }*/
 
-    @Override
-    public Optional<Link> getFieldLink(Field field) {
-        return Optional.of(create(getFieldName(field), getFieldFullName(field), AnnotationUtil.tryFind(field, annotation)));
+/*    public Optional<Link> getFieldLink(Field field) {
+        String fieldLink = getFieldFullName(field);
+        return Optional.of(create(getFieldName(field), fieldLink, AnnotationUtil.tryFind(field, annotation)));
     }
 
     private Link create(String name, String fullName, Optional<A> annotation) {
         Link link = new Link();
         link.setLabel(name);
-        link.setUrl(AnchorUtil.formatLink(linkTemplate, annotation.map(a -> a.id() == -1 ? null : a.id()).orElse(null), fullName));
+        link.setUrl(AnchorUtil.formatLink(linkPage, annotation.map(a -> a.id() == -1 ? null : a.id()).orElse(null), fullName));
         return link;
-    }
+    }*/
 }

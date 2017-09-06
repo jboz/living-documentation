@@ -166,7 +166,7 @@
                             <format>plantuml</format>
                             <interactive>false</interactive>
                             <excludes>
-                                <exclude>.*\.domain\..*</exclude>
+                                <exclude>.*\.domain\.(?!Bill$).*</exclude>
                                 <exclude>.*JAXRSConfiguration</exclude>
                                 <exclude>.*ListBillRepository</exclude>
                             </excludes>

@@ -77,6 +77,8 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     @Parameter(defaultValue = "false")
     private boolean gerkinSeparateFeature;
 
+    protected boolean somethingWasGenerated = false;
+
     @Override
     protected String getOutputFilename() {
         return gherkinOutputFilename;
@@ -93,11 +95,13 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
+        if (!gerkinSeparateFeature) {
+            appendTitle(get(pageCount.get()));
+        }
+
         readFeatures().forEach(path -> {
 
-            if (!gerkinSeparateFeature) {
-                appendTitle(get(pageCount.get()));
-            } else {
+            if (gerkinSeparateFeature) {
                 // read feature title
                 try {
                     Map<String, Object> parsed = MapFormatter.parse(readFileToString(FileUtils.getFile(path), defaultCharset()));
@@ -109,11 +113,17 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
             }
             get(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
             get(pageCount.get()).textLine(EMPTY);
+            somethingWasGenerated = true;
 
             if (gerkinSeparateFeature) {
                 pageCount.incrementAndGet();
             }
         });
+
+        if (!somethingWasGenerated) {
+            // nothing generated
+            return;
+        }
 
         write(docBuilders.get(0));
     }
