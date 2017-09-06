@@ -5,7 +5,7 @@
 
     <groupId>ch.ifocusit.livingdoc</groupId>
     <artifactId>living-documentation</artifactId>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.10-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Living Documentation tools</name>

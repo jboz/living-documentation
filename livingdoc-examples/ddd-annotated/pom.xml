@@ -6,7 +6,7 @@
     <parent>
         <groupId>ch.ifocusit.livingdoc.example</groupId>
         <artifactId>examples-parent</artifactId>
-        <version>1.9-SNAPSHOT</version>
+        <version>1.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>ddd-annotated</artifactId>

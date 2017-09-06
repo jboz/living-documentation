@@ -7,7 +7,7 @@
     <parent>
         <groupId>ch.ifocusit.livingdoc.example</groupId>
         <artifactId>aggregate</artifactId>
-        <version>1.9-SNAPSHOT</version>
+        <version>1.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>aggregate-shared</artifactId>
