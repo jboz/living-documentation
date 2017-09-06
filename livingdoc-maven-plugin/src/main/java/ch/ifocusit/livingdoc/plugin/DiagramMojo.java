@@ -177,7 +177,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
         switch (diagramType) {
             case plantuml:
                 PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes,
-                        rootAggregateColor, diagramHeader, diagramFooter, diagramShowFields, diagramShowMethods,
+                        rootAggregateColor, diagramHeader, diagramFooter, diagramShowMethods, diagramShowFields,
                         diagramWithDependencies, diagramLinkPage);
                 if (onlyAnnotated) {
                     builder.filterOnAnnotation(UbiquitousLanguage.class);

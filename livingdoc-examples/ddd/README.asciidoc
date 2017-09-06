@@ -6,9 +6,9 @@ This is a simple DDD project around the telecom aggregate
 
 The maven plugin is use to generate dynamically the domain class diagram :
 
-image::domain.png[]
+image::diagram.png[]
 image::glossary.png[]
-image::dictionnary.png[]
+image::dictionary.png[]
 
 == Maven configuration :
 [source,xml]
@@ -34,6 +34,9 @@ image::dictionnary.png[]
         <excludes>
             <exclude>.*domain.common.*</exclude>
         </excludes>
+        <diagramTitle>= Classes Diagram</diagramTitle>
+        <dictionaryTitle>= Dictionary</dictionaryTitle>
+        <glossaryTitle>= Glossary</glossaryTitle>
     </configuration>
 </plugin>
 ----
