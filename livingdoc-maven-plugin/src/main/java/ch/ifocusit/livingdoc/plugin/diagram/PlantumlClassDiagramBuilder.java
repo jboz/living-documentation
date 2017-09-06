@@ -97,8 +97,8 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
     @Override
     protected String readHeader() throws MojoExecutionException {
         String header = super.readHeader();
-        header += showFields ? StringUtils.EMPTY : "hide fields" + NEWLINE;
-        header += showMethods ? StringUtils.EMPTY : "hide methods" + NEWLINE;
+        header += showFields ? StringUtils.EMPTY : ("hide fields" + NEWLINE);
+        header += showMethods ? StringUtils.EMPTY : ("hide methods" + NEWLINE);
         return header;
     }
 

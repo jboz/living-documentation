@@ -21,7 +21,7 @@ image::dictionary.png[]
 [source,java]
 ----
 @RootAggregate
-@Glossary(id = 100)
+@UbiquitousLanguage(id = 100)
 public class Bill {
     [...]
 }
@@ -74,6 +74,10 @@ Annotations dependency :
         <excludes>
             <exclude>.*domain.common.*</exclude>
         </excludes>
+        <diagramTitle>= Classes Diagram</diagramTitle>
+        <dictionaryTitle>= Dictionary</dictionaryTitle>
+        <glossaryTitle>= Glossary</glossaryTitle>
+        <glossaryColumnsName>Id Glossaire|Nom de l'objet|Nom de l'attribut|Type|Description|Contraintes|Valeur par défaut</glossaryColumnsName>
     </configuration>
 </plugin>
 ----
