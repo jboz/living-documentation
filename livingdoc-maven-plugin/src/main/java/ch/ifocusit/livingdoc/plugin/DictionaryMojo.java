@@ -44,16 +44,16 @@ import java.util.stream.Collectors;
 public class DictionaryMojo extends AbstractGlossaryMojo {
     private static final String DEFAULT_DICTIONARY_TEMPLATE_MUSTACHE = "/default_dictionary_template.mustache";
 
-    @Parameter(defaultValue = "dictionary", required = true)
+    @Parameter(property = "livingdoc.dictionary.output.filename", defaultValue = "dictionary", required = true)
     private String dictionaryOutputFilename;
 
-    @Parameter
+    @Parameter(property = "livingdoc.dictionary.title")
     private String dictionaryTitle;
 
-    @Parameter(defaultValue = "true")
-    private boolean dictionaryWithLink = true;
+    @Parameter(property = "livingdoc.dictionary.link.activate", defaultValue = "true")
+    private boolean dictionaryWithLink;
 
-    @Parameter
+    @Parameter(property = "livingdoc.dictionary.template")
     private File dictionaryTemplate;
 
     @Override

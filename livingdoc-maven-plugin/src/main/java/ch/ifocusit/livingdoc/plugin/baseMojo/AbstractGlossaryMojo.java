@@ -73,11 +73,11 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
     /**
      * List of source directories to browse
      */
-    @Parameter(defaultValue = "${project.build.sourceDirectory}")
+    @Parameter(property = "livingdoc.glossary.sources", defaultValue = "${project.build.sourceDirectory}")
     private List<String> sources = new ArrayList<>();
 
-    @Parameter
-    private String packageRoot = EMPTY;
+    @Parameter(property = "livingdoc.glossary.packageRoot", defaultValue = "${project.groupId}.${project.artifactId}.domain")
+    private String packageRoot;
 
     protected AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
     protected JavaProjectBuilder javaDocBuilder;
@@ -211,7 +211,7 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
                     }
                 }
             } catch (Exception e) {
-                getLog().warn("Unable to load jar source " + artifact, e);
+                getLog().warn("Unable to load jar source " + artifact + " : " + e.getMessage());
             }
         });
     }

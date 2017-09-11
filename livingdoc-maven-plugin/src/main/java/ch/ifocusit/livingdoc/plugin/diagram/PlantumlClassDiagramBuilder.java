@@ -66,8 +66,8 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
                 JavaClazz javaClass = super.createJavaClass(clazz);
                 if (rootAggregateColor != null) {
                     AnnotationUtil.tryFind(clazz, RootAggregate.class).ifPresent(annot ->
-                            javaClass.setBackgroundColor(rootAggregateColor.getBackgroundColor())
-                                    .setBorderColor(rootAggregateColor.getBorderColor()));
+                            javaClass.setBackgroundColor(rootAggregateColor.getBackground())
+                                    .setBorderColor(rootAggregateColor.getBorder()));
                 }
                 return javaClass;
             }

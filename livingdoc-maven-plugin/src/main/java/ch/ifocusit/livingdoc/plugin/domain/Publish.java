@@ -11,22 +11,22 @@ public class Publish {
     /**
      * Publication provider.
      */
-    @Parameter(required = true, defaultValue = "confluence")
+    @Parameter(property = "provider", required = true, defaultValue = "confluence")
     private Provider provider = Provider.confluence;
 
-    @Parameter(required = true)
+    @Parameter(property = "endpoint", required = true)
     private String endpoint;
 
-    @Parameter(required = true)
+    @Parameter(property = "spaceKey", required = true)
     private String spaceKey;
 
-    @Parameter(required = true)
+    @Parameter(property = "ancestorId", required = true)
     private String ancestorId;
 
-    @Parameter
+    @Parameter(property = "username")
     private String username;
 
-    @Parameter
+    @Parameter(property = "password")
     private String password;
 
     public Provider getProvider() {
