@@ -46,19 +46,19 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class GlossaryMojo extends AbstractGlossaryMojo {
     private static final String DEFAULT_GLOSSARY_TEMPLATE_MUSTACHE = "/default_glossary_template.mustache";
 
-    @Parameter(defaultValue = "glossary", required = true)
+    @Parameter(property = "livingdoc.glossary.output.filename", defaultValue = "glossary", required = true)
     private String glossaryOutputFilename;
 
-    @Parameter
+    @Parameter(property = "livingdoc.glossary.title")
     private String glossaryTitle;
 
-    @Parameter(defaultValue = "Id|Object Name|Attribute name|Type|Description|Constraints|Default Value")
+    @Parameter(property = "livingdoc.glossary.columns", defaultValue = "Id|Object Name|Attribute name|Type|Description|Constraints|Default Value")
     private String glossaryColumnsName;
 
-    @Parameter
+    @Parameter(property = "livingdoc.glossary.template")
     private File glossaryTemplate;
 
-    @Parameter(defaultValue = "true")
+    @Parameter(property = "livingdoc.glossary.link.activate", defaultValue = "true")
     private boolean glossaryWithLink = true;
 
     @Override

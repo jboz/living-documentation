@@ -56,25 +56,25 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     /**
      * List of source directories to browse
      */
-    @Parameter(defaultValue = "${project.basedir}/src/test/resources/features")
+    @Parameter(property = "livingdoc.gherkin.features", defaultValue = "${project.basedir}/src/test/resources/features")
     private List<String> features;
 
     /**
      * Options like use a custom template (template=path_to_my_template.erb).
      */
-    @Parameter
+    @Parameter(property = "livingdoc.gherkin.options")
     private String gherkinOptions;
 
-    @Parameter(defaultValue = "gherkin", required = true)
+    @Parameter(property = "livingdoc.gherkin.output.filename", defaultValue = "gherkin", required = true)
     private String gherkinOutputFilename;
 
-    @Parameter
+    @Parameter(property = "livingdoc.gherkin.title")
     private String gherkinTitle;
 
     /**
      * Flag to indicate if feature must be in separate files
      */
-    @Parameter(defaultValue = "false")
+    @Parameter(property = "livingdoc.gherkin.separate", defaultValue = "false")
     private boolean gerkinSeparateFeature;
 
     protected boolean somethingWasGenerated = false;

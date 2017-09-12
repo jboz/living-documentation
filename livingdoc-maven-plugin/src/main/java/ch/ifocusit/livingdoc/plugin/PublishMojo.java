@@ -50,18 +50,14 @@ import java.util.Map;
 @Mojo(name = "publish")
 public class PublishMojo extends AbstractAsciidoctorMojo {
 
-    @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-    @Parameter(defaultValue = "${plugin.artifactMap}", required = true, readonly = true)
-    private Map<String, Artifact> pluginArtifactMap;
-
-    @Parameter
+    @Parameter(property = "livingdoc.publish")
     private Publish publish = new Publish();
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         extractTemplatesFromJar();
         try {
-            PublishProvider provider = null;
+            PublishProvider provider;
             switch (publish.getProvider()) {
                 default:
                     provider = new ConfluenceProvider(publish.getEndpoint(), publish.getUsername(), publish.getPassword());
