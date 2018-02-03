@@ -22,5 +22,33 @@
  */
 package ch.ifocusit.telecom.domain.common;
 
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
+
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.util.UUID;
+
+@MappedSuperclass
+@ToString
+@EqualsAndHashCode
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class AbstractDomain {
+
+    @Id
+    String id;
+
+    // ======================================
+    // =         Lifecycle methods          =
+    // ======================================
+
+    @PrePersist
+    private void setUUID() {
+        id = UUID.randomUUID().toString();
+    }
 }

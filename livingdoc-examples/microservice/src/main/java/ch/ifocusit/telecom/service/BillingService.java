@@ -20,7 +20,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.rest;
+package ch.ifocusit.telecom.service;
 
 import ch.ifocusit.telecom.domain.Bill;
 import ch.ifocusit.telecom.repository.BillRepository;
@@ -38,6 +38,8 @@ import java.time.YearMonth;
 import java.util.Optional;
 
 /**
+ * Bill rest endpoint.
+ *
  * @author Julien Boz
  */
 @RequestScoped
@@ -59,15 +61,27 @@ public class BillingService {
     }
 
     @GET
+    @Path("/")
+    @ApiOperation(value = "Dernière facture mensuelle", response = Bill.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "Billing not found")}
+    )
+    public Response getLastBill(@Context Request request) {
+        return response(repository.retreiveLastBill(), request);
+    }
+
+    @GET
     @Path("/{month}")
-    @ApiOperation(value = "Facturation d'un mois", response = Bill.class)
+    @ApiOperation(value = "Facturation d'un mois donné", response = Bill.class)
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Invalid input"),
             @ApiResponse(code = 404, message = "Billing not found")}
     )
     public Response getBill(@PathParam("month") final String month, @Context Request request) {
-        Optional<Bill> bill = repository.get(YearMonth.parse(month));
+        return response(repository.get(YearMonth.parse(month)), request);
+    }
 
+    public Response response(Optional<Bill> bill, Request request) {
         if (!bill.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

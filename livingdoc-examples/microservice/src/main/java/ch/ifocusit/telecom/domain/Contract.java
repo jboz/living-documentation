@@ -24,36 +24,45 @@ package ch.ifocusit.telecom.domain;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.MonthDay;
 
 /**
  * Telecom contract
  */
+@Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @UbiquitousLanguage(id = 200)
-@Data
 public class Contract extends AbstractDomain {
 
     /**
      * Contract identifier.
      * Generate by the system and communicate to client.
      */
+    @NotNull
     @UbiquitousLanguage(id = 201)
-    private String id;
+    String idContract;
 
     /**
      * Contract customer.
      */
+    @NotNull
     @UbiquitousLanguage(id = 202)
-    private Customer customer;
+    @ManyToOne
+    Customer customer;
 
     /**
      * Contract effect date.
      */
+    @NotNull
     @UbiquitousLanguage(id = 203)
-    private LocalDate effectDate;
+    LocalDate effectDate;
 
     /**
      * Extract birth day from effect date.
@@ -61,7 +70,8 @@ public class Contract extends AbstractDomain {
      * @return the contract birth date
      */
     @UbiquitousLanguage(id = 204)
-    public MonthDay getBirthDay() {
+    MonthDay getBirthDay() {
         return MonthDay.from(effectDate);
     }
 }
+

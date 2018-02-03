@@ -24,8 +24,14 @@ package ch.ifocusit.telecom.domain;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,14 +41,19 @@ import java.util.Set;
  * @author Julien Boz
  */
 @UbiquitousLanguage(id = 300)
-@Data
+@Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Setter
 public class Customer extends AbstractDomain {
 
     /**
      * Name of the customer.
      */
+    @NotNull
     @UbiquitousLanguage(id = 301)
-    private String name;
+    String name;
 
-    private Set<Contract> contracts = new HashSet<>();
+    @OneToMany(mappedBy = "customer")
+    Set<Contract> contracts = new HashSet<>();
 }

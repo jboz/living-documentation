@@ -24,19 +24,30 @@ package ch.ifocusit.telecom.repository;
 
 import ch.ifocusit.telecom.domain.Bill;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.time.YearMonth;
 import java.util.Optional;
 
 /**
  * @author Julien Boz
  */
-public interface BillRepository {
+@Transactional
+public class BillRepository {
 
-    public Bill add(Bill bill);
+    @PersistenceContext
+    private EntityManager em;
 
-    public Optional<Bill> retreiveLastBill();
+    public Optional<Bill> retreiveLastBill() {
+        TypedQuery<Bill> query = em.createNamedQuery(Bill.FIND_ALL, Bill.class);
+        query.setMaxResults(1);
+        return query.getResultList().stream().findFirst();
+    }
 
-    public void clear();
-
-    public Optional<Bill>  get(YearMonth parse);
+    public Optional<Bill> get(YearMonth yearMonth) {
+        TypedQuery<Bill> query = em.createNamedQuery(Bill.FIND_ALL, Bill.class);
+        return query.getResultList().stream().filter((bill) -> bill.getMonth().equals(yearMonth)).findFirst();
+    }
 }

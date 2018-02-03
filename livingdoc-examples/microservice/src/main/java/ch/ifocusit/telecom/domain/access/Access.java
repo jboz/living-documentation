@@ -23,9 +23,20 @@
 package ch.ifocusit.telecom.domain.access;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
+import ch.ifocusit.telecom.domain.Customer;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
@@ -33,24 +44,44 @@ import java.time.ZonedDateTime;
  * Use of telecom service.
  */
 @UbiquitousLanguage(id = 400)
-@Data
+@MappedSuperclass
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Setter
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = CallAccess.class, name = "Call"),
+        @JsonSubTypes.Type(value = SmsAccess.class, name = "Sms")}
+)
 public abstract class Access extends AbstractDomain {
 
     /**
      * Phone number used.
      */
+    @NotNull
     @UbiquitousLanguage(id = 401)
-    private String phoneNumber;
+    String phoneNumber;
 
     /**
      * Price of use of the service.
      */
+    @NotNull
     @UbiquitousLanguage(id = 402)
     private BigDecimal price;
 
     /**
      * Timestamp of use.
      */
+    @NotNull
     @UbiquitousLanguage(id = 403)
     private ZonedDateTime dateTime = ZonedDateTime.now();
+
+    /**
+     * Customer that use the services.
+     */
+    @NotNull
+    @UbiquitousLanguage(id = 404)
+    Customer customer;
 }

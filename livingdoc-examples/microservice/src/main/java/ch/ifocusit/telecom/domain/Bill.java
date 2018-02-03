@@ -22,15 +22,18 @@
  */
 package ch.ifocusit.telecom.domain;
 
-import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.annotations.RootAggregate;
-import ch.ifocusit.telecom.domain.access.Access;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
-import lombok.Data;
+import ch.ifocusit.telecom.service.infra.YearMonthToStringConverter;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.YearMonth;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * *Monthly* bill.
@@ -41,30 +44,44 @@ import java.util.Set;
  */
 @RootAggregate
 @UbiquitousLanguage(id = 100)
-@Data
+@Entity
+@NamedQueries({
+        @NamedQuery(name = Bill.FIND_ALL, query = "SELECT b FROM Bill b ORDER BY b.month DESC")
+})
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Setter
 public class Bill extends AbstractDomain {
+    public static final String FIND_ALL = "Bill.findAll";
 
     /**
      * Facturation month.
      */
+    @NotNull
     @UbiquitousLanguage(id = 101)
-    private YearMonth month;
+    @Convert(converter = YearMonthToStringConverter.class)
+    YearMonth month;
 
     /**
+     * °°
      * Contract concerned by the bill.
      */
+    @NotNull
     @UbiquitousLanguage(id = 102)
-    private Contract contract;
+    @ManyToOne
+    Contract contract;
 
-    /**
-     * Bill contents.
-     */
-    @UbiquitousLanguage(id = 103)
-    private Set<Access> accesses = new HashSet<>();
+//    /**
+//     * Bill contents.
+//     */
+//    @UbiquitousLanguage(id = 103)
+//    @OneToMany
+//    @JoinTable
+//    Set<Access> accesses = new HashSet<>();
 
     /**
      * Flag that indicate whenever the bill has been sended to the customer.
      */
-    private boolean customerInformed;
+    boolean customerInformed;
 
 }

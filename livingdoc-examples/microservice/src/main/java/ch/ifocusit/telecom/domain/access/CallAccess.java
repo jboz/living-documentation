@@ -23,20 +23,33 @@
 package ch.ifocusit.telecom.domain.access;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
+import ch.ifocusit.telecom.service.infra.DurationToStringConverter;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 import java.time.Duration;
 
 /**
  * Phone call type access.
  */
 @UbiquitousLanguage(id = 500)
-@Data
+@Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Setter
 public class CallAccess extends Access {
 
     /**
      * Phone call duration
      */
+    @NotNull
     @UbiquitousLanguage(id = 501)
-    private Duration duration;
+    @Convert(converter = DurationToStringConverter.class)
+    Duration duration;
 }

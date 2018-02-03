@@ -20,7 +20,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.rest;
+package ch.ifocusit.telecom.service.infra;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

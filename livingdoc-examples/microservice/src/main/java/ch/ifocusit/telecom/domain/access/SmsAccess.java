@@ -23,12 +23,20 @@
 package ch.ifocusit.telecom.domain.access;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.FieldDefaults;
+
+import javax.persistence.Entity;
 
 /**
  * SMS type access.
  */
 @UbiquitousLanguage(id = 600)
-@Data
+@Entity
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Getter
+@Setter
 public class SmsAccess extends Access {
 }
