@@ -50,13 +50,14 @@ import static java.util.Arrays.stream;
 public abstract class AbstractClassDiagramBuilder implements LinkMaker, NamesMapper {
 
     private static final String TEST = "Test";
+    private static final String IT = "IT";
     private static final String PACKAGE_INFO = "package-info";
+
     protected final MavenProject project;
     protected final String prefix;
     protected final String[] excludes;
     protected final File header;
     protected final File footer;
-    private final String IT = "IT";
     protected final boolean diagramWithDependencies;
     protected String linkPage;
 

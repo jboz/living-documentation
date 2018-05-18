@@ -38,6 +38,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author Julien Boz
@@ -176,7 +177,8 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
 
         switch (diagramType) {
             case plantuml:
-                PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes,
+                PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot,
+                        Stream.of(excludes).map(s -> s.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", "")).toArray(String[]::new),
                         rootAggregateColor == null || rootAggregateColor.isEmpty() ? DEFAULT_ROOT_COLOR : rootAggregateColor, diagramHeader, diagramFooter, diagramShowMethods, diagramShowFields,
                         diagramWithDependencies, diagramLinkPage);
                 if (onlyAnnotated) {

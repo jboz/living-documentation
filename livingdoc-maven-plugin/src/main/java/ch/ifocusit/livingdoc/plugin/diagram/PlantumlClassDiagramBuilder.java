@@ -32,9 +32,12 @@ import com.google.common.reflect.ClassPath.ClassInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -45,6 +48,8 @@ import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
  * @author Julien Boz
  */
 public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
+
+    Logger LOG = LoggerFactory.getLogger(PlantumlClassDiagramBuilder.class);
 
     private ClassDiagramBuilder classDiagramBuilder;
     private Predicate<ClassInfo> additionalClassPredicate = a -> true; // default predicate always true
@@ -83,7 +88,16 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
                         // apply filters
                         .filter(defaultFilter())
                         .filter(additionalClassPredicate)
-                        .map(ClassInfo::load).collect(Collectors.toList()))
+                        .map(classInfo -> {
+                            try {
+                                return classInfo.load();
+                            } catch (Throwable e) {
+                                LOG.warn(e.toString());
+                            }
+                            return null;
+                        })
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList()))
                 .excludes(excludes)
                 .setHeader(readHeader())
                 .setFooter(readFooter())
