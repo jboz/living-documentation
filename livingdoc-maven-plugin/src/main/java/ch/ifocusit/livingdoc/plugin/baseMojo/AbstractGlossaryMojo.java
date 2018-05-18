@@ -25,13 +25,11 @@ package ch.ifocusit.livingdoc.plugin.baseMojo;
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
 import ch.ifocusit.livingdoc.plugin.mapping.MappingRespository;
-import ch.ifocusit.livingdoc.plugin.utils.AnchorUtil;
 import ch.ifocusit.livingdoc.plugin.utils.ClassLoaderUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaAnnotatedElement;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
@@ -47,20 +45,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
-import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.defaultString;
-import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.interpretNewLine;
-import static java.text.MessageFormat.format;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static java.util.Arrays.stream;
 
 /**
  * @author Julien Boz
@@ -78,6 +73,9 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
 
     @Parameter(property = "livingdoc.glossary.packageRoot", defaultValue = "${project.groupId}.${project.artifactId}.domain")
     private String packageRoot;
+
+    @Parameter
+    private String[] excludes = new String[0];
 
     protected AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
     protected JavaProjectBuilder javaDocBuilder;
@@ -130,7 +128,20 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
         return javaDocBuilder.getClasses().stream()
                 .filter(javaClass -> packageRoot == null || javaClass.getPackageName().startsWith(packageRoot))
                 .filter(this::hasAnnotation) // if annotated
+                .filter(defaultFilter())
                 ;
+    }
+
+    private static final String TEST = "Test";
+    private static final String IT = "IT";
+    private static final String PACKAGE_INFO = "package-info";
+
+    protected Predicate<JavaClass> defaultFilter() {
+        return ci -> !ci.getSimpleName().equalsIgnoreCase(PACKAGE_INFO)
+                && !ci.getSimpleName().endsWith(TEST)
+                && !ci.getSimpleName().endsWith(IT)
+                // do not load class if must be filtered
+                && stream(excludes).noneMatch(excl -> ci.getCanonicalName().matches(excl));
     }
 
     protected boolean hasAnnotation(JavaAnnotatedElement annotatedElement) {
