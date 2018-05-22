@@ -20,31 +20,50 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain;
+package ch.ifocusit.telecom.glue;
 
-import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.telecom.domain.common.AbstractDomain;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.HashSet;
-import java.util.Set;
+import java.math.BigDecimal;
 
 /**
- * Customer of the telecom service
- *
  * @author Julien Boz
  */
-@UbiquitousLanguage(id = 300)
-@Getter
-@Setter
-public class Customer extends AbstractDomain {
+public class Item {
 
-    /**
-     * Name of the customer.
-     */
-    @UbiquitousLanguage(id = 301)
-    private String name;
+    public static enum ItemType {
+        SMS, CALL
+    }
 
-    private Set<Contract> contracts = new HashSet<>();
+    private ItemType type;
+    private String phoneNumber;
+    private String dateTime;
+    private BigDecimal price;
+    private String duration;
+
+    public Item(ItemType type, String phoneNumber, String dateTime, BigDecimal price, String duration) {
+        this.type = type;
+        this.phoneNumber = phoneNumber;
+        this.dateTime = dateTime;
+        this.price = price;
+        this.duration = duration;
+    }
+
+    public ItemType getType() {
+        return type;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
 }
