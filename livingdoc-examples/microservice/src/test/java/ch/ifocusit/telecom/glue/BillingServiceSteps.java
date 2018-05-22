@@ -25,8 +25,8 @@ package ch.ifocusit.telecom.glue;
 import ch.ifocusit.telecom.domain.Bill;
 import ch.ifocusit.telecom.domain.access.CallAccess;
 import ch.ifocusit.telecom.domain.access.SmsAccess;
-import ch.ifocusit.telecom.repository.BillRespository;
-import ch.ifocusit.telecom.repository.ListBillRespository;
+import ch.ifocusit.telecom.repository.BillRepository;
+import ch.ifocusit.telecom.repository.ListBillRepository;
 import ch.ifocusit.telecom.rest.BillingService;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -49,7 +49,7 @@ public class BillingServiceSteps {
 
     private static final Random RANDOM = new Random();
 
-    private BillRespository billRespository;
+    private BillRepository billRespository;
     private BillingService service;
 
     private Bill currentBill;
@@ -58,9 +58,9 @@ public class BillingServiceSteps {
 
     @Before
     public void setUp() {
-        billRespository = new ListBillRespository();
+        billRespository = new ListBillRepository();
         service = new BillingService();
-        service.setBillRespository(billRespository);
+        service.setRepository(billRespository);
         billRespository.clear();
     }
 
