@@ -149,7 +149,7 @@
                         <goals>
                             <goal>diagram</goal>
                             <goal>glossary</goal>
-                            <!--<goal>gherkin</goal>-->
+                            <goal>gherkin</goal>
                             <goal>cucumber</goal>
                         </goals>
                         <configuration>
@@ -186,7 +186,7 @@
                     <onlyAnnotated>true</onlyAnnotated>
                     <interactive>true</interactive><!-- allow links in diagram, see -->
                     <diagramLinkPage>../index.html</diagramLinkPage><!-- all sections will be in index file -->
-                    <glossaryTitleTemplate>[[{2}]]\n=== {1} ^glossary_id={0}^</glossaryTitleTemplate>
+                    <!--<glossaryTitleTemplate>[[{2}]]\n=== {1} ^glossary_id={0}^</glossaryTitleTemplate>-->
                     <gherkinOptions>{templates}/gherkin_template.erb</gherkinOptions>
                 </configuration>
             </plugin>

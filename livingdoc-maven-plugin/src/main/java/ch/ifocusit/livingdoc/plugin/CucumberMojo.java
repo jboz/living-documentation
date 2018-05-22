@@ -22,6 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
 import com.github.cukedoctor.Cukedoctor;
 import com.github.cukedoctor.api.CukedoctorConverter;
 import com.github.cukedoctor.api.DocumentAttributes;
@@ -47,7 +48,13 @@ import java.util.List;
  * @author Julien Boz
  */
 @Mojo(name = "cucumber", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
-public class CucumberMojo extends CommonMojoDefinition {
+public class CucumberMojo extends AbstractDocsGeneratorMojo {
+
+    @Parameter(property = "livingdoc.cucumber.output.filename", defaultValue = "cucumber", required = true)
+    private String cucumberOutputFilename;
+
+    @Parameter(property = "livingdoc.cucumber.title")
+    private String cucumberTitle;
 
     /**
      * Cucumber execution result json files.
@@ -59,8 +66,13 @@ public class CucumberMojo extends CommonMojoDefinition {
     private Boolean hideSummarySection;
 
     @Override
-    protected String getDefaultFilename() {
-        return "cucumber";
+    protected String getOutputFilename() {
+        return cucumberOutputFilename;
+    }
+
+    @Override
+    protected String getTitle() {
+        return cucumberTitle;
     }
 
     @Override
@@ -68,12 +80,8 @@ public class CucumberMojo extends CommonMojoDefinition {
         if (hideSummarySection != null) {
             System.setProperty("HIDE_SUMMARY_SECTION", Boolean.toString(hideSummarySection));
         }
-
-        AsciiDocBuilder asciiDocBuilder = new AsciiDocBuilder();
-        if (Format.html.equals(format)) {
-            asciiDocBuilder.sectionTitleLevel1("Business requirements");
-        }
-        asciiDocBuilder.textLine(StringUtils.EMPTY);
+        AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
+        appendTitle(asciiDocBuilder);
 
         List<Feature> featuresFound = new ArrayList<>();
         jsons.forEach(json -> {
@@ -97,6 +105,7 @@ public class CucumberMojo extends CommonMojoDefinition {
 
         DocumentAttributes documentAttributes = GlobalConfig.newInstance().getDocumentAttributes()
                 .backend(format.name().toLowerCase())
+                .docTitle(getTitle())
 //                .toc(toc.name().toLowerCase())
 //                .revNumber(docVersion)
 //                .hardBreaks(hardBreaks)
@@ -105,9 +114,8 @@ public class CucumberMojo extends CommonMojoDefinition {
 
         CukedoctorConverter converter = Cukedoctor.instance(featuresFound, documentAttributes);
         String report = converter.renderDocumentation();
-        asciiDocBuilder.textLine(report);
+        asciiDocBuilder.textLine(report).newLine();
 
-        asciiDocBuilder.textLine(StringUtils.EMPTY);
         write(asciiDocBuilder);
     }
 }

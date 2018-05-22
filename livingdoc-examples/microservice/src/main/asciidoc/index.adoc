@@ -19,3 +19,7 @@ include::{generated}/glossary.adoc[]
 == Business Behavior
 
 include::{generated}/gherkin.adoc[]
+
+== Business Behavior - cucumber report
+
+include::{generated}/cucumber.adoc[leveloffset=+2]
