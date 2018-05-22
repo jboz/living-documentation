@@ -11,7 +11,8 @@ public class GlossaryNamesMapperTest {
 
     @Test
     public void testReadFile() throws Exception {
-        GlossaryNamesMapper mapper = new GlossaryNamesMapper(new File(getClass().getResource("/mappings.csv").toURI()), UbiquitousLanguage.class, "id-{0}");
+        GlossaryNamesMapper mapper = new GlossaryNamesMapper<>(
+                new File(getClass().getResource("/mappings.csv").toURI()), UbiquitousLanguage.class);
         assertThat(mapper.mappings).hasSize(1);
     }
 }

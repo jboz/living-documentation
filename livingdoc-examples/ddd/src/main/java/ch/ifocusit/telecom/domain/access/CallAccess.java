@@ -24,8 +24,14 @@ package ch.ifocusit.telecom.domain.access;
 
 import java.time.Duration;
 
+/**
+ * Phone call type access.
+ */
 public class CallAccess extends Access {
 
+    /**
+     * Phone call duration
+     */
     private Duration duration;
 
     public Duration getDuration() {

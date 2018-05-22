@@ -23,7 +23,8 @@
 package ch.ifocusit.livingdoc.plugin.mapping;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.livingdoc.plugin.AnnotationUtils;
+import ch.ifocusit.livingdoc.plugin.utils.AnchorUtil;
+import ch.ifocusit.livingdoc.plugin.utils.AnnotationUtil;
 import ch.ifocusit.plantuml.classdiagram.NamesMapper;
 import ch.ifocusit.plantuml.classdiagram.model.Link;
 import org.simpleflatmapper.csv.CsvParser;
@@ -32,7 +33,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,58 +43,58 @@ import java.util.stream.Collectors;
  */
 public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesMapper {
 
-    List<MappingDefinition> mappings = new ArrayList<>();
+    List<DomainObject> mappings = new ArrayList<>();
     private Class<A> annotation;
 
-    private String linkTemplate;
-
-    public GlossaryNamesMapper(File file, Class<A> annotation, String linkTemplate) throws IOException {
+    public GlossaryNamesMapper(File file, Class<A> annotation) throws IOException {
         this.annotation = annotation;
-        this.linkTemplate = linkTemplate;
 
         if (file != null) {
-            mappings = CsvParser.mapTo(MappingDefinition.class)
+            mappings = CsvParser.mapTo(DomainObject.class)
                     .stream(new FileReader(file))
                     .collect(Collectors.toList());
         }
     }
 
     private Optional<String> getName(int id) {
-        return mappings.stream().filter(def -> def.getId() == id).findFirst().map(MappingDefinition::getName);
+        return mappings.stream().filter(def -> def.getId() == id).findFirst().map(DomainObject::getName);
     }
 
     @Override
     public String getClassName(Class aClass) {
-        int id = AnnotationUtils.tryFind(aClass, annotation).map(UbiquitousLanguage::id).orElse(-1);
+        int id = AnnotationUtil.tryFind(aClass, annotation).map(UbiquitousLanguage::id).orElse(-1);
         return getName(id).orElse(NamesMapper.super.getClassName(aClass));
     }
 
-    @Override
-    public Optional<Link> getClassLink(Class aClass) {
-        return Optional.of(create(getClassName(aClass), AnnotationUtils.tryFind(aClass, annotation)));
-    }
+/*    public Optional<Link> getClassLink(Class aClass) {
+        return Optional.of(create(getClassName(aClass), aClass.getSimpleName(), AnnotationUtil.tryFind(aClass, annotation)));
+    }*/
 
     @Override
     public String getFieldName(Field field) {
-        int id = AnnotationUtils.tryFind(field, annotation).map(UbiquitousLanguage::id).orElse(-1);
+        int id = AnnotationUtil.tryFind(field, annotation).map(UbiquitousLanguage::id).orElse(-1);
         return getName(id).orElse(NamesMapper.super.getFieldName(field));
     }
 
-    @Override
-    public Optional<Link> getFieldLink(Field field) {
-        return Optional.of(create(getFieldName(field), AnnotationUtils.tryFind(field, annotation)));
+/*    *//**
+     * Equilvalent to {@link DomainObject#getFullName()}
+     *
+     * @param field : java field to treat
+     * @return fully classified field name (i.e. ParentClassName.fieldName string)
+     *//*
+    public String getFieldFullName(Field field) {
+        return AnchorUtil.glossaryLink(field.getDeclaringClass().getSimpleName(), field.getName());
+    }*/
+
+/*    public Optional<Link> getFieldLink(Field field) {
+        String fieldLink = getFieldFullName(field);
+        return Optional.of(create(getFieldName(field), fieldLink, AnnotationUtil.tryFind(field, annotation)));
     }
 
-    private Link create(String name, Optional<A> annotation) {
+    private Link create(String name, String fullName, Optional<A> annotation) {
         Link link = new Link();
         link.setLabel(name);
-        String anchor = annotation.map(annot -> annot.id() == -1 ? linkFromName(name) : String.valueOf(annot.id()))
-                .orElse(linkFromName(name));
-        link.setUrl(MessageFormat.format(linkTemplate, anchor));
+        link.setUrl(AnchorUtil.formatLink(linkPage, annotation.map(a -> a.id() == -1 ? null : a.id()).orElse(null), fullName));
         return link;
-    }
-
-    private String linkFromName(String name) {
-        return name.replaceAll(" ", "");
-    }
+    }*/
 }

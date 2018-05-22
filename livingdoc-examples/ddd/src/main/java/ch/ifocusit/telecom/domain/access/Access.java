@@ -27,10 +27,22 @@ import ch.ifocusit.telecom.domain.common.AbstractDomain;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
+/**
+ * Use of telecom service.
+ */
 public abstract class Access extends AbstractDomain {
 
+    /**
+     * Phone number used.
+     */
     private String phoneNumber;
+    /**
+     * Price of use of the service.
+     */
     private BigDecimal price;
+    /**
+     * Timestamp of use.
+     */
     private ZonedDateTime dateTime = ZonedDateTime.now();
 
     public String getPhoneNumber() {

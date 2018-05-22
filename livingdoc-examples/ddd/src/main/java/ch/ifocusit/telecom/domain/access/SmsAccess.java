@@ -22,5 +22,8 @@
  */
 package ch.ifocusit.telecom.domain.access;
 
+/**
+ * SMS type access.
+ */
 public class SmsAccess extends Access {
 }

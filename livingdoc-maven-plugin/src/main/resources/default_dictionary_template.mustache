@@ -1,0 +1,16 @@
+{{#classes}}
+[[{{linkContent}}]]
+{{#idDefined}}== [small]#{{id}}# - {{name}}{{/idDefined}}
+{{^idDefined}}== {{name}}{{/idDefined}}
+
+{{{description}}}
+
+{{#fields}}
+[[{{linkContent}}]]
+{{#idDefined}}== [small]#{{id}}# - {{linkableFullName}}{{/idDefined}}
+{{^idDefined}}== {{linkableFullName}}{{/idDefined}}
+
+{{{description}}}
+
+{{/fields}}
+{{/classes}}

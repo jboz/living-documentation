@@ -19,8 +19,11 @@ public class HandlingActivity implements ValueObject<HandlingActivity> {
 
     // TODO make HandlingActivity a part of HandlingEvent too? There is some overlap.
 
+    @UbiquitousLanguage
     private HandlingEventType type;
+    @UbiquitousLanguage
     private Location location;
+    @UbiquitousLanguage
     private Voyage voyage;
 
     public HandlingActivity(final HandlingEventType type, final Location location) {

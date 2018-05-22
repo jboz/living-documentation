@@ -24,30 +24,35 @@ package ch.ifocusit.livingdoc.plugin.domain;
 
 import org.apache.maven.plugins.annotations.Parameter;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 /**
  * @author Julien Boz
  */
 public class Color {
 
     @Parameter
-    private String backgroundColor;
+    private String background;
 
     @Parameter
-    private String borderColor;
-
-
-    public String getBackgroundColor() {
-        return backgroundColor;
-    }
-
-    public String getBorderColor() {
-        return borderColor;
-    }
+    private String border;
 
     public static Color from(String bg, String border) {
         Color color = new Color();
-        color.backgroundColor = bg;
-        color.borderColor = border;
+        color.background = bg;
+        color.border = border;
         return color;
+    }
+
+    public String getBackground() {
+        return background;
+    }
+
+    public String getBorder() {
+        return border;
+    }
+
+    public boolean isEmpty() {
+        return isBlank(background) && isBlank(border);
     }
 }

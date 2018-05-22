@@ -51,14 +51,20 @@ public class Bill extends AbstractDomain {
     /**
      * Contract concerned by the bill.
      */
-    @UbiquitousLanguage(id = 200)
+    @UbiquitousLanguage(id = 102)
     private Contract contract;
 
     /**
      * Bill contents.
      */
-    @UbiquitousLanguage(id = 400)
+    @UbiquitousLanguage(id = 103)
     private Set<Access> accesses = new HashSet<>();
+
+    /**
+     * Bill payment state
+     */
+    @UbiquitousLanguage(id = 104)
+    private PaymentState paymentState;
 
     /**
      * Flag that indicate whenever the bill has been sended to the customer.

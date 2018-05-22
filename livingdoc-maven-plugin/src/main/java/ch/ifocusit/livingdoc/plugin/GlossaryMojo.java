@@ -22,71 +22,73 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import ch.ifocusit.livingdoc.plugin.mapping.MappingDefinition;
-import org.apache.commons.lang3.StringUtils;
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
+import ch.ifocusit.livingdoc.plugin.glossary.JavaClass;
+import ch.ifocusit.livingdoc.plugin.utils.MustacheUtil;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
+ * Glossary of domain objects in a table representation.
+ *
  * @author Julien Boz
  */
 @Mojo(name = "glossary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
-public class GlossaryMojo extends CommonGlossaryMojoDefinition {
+public class GlossaryMojo extends AbstractGlossaryMojo {
+    private static final String DEFAULT_GLOSSARY_TEMPLATE_MUSTACHE = "/default_glossary_template.mustache";
 
-    public static final String NEWLINE = System.getProperty("line.separator");
-    public static final String HEADER = "[[glossaryid-{0}]]\n=== #{0}# - {1}";
-    public static final String HEADER_LITE = "[[glossaryid-{0}]]\n=== {1}";
+    @Parameter(property = "livingdoc.glossary.output.filename", defaultValue = "glossary", required = true)
+    private String glossaryOutputFilename;
 
-    @Parameter
-    private String glossaryTemplate;
+    @Parameter(property = "livingdoc.glossary.title")
+    private String glossaryTitle;
+
+    @Parameter(property = "livingdoc.glossary.columns", defaultValue = "Id|Object Name|Attribute name|Type|Description|Constraints|Default Value")
+    private String glossaryColumnsName;
+
+    @Parameter(property = "livingdoc.glossary.template")
+    private File glossaryTemplate;
+
+    @Parameter(property = "livingdoc.glossary.link.activate", defaultValue = "true")
+    private boolean glossaryWithLink = true;
 
     @Override
-    protected String getDefaultFilename() {
-        return "glossary";
+    protected String getOutputFilename() {
+        return glossaryOutputFilename;
     }
 
     @Override
     protected String getTitle() {
-        return "Glossary";
+        return glossaryTitle;
     }
 
     @Override
-    protected void executeMojo() {
-        // regroup all mapping definition
-        List<MappingDefinition> definitions = new ArrayList<>();
+    protected void executeMojo() throws Exception {
 
-        getClasses().forEach(javaClass -> {
-            // add class entry
-            definitions.add(map(javaClass, javaClass.getName(), javaClass.getComment()));
+        List<JavaClass> classes = getClasses()
+                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation,
+                        getClasses().collect(Collectors.toList()), this))
+                .collect(Collectors.toList());
 
-            // browse fields
-            javaClass.getFields().stream()
-                    .filter(this::hasAnnotation) // if annotated
-                    .forEach(javaField -> {
-                        // add field entry
-                        definitions.add(map(javaField, javaField.getName(), javaField.getComment()));
-                    });
-        });
+        boolean withId = classes.stream().anyMatch(JavaClass::hasId);
 
-        // sort definitions before add asciidoc entries
-        definitions.stream().sorted().filter(distinctByKey()).forEach(this::addGlossarEntry);
-    }
+        Map<String, Object> scopes = new HashMap<>();
+        scopes.put("columnsName", withId ? glossaryColumnsName : glossaryColumnsName.replace("Id|", ""));
+        scopes.put("columnsSize", (withId ? "1," : EMPTY) + "2,2,1,4,1,1");
+        scopes.put("classes", classes);
+        scopes.put("withLink", glossaryWithLink);
 
-    private void addGlossarEntry(MappingDefinition def) {
-        String text = MessageFormat.format(def.getId() == null ? HEADER_LITE : HEADER,
-                defaultString(def.getId(), idFromName(def)), def.getName());
+        asciiDocBuilder.textLine(MustacheUtil.execute(glossaryTemplate, DEFAULT_GLOSSARY_TEMPLATE_MUSTACHE, scopes));
 
-        if (StringUtils.isNotBlank(glossaryTemplate)) {
-            text = MessageFormat.format(glossaryTemplate, defaultString(def.getId(), idFromName(def)), def.getName());
-        }
-
-        asciiDocBuilder.textLine(text.replace("\\r\\n", NEWLINE).replace("\\n", NEWLINE));
-        asciiDocBuilder.textLine(def.getDescription());
-        asciiDocBuilder.textLine(StringUtils.EMPTY);
+        somethingWasGenerated = !classes.isEmpty();
     }
 }

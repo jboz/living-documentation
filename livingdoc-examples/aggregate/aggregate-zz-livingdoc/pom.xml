@@ -7,7 +7,7 @@
     <parent>
         <artifactId>aggregate</artifactId>
         <groupId>ch.ifocusit.livingdoc.example</groupId>
-        <version>1.3-SNAPSHOT</version>
+        <version>1.11-SNAPSHOT</version>
     </parent>
 
     <artifactId>aggregate-zz-livingdoc</artifactId>
@@ -50,12 +50,17 @@
                     <packageRoot>ch.ifocusit.livingdoc.example</packageRoot>
                     <format>adoc</format>
                     <excludes>
-                        <exclude>.*\.shared.*</exclude><!-- exclude shared package -->
+                        <!-- exclude shared package -->
+                        <exclude>.*\.shared.*</exclude>
+                        <!-- exclude some methods shared on different objects -->
+                        <exclude>.*sameValueAs.*</exclude>
+                        <exclude>.*sameIdentityAs.*</exclude>
+                        <exclude>.*idString.*</exclude>
                     </excludes>
+                    <onlyAnnotated>true</onlyAnnotated>
                     <interactive>true</interactive>
-                    <!-- link template defined here to match with the link definition in diagram -->
-                    <linkTemplate>../../livingdoc.html#glossaryid-{0}</linkTemplate><!-- relative link from svg diagram, so level up -->
-                    <glossaryTemplate>\n\n[[glossaryid-{0}]]\n=== {1}</glossaryTemplate>
+                    <!-- relative link from svg diagram, so level up -->
+                    <diagramLinkPage>../../livingdoc.html</diagramLinkPage>
                 </configuration>
             </plugin>
             <plugin>

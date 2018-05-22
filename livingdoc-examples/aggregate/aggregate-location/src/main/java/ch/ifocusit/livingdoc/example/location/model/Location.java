@@ -21,8 +21,12 @@ public final class Location implements Entity<Location> {
     public static final Location UNKNOWN = new Location(
             new UnLocode("XXXXX"), "Unknown location"
     );
+
+    @UbiquitousLanguage
     private UnLocode unLocode;
+    @UbiquitousLanguage
     private String name;
+    @UbiquitousLanguage
     private Long id;
 
     /**

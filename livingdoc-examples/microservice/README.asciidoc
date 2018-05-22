@@ -3,4 +3,8 @@
 This a simple micro-service project around the telecom aggregate.
 This wil generate living documentation in maven-site.
 
-launch *mvn package install site* and see open *target/site/index.html* file.
+launch *mvn package* and open *target/docs/index.html* file.
+
+Here is a screenshot of the generate index file :
+
+image::images/example_microservice_index.html.png[Complete index file,width=200,link="https://raw.githubusercontent.com/jboz/living-documentation/master/livingdoc-examples/microservice/images/example_microservice_index.html.png"]

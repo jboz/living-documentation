@@ -24,15 +24,26 @@ public class Delivery implements ValueObject<Delivery> {
 
     private static final Date ETA_UNKOWN = null;
     private static final HandlingActivity NO_ACTIVITY = null;
+
+    @UbiquitousLanguage
     private TransportStatus transportStatus;
+    @UbiquitousLanguage
     private Location lastKnownLocation;
+    @UbiquitousLanguage
     private Voyage currentVoyage;
+    @UbiquitousLanguage
     private boolean misdirected;
+    @UbiquitousLanguage
     private Date eta;
+    @UbiquitousLanguage
     private HandlingActivity nextExpectedActivity;
+    @UbiquitousLanguage
     private boolean isUnloadedAtDestination;
+    @UbiquitousLanguage
     private RoutingStatus routingStatus;
+    @UbiquitousLanguage
     private Date calculatedAt;
+    @UbiquitousLanguage
     private HandlingEvent<Voyage, Location, Cargo> lastEvent;
 
     /**

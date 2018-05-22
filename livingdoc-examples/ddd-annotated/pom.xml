@@ -6,7 +6,7 @@
     <parent>
         <groupId>ch.ifocusit.livingdoc.example</groupId>
         <artifactId>examples-parent</artifactId>
-        <version>1.3-SNAPSHOT</version>
+        <version>1.11-SNAPSHOT</version>
     </parent>
 
     <artifactId>ddd-annotated</artifactId>
@@ -62,15 +62,18 @@
                 </executions>
                 <configuration>
                     <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
-                    <onlyGlossary>true</onlyGlossary>
+                    <onlyAnnotated>true</onlyAnnotated>
                     <diagramType>plantuml</diagramType>
                     <format>html</format>
                     <interactive>true</interactive>
-                    <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
                     <glossaryMapping>src/docs/business-glossary.csv</glossaryMapping>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>
+                    <diagramTitle>= Classes Diagram</diagramTitle>
+                    <dictionaryTitle>= Dictionary</dictionaryTitle>
+                    <glossaryTitle>= Glossary</glossaryTitle>
+                    <glossaryColumnsName>Id Glossaire|Nom de l'objet|Nom de l'attribut|Type|Description|Contraintes|Valeur par défaut</glossaryColumnsName>
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->

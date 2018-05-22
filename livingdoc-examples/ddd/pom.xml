@@ -6,7 +6,7 @@
     <parent>
         <groupId>ch.ifocusit.livingdoc.example</groupId>
         <artifactId>examples-parent</artifactId>
-        <version>1.3-SNAPSHOT</version>
+        <version>1.11-SNAPSHOT</version>
     </parent>
 
     <artifactId>ddd</artifactId>
@@ -34,6 +34,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <!-- tag::plugin-livingdoc[] -->
@@ -46,17 +53,21 @@
                         <phase>package</phase>
                         <goals>
                             <goal>diagram</goal>
+                            <goal>glossary</goal>
+                            <goal>dictionary</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
                     <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
-                    <diagramType>plantuml</diagramType>
-                    <outputDirectory>${build.directory}</outputDirectory>
-                    <outputFilename>domain.adoc</outputFilename>
+                    <interactive>true</interactive>
+                    <generatedDocsDirectory>${project.build.directory}</generatedDocsDirectory>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>
+                    <diagramTitle>= Classes Diagram</diagramTitle>
+                    <dictionaryTitle>= Dictionary</dictionaryTitle>
+                    <glossaryTitle>= Glossary</glossaryTitle>
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->

@@ -1,6 +1,3 @@
 skinparam backgroundColor transparent
 
-note left of Bill
-  This is the
-  <b>Root aggregate</b>
-end note
+hide fields

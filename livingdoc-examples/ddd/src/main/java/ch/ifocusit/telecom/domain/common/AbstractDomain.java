@@ -22,5 +22,8 @@
  */
 package ch.ifocusit.telecom.domain.common;
 
+/**
+ * Base class of all domain object.
+ */
 public abstract class AbstractDomain {
 }

@@ -3,6 +3,7 @@ ifndef::imagesdir[:imagesdir: images]
 image:https://travis-ci.org/jboz/living-documentation.svg?branch=master["Build Status", link="https://travis-ci.org/jboz/living-documentation"]
 image:https://img.shields.io/badge/PRs-welcome-brightgreen.svg["Make a pull request", link="http://makeapullrequest.com"]
 image:https://img.shields.io/github/license/jboz/living-documentation.svg[License]
+image:https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-maven-plugin/badge.svg?style=flat["Maven Central", link="https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-maven-plugin"]
 
 Read CONTRIBUTING file to contrib and check the the backlog on the trello board : https://trello.com/b/pabtQSZG/living-documentation
 
@@ -10,79 +11,31 @@ Read CONTRIBUTING file to contrib and check the the backlog on the trello board 
 
 This project is intended to provide some tools to allow a nice Living Documentation.
 
-_Inspired by https://livingdocumentation.github.io/livingdoc-maven-plugin/intro.html_
+It based on http://asciidoctor.org/docs/what-is-asciidoc/[Asciidoctor], https://github.com/jboz/plantuml-builder[Plantuml Builder], and other nice tools...
 
-See examples to show the powerfull ! You'll be able to generate beautiful diagrams with a simple configuration.
+See examples to show the powerfull ! You'll be able to generate beautiful documents with a simple configuration.
 Create a living documentation from the code automatically. Easily customizable.
 
 With or without annotations.
 
-== Generate a conception diagram
+This java project is made of :
+
+. Some java https://github.com/jboz/living-documentation/tree/master/livingdoc-annotations[annotations] (like https://github.com/jboz/living-documentation/blob/master/livingdoc-annotations/src/main/java/ch/ifocusit/livingdoc/annotations/UbiquitousLanguage.java[UbiquitousLanguage] annotation), but not mandatory
+. A fully customizable https://github.com/jboz/living-documentation/tree/master/livingdoc-maven-plugin[maven plugin]
+
+== Generate a conception diagram (svg format with link supported !)
 image::conception-diagram.png[Asciidoctor Diagram javaClasses diagram]
 
+== And a business glossary (with asciidoc syntax, also in table format)
+like this example : https://github.com/jboz/living-documentation/tree/master/livingdoc-examples/microservice/
 
-== And a business glossary (with asciidoc syntax)
+== Add gherkin description :
+You can also integrate gherkin files like this example : link:livingdoc-examples/microservice/images/example_microservice_index.html.png[Microservice example generated index file]
 
-[[glossaryid-100]]
-=== Bill ^100^
-*Monthly* bill.
-[NOTE]
-Generate by the system at contract birth date.
+== Also allow to publish generated docs to confluence :
+Publish specific HTML version to Altassian Conlluence Server.
 
-[[glossaryid-101]]
-=== month ^101^
-Facturation month.
-
-[[glossaryid-200]]
-===== Contract ^200^
-Telecom contract
-
-[[glossaryid-201]]
-=== id ^201^
-Contract identifier.
-Generate by the system and communicate to client.
-
-[[glossaryid-202]]
-=== effectDate ^202^
-Contract effect date.
-
-[[glossaryid-300]]
-=== Customer ^300^
-Customer of the telecom service
-
-[[glossaryid-301]]
-=== name ^301^
-Name of the customer.
-
-[[glossaryid-400]]
-=== Access ^400^
-Use of telecom service.
-
-[[glossaryid-401]]
-=== phoneNumber ^401^
-Phone number used.
-
-[[glossaryid-402]]
-=== price ^402^
-Price of use of the service.
-
-[[glossaryid-403]]
-=== dateTime ^403^
-Timestamp of use.
-
-[[glossaryid-500]]
-=== CallAccess ^500^
-Phone call type access.
-
-[[glossaryid-501]]
-=== duration ^501^
-Phone call duration
-
-[[glossaryid-600]]
-=== SmsAccess ^600^
-SMS type access.
-
-== Maven configuration :
+== With a light maven configuration :
 [source,xml]
 ----
 <plugin>
@@ -109,4 +62,5 @@ SMS type access.
 </plugin>
 ----
 
-See https://github.com/jboz/living-documentation/tree/master/livingdoc-examples[livingdoc-examples] for more uses cases.
+See *https://github.com/jboz/living-documentation/tree/master/livingdoc-examples[livingdoc-examples]* for more uses cases.
+

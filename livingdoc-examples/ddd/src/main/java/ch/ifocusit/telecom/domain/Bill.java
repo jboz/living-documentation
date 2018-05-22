@@ -23,10 +23,13 @@
 package ch.ifocusit.telecom.domain;
 
 import ch.ifocusit.telecom.domain.access.Access;
+import ch.ifocusit.telecom.domain.access.CallAccess;
 import ch.ifocusit.telecom.domain.access.SmsAccess;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
-import ch.ifocusit.telecom.domain.access.CallAccess;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.YearMonth;
@@ -34,13 +37,35 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Monthly bill.
+ */
 public class Bill extends AbstractDomain {
 
+    /**
+     * Which month of the bill.
+     */
+    @NotNull
+    @PastOrPresent
     private YearMonth month;
 
+    /**
+     * Contract concerned by the bill.
+     */
+    @NotNull
     private Contract contract;
 
+    /**
+     * Bill contents.
+     */
+    @Valid
     private Set<Access> accesses = new HashSet<>();
+
+    /**
+     * Bill payment state
+     */
+    @NotNull
+    private PaymentState paymentState = PaymentState.WAITING;
 
     public Contract getContract() {
         return contract;

@@ -23,34 +23,46 @@
 package ch.ifocusit.livingdoc.plugin.diagram;
 
 import ch.ifocusit.livingdoc.annotations.RootAggregate;
-import ch.ifocusit.livingdoc.plugin.AnnotationUtils;
 import ch.ifocusit.livingdoc.plugin.domain.Color;
-import ch.ifocusit.livingdoc.plugin.mapping.GlossaryNamesMapper;
+import ch.ifocusit.livingdoc.plugin.utils.AnnotationUtil;
 import ch.ifocusit.plantuml.classdiagram.ClassDiagramBuilder;
 import ch.ifocusit.plantuml.classdiagram.model.clazz.JavaClazz;
 import com.google.common.reflect.ClassPath;
 import com.google.common.reflect.ClassPath.ClassInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
 
 /**
  * @author Julien Boz
  */
 public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
 
+    Logger LOG = LoggerFactory.getLogger(PlantumlClassDiagramBuilder.class);
+
     private ClassDiagramBuilder classDiagramBuilder;
     private Predicate<ClassInfo> additionalClassPredicate = a -> true; // default predicate always true
-    private GlossaryNamesMapper namesMapper;
+    private boolean showMethods;
+    private boolean showFields;
 
-    public PlantumlClassDiagramBuilder(MavenProject project, String prefix, String[] excludes, Color rootAggregateColor, File header, File footer) {
-        super(project, prefix, excludes, header, footer);
+    public PlantumlClassDiagramBuilder(MavenProject project, String prefix, String[] excludes, Color rootAggregateColor, File header, File footer,
+                                       boolean showMethods, boolean showFields, boolean diagramWithDependencies,
+                                       String linkPage) {
+        super(project, prefix, excludes, header, footer, diagramWithDependencies, linkPage);
+
+        this.showMethods = showMethods;
+        this.showFields = showFields;
 
         // override creation to change root aggregate class color
         classDiagramBuilder = new ClassDiagramBuilder() {
@@ -58,9 +70,9 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
             protected JavaClazz createJavaClass(Class clazz) {
                 JavaClazz javaClass = super.createJavaClass(clazz);
                 if (rootAggregateColor != null) {
-                    AnnotationUtils.tryFind(clazz, RootAggregate.class).ifPresent(annot ->
-                            javaClass.setBackgroundColor(rootAggregateColor.getBackgroundColor())
-                                    .setBorderColor(rootAggregateColor.getBorderColor()));
+                    AnnotationUtil.tryFind(clazz, RootAggregate.class).ifPresent(annot ->
+                            javaClass.setBackgroundColor(rootAggregateColor.getBackground())
+                                    .setBorderColor(rootAggregateColor.getBorder()));
                 }
                 return javaClass;
             }
@@ -71,36 +83,46 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
         final ClassPath classPath = initClassPath();
         final Set<ClassInfo> allClasses = classPath.getTopLevelClassesRecursive(prefix);
 
-        if (namesMapper != null) {
-            classDiagramBuilder.withNamesMapper(namesMapper);
-        }
-
         String diagram = classDiagramBuilder
                 .addClasse(allClasses.stream()
                         // apply filters
                         .filter(defaultFilter())
                         .filter(additionalClassPredicate)
-                        .map(ClassInfo::load).collect(Collectors.toList()))
+                        .map(classInfo -> {
+                            try {
+                                return classInfo.load();
+                            } catch (Throwable e) {
+                                LOG.warn(e.toString());
+                            }
+                            return null;
+                        })
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList()))
                 .excludes(excludes)
                 .setHeader(readHeader())
                 .setFooter(readFooter())
+                .withNamesMapper(namesMapper)
+                .withLinkMaker(this)
+                .withDependencies(diagramWithDependencies)
                 .build();
         return diagram;
     }
 
-    public PlantumlClassDiagramBuilder filterOnAnnotation(Class<? extends Annotation> annotation) {
+    @Override
+    protected String readHeader() throws MojoExecutionException {
+        String header = super.readHeader();
+        header += showFields ? StringUtils.EMPTY : ("hide fields" + NEWLINE);
+        header += showMethods ? StringUtils.EMPTY : ("hide methods" + NEWLINE);
+        return header;
+    }
+
+    public void filterOnAnnotation(Class<? extends Annotation> annotation) {
+        if (annotation == null) {
+            return; // nothing to do
+        }
         // create class predicate
         additionalClassPredicate = additionalClassPredicate.and(classInfo -> classInfo.load().isAnnotationPresent(annotation));
         // add field predicate
         classDiagramBuilder.addFieldPredicate(attribut -> attribut.getField().isAnnotationPresent(annotation));
-        return this;
-    }
-
-    public void mapNames(File mappings, Class<? extends Annotation> annotation, String linkTemplate) throws MojoExecutionException {
-        try {
-            namesMapper = new GlossaryNamesMapper(mappings, annotation, linkTemplate);
-        } catch (IOException e) {
-            throw new MojoExecutionException("error reading mappings file", e);
-        }
     }
 }

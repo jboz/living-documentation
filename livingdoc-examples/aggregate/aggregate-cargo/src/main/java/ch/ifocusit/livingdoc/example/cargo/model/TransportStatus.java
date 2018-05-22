@@ -8,7 +8,17 @@ import ch.ifocusit.livingdoc.example.shared.ValueObject;
  */
 @UbiquitousLanguage
 public enum TransportStatus implements ValueObject<TransportStatus> {
-    NOT_RECEIVED, IN_PORT, ONBOARD_CARRIER, CLAIMED, UNKNOWN;
+
+    @UbiquitousLanguage
+    NOT_RECEIVED,
+    @UbiquitousLanguage
+    IN_PORT,
+    @UbiquitousLanguage
+    ONBOARD_CARRIER,
+    @UbiquitousLanguage
+    CLAIMED,
+    @UbiquitousLanguage
+    UNKNOWN;
 
     @Override
     public boolean sameValueAs(final TransportStatus other) {

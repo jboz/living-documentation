@@ -2,13 +2,12 @@
 
 = Living documentation in a DDD project
 
-This is a simple DDD project around the telecom aggregate.
+This is a simple Domain Driven Design project around the telecom aggregate.
 In this example the *business model will be translate* during the living documentation generation phase.
-
-The maven plugin is use to generate dynamically the domain class diagram.
 A simple mapping file is used to *translate the ubiquitous language* from technical names to business names.
+Hera are the living documentation content :
 
-== generated diagram :
+== Generated diagram :
 image::diagram.png[]
 
 == Generated glossary :
@@ -22,13 +21,22 @@ image::dictionary.png[]
 [source,java]
 ----
 @RootAggregate
-@Glossary(id = 100)
+@UbiquitousLanguage(id = 100)
 public class Bill {
+    [...]
+}
+
+@UbiquitousLanguage(id = 200)
+public class Contract extends AbstractDomain {
+
+    @UbiquitousLanguage(id = 201)
+    private String id;
+
     [...]
 }
 ----
 
-Annotations are from dependency :
+Annotations dependency :
 
 [source,xml]
 ----
@@ -45,42 +53,31 @@ Annotations are from dependency :
 <plugin>
     <groupId>ch.ifocusit.livingdoc</groupId>
     <artifactId>livingdoc-maven-plugin</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <executions>
         <execution>
             <id>class-diagram</id>
             <phase>package</phase>
             <goals>
                 <goal>diagram</goal>
-            </goals>
-            <configuration>
-                <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
-                <onlyGlossary>true</onlyGlossary>
-                <diagramType>plantuml</diagramType>
-                <excludes>
-                    <exclude>.*domain.common.*</exclude>
-                </excludes>
-            </configuration>
-        </execution>
-        <execution>
-            <id>glossary</id>
-            <phase>package</phase>
-            <goals>
                 <goal>glossary</goal>
-            </goals>
-        </execution>
-        <execution>
-            <id>dico</id>
-            <phase>package</phase>
-            <goals>
                 <goal>dictionary</goal>
             </goals>
         </execution>
     </executions>
     <configuration>
-        <glossaryMapping>src/docs/business-glossary.csv</glossaryMapping>
-        <outputDirectory>${project.build.directory}/generated-docs</outputDirectory>
+        <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
+        <onlyAnnotated>true</onlyAnnotated>
+        <diagramType>plantuml</diagramType>
         <format>html</format>
+        <interactive>true</interactive>
+        <glossaryMapping>src/docs/business-glossary.csv</glossaryMapping>
+        <excludes>
+            <exclude>.*domain.common.*</exclude>
+        </excludes>
+        <diagramTitle>= Classes Diagram</diagramTitle>
+        <dictionaryTitle>= Dictionary</dictionaryTitle>
+        <glossaryTitle>= Glossary</glossaryTitle>
+        <glossaryColumnsName>Id Glossaire|Nom de l'objet|Nom de l'attribut|Type|Description|Contraintes|Valeur par défaut</glossaryColumnsName>
     </configuration>
 </plugin>
 ----

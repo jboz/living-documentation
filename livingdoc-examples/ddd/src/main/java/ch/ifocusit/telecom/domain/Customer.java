@@ -24,21 +24,37 @@ package ch.ifocusit.telecom.domain;
 
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Customer of the telecom service
+ */
+@Valid
 public class Customer extends AbstractDomain {
 
-    private String name;
+    /**
+     * Email of the customer.
+     */
+    @Email
+    @NotBlank
+    private String email;
+
+    /**
+     * Customer's contracts.
+     */
     private Set<Contract> contracts = new HashSet<>();
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Set<Contract> getContracts() {
