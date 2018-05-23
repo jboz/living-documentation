@@ -3,16 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>ch.ifocusit.livingdoc.example</groupId>
-        <artifactId>examples-parent</artifactId>
-        <version>1.11-SNAPSHOT</version>
-    </parent>
-
-    <artifactId>ddd</artifactId>
+    <groupId>ch.ifocusit.livingdoc.example</groupId>
+    <artifactId>ddd-annotated</artifactId>
+    <version>@project.version@.test</version>
     <packaging>jar</packaging>
 
-    <description>Living Documentation example in a DDD project</description>
+    <description>Living Documentation example in a DDD project with annotated javaClasses</description>
 
     <organization>
         <name>Focus IT</name>
@@ -30,28 +26,33 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <failOnMissingWebXml>false</failOnMissingWebXml>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>2.0.0.Final</version>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <!-- living doc deps -->
+        <dependency>
+            <groupId>ch.ifocusit.livingdoc</groupId>
+            <artifactId>livingdoc-annotations</artifactId>
+            <version>@project.version@</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- tag::plugin-livingdoc[] -->
             <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
+                <version>@project.version@</version>
                 <executions>
                     <execution>
                         <id>class-diagram</id>
-                        <phase>package</phase>
                         <goals>
                             <goal>diagram</goal>
                             <goal>glossary</goal>
@@ -61,17 +62,22 @@
                 </executions>
                 <configuration>
                     <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
+                    <onlyAnnotated>true</onlyAnnotated>
+                    <diagramType>plantuml</diagramType>
+                    <format>html</format>
                     <interactive>true</interactive>
-                    <generatedDocsDirectory>${project.build.directory}</generatedDocsDirectory>
+                    <glossaryMapping>src/docs/business-glossary.csv</glossaryMapping>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>
                     <diagramTitle>= Classes Diagram</diagramTitle>
                     <dictionaryTitle>= Dictionary</dictionaryTitle>
                     <glossaryTitle>= Glossary</glossaryTitle>
+                    <glossaryColumnsName>Id Glossaire|Nom de l'objet|Nom de
+                        l'attribut|Type|Description|Contraintes|Valeur par défaut
+                    </glossaryColumnsName>
                 </configuration>
             </plugin>
-            <!-- end::plugin-livingdoc[] -->
         </plugins>
     </build>
 </project>

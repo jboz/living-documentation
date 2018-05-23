@@ -3,12 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>ch.ifocusit.livingdoc.example</groupId>
-        <artifactId>examples-parent</artifactId>
-        <version>1.11-SNAPSHOT</version>
-    </parent>
-
+    <groupId>ch.ifocusit.livingdoc.example</groupId>
+    <version>@project.version@.test</version>
     <artifactId>ddd</artifactId>
     <packaging>jar</packaging>
 
@@ -44,14 +40,13 @@
 
     <build>
         <plugins>
-            <!-- tag::plugin-livingdoc[] -->
             <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
+                <version>@project.version@</version>
                 <executions>
                     <execution>
                         <id>class-diagram</id>
-                        <phase>package</phase>
                         <goals>
                             <goal>diagram</goal>
                             <goal>glossary</goal>
@@ -71,7 +66,6 @@
                     <glossaryTitle>= Glossary</glossaryTitle>
                 </configuration>
             </plugin>
-            <!-- end::plugin-livingdoc[] -->
         </plugins>
     </build>
 </project>
