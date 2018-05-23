@@ -20,11 +20,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package ch.ifocusit.telecom.service;
+
+import ch.ifocusit.telecom.domain.Bill;
+import ch.ifocusit.telecom.repository.BillRepository;
+
+import java.time.YearMonth;
+import java.util.Optional;
 
 /**
  * @author Julien Boz
  */
-@BoundaryContext
-package ch.ifocusit.telecom.rest;
+public class BillingService {
 
-import ch.ifocusit.livingdoc.annotations.BoundaryContext;
+    private BillRepository repository;
+
+    public Optional<Bill> getBill(String month) {
+        return repository.get(YearMonth.parse(month));
+    }
+}

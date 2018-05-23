@@ -83,6 +83,8 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
         final ClassPath classPath = initClassPath();
         final Set<ClassInfo> allClasses = classPath.getTopLevelClassesRecursive(prefix);
 
+        LOG.info("Initial classes size: " + allClasses.size());
+
         String diagram = classDiagramBuilder
                 .addClasse(allClasses.stream()
                         // apply filters

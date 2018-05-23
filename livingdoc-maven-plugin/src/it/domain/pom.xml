@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ch.ifocusit</groupId>
+    <version>@project.version@.test</version>
+    <artifactId>telecom</artifactId>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.16</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.ifocusit.livingdoc</groupId>
+            <artifactId>livingdoc-annotations</artifactId>
+            <version>@project.version@</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>ch.ifocusit.livingdoc</groupId>
+                <artifactId>livingdoc-maven-plugin</artifactId>
+                <version>@project.version@</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <goals>
+                            <goal>diagram</goal>
+                            <goal>dictionary</goal>
+                            <goal>glossary</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>all</id>
+                        <goals>
+                            <goal>diagram</goal>
+                            <goal>dictionary</goal>
+                            <goal>glossary</goal>
+                        </goals>
+                        <configuration>
+                            <packageRoot>ch.ifocusit.telecom</packageRoot>
+                            <diagramOutputFilename>diagram-all</diagramOutputFilename>
+                            <dictionaryOutputFilename>dictionnary-all</dictionaryOutputFilename>
+                            <glossaryOutputFilename>glossary-all</glossaryOutputFilename>
+                            <diagramTitle>All classes diagram</diagramTitle>
+                            <glossaryTitle>All classes glossary</glossaryTitle>
+                            <dictionaryTitle>All classes dictionary</dictionaryTitle>
+                            <format>adoc</format>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>adapted</id>
+                        <goals>
+                            <goal>diagram</goal>
+                        </goals>
+                        <configuration>
+                            <packageRoot>ch.ifocusit.telecom</packageRoot>
+                            <diagramOutputFilename>diagram-adapted</diagramOutputFilename>
+                            <format>plantuml</format>
+                            <diagramHeader>${project.basedir}/src/main/livingdoc/diagram-adapted.header</diagramHeader>
+                            <diagramWithLink>false</diagramWithLink>
+                            <interactive>false</interactive>
+                            <rootAggregateColor>
+                                <background>pink</background>
+                                <border>purple</border>
+                            </rootAggregateColor>
+                            <excludes>
+                                <exclude>.*\.common\..*</exclude>
+                                <exclude>.*ListBillRepository\..*</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

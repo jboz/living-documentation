@@ -24,7 +24,6 @@ package ch.ifocusit.telecom.repository;
 
 import ch.ifocusit.telecom.domain.Bill;
 
-import javax.enterprise.context.RequestScoped;
 import java.time.YearMonth;
 import java.util.*;
 
@@ -33,7 +32,6 @@ import java.util.*;
  *
  * @author Julien Boz
  */
-@RequestScoped
 public class ListBillRepository implements BillRepository {
 
     private final List<Bill> bills = new ArrayList<>();

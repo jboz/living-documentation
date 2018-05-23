@@ -32,6 +32,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
@@ -43,7 +44,7 @@ import java.util.stream.Stream;
 /**
  * @author Julien Boz
  */
-@Mojo(name = "diagram", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
+@Mojo(name = "diagram", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM, defaultPhase = LifecyclePhase.PROCESS_CLASSES)
 public class DiagramMojo extends AbstractDocsGeneratorMojo {
 
     private static final Color DEFAULT_ROOT_COLOR = Color.from("wheat", null);
@@ -174,6 +175,8 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     }
 
     String generateDiagram() throws MojoExecutionException {
+
+        getLog().info("generate diagram with packageRoot=" + packageRoot);
 
         switch (diagramType) {
             case plantuml:

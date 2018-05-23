@@ -20,17 +20,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.rest;
-
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
 
 /**
- * Configures a JAX-RS endpoint.
- *
  * @author Julien Boz
  */
-@ApplicationPath("/api")
-public class JAXRSConfiguration extends Application {
+@BoundaryContext
+package ch.ifocusit.telecom.service;
 
-}
+import ch.ifocusit.livingdoc.annotations.BoundaryContext;

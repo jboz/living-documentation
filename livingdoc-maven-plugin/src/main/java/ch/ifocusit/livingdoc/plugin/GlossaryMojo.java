@@ -25,6 +25,7 @@ package ch.ifocusit.livingdoc.plugin;
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
 import ch.ifocusit.livingdoc.plugin.glossary.JavaClass;
 import ch.ifocusit.livingdoc.plugin.utils.MustacheUtil;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
@@ -42,7 +43,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  *
  * @author Julien Boz
  */
-@Mojo(name = "glossary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
+@Mojo(name = "glossary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM, defaultPhase = LifecyclePhase.PROCESS_CLASSES)
 public class GlossaryMojo extends AbstractGlossaryMojo {
     private static final String DEFAULT_GLOSSARY_TEMPLATE_MUSTACHE = "/default_glossary_template.mustache";
 
