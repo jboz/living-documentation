@@ -35,11 +35,21 @@
         <livingdoc.phase>prepare-package</livingdoc.phase>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- JAVA EE Micro Service -->
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>7.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
