@@ -5,6 +5,11 @@ sudo: false
 jdk:
   - openjdk8
 
+addons:
+  apt:
+    packages:
+      - graphviz
+
 install: mvn install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V -U
 
 script: echo -e "\nliving-documentation project\n"
