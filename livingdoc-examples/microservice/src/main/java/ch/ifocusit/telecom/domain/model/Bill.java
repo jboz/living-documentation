@@ -20,23 +20,49 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.access;
+package ch.ifocusit.telecom.domain.model;
 
+import java.time.YearMonth;
+import java.util.HashSet;
+import java.util.Set;
+
+import ch.ifocusit.livingdoc.annotations.RootAggregate;
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
+import ch.ifocusit.telecom.domain.model.access.Access;
+import ch.ifocusit.telecom.domain.model.common.AbstractDomain;
 import lombok.Data;
 
-import java.time.Duration;
-
 /**
- * Phone call type access.
+ * *Monthly* bill. [NOTE] Generate by the system at contract birth date.
+ *
+ * @since 2017-03-01
  */
-@UbiquitousLanguage(id = 500)
+@RootAggregate
+@UbiquitousLanguage(id = 100)
 @Data
-public class CallAccess extends Access {
+public class Bill extends AbstractDomain {
 
     /**
-     * Phone call duration
+     * Facturation month.
      */
-    @UbiquitousLanguage(id = 501)
-    private Duration duration;
+    @UbiquitousLanguage(id = 101)
+    private YearMonth month;
+
+    /**
+     * Contract concerned by the bill.
+     */
+    @UbiquitousLanguage(id = 102)
+    private Contract contract;
+
+    /**
+     * Bill contents.
+     */
+    @UbiquitousLanguage(id = 103)
+    private Set<Access> accesses = new HashSet<>();
+
+    /**
+     * Flag that indicate whenever the bill has been sended to the customer.
+     */
+    private boolean customerInformed;
+
 }

@@ -20,7 +20,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.access;
+package ch.ifocusit.telecom.domain.model.access;
 
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
 

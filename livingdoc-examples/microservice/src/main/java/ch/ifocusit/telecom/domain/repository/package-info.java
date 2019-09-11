@@ -25,6 +25,6 @@
  * @author Julien Boz
  */
 @BoundaryContext
-package ch.ifocusit.telecom.rest;
+package ch.ifocusit.telecom.domain.repository;
 
 import ch.ifocusit.livingdoc.annotations.BoundaryContext;

@@ -22,11 +22,17 @@
  */
 package ch.ifocusit.telecom.repository;
 
-import ch.ifocusit.telecom.domain.Bill;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import javax.enterprise.context.RequestScoped;
-import java.time.YearMonth;
-import java.util.*;
+
+import ch.ifocusit.telecom.domain.model.Bill;
+import ch.ifocusit.telecom.domain.repository.BillRepository;
 
 /**
  * Base on file system bill repository.

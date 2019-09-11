@@ -20,48 +20,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain;
+package ch.ifocusit.telecom.domain.model.access;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.telecom.domain.common.AbstractDomain;
 import lombok.Data;
 
-import java.time.LocalDate;
-import java.time.MonthDay;
+import java.time.Duration;
 
 /**
- * Telecom contract
+ * Phone call type access.
  */
-@UbiquitousLanguage(id = 200)
+@UbiquitousLanguage(id = 500)
 @Data
-public class Contract extends AbstractDomain {
+public class CallAccess extends Access {
 
     /**
-     * Contract identifier.
-     * Generate by the system and communicate to client.
+     * Phone call duration
      */
-    @UbiquitousLanguage(id = 201)
-    private String id;
-
-    /**
-     * Contract customer.
-     */
-    @UbiquitousLanguage(id = 202)
-    private Customer customer;
-
-    /**
-     * Contract effect date.
-     */
-    @UbiquitousLanguage(id = 203)
-    private LocalDate effectDate;
-
-    /**
-     * Extract birth day from effect date.
-     *
-     * @return the contract birth date
-     */
-    @UbiquitousLanguage(id = 204)
-    public MonthDay getBirthDay() {
-        return MonthDay.from(effectDate);
-    }
+    @UbiquitousLanguage(id = 501)
+    private Duration duration;
 }

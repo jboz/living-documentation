@@ -20,23 +20,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.repository;
+package ch.ifocusit.telecom.domain.model.access;
 
-import ch.ifocusit.telecom.domain.Bill;
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
-import java.time.YearMonth;
-import java.util.Optional;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
+import ch.ifocusit.telecom.domain.model.common.AbstractDomain;
+import lombok.Data;
 
 /**
- * @author Julien Boz
+ * Use of telecom service.
  */
-public interface BillRepository {
+@UbiquitousLanguage(id = 400)
+@Data
+public abstract class Access extends AbstractDomain {
 
-    public Bill add(Bill bill);
+    /**
+     * Phone number used.
+     */
+    @UbiquitousLanguage(id = 401)
+    private String phoneNumber;
 
-    public Optional<Bill> retreiveLastBill();
+    /**
+     * Price of use of the service.
+     */
+    @UbiquitousLanguage(id = 402)
+    private BigDecimal price;
 
-    public void clear();
-
-    public Optional<Bill>  get(YearMonth parse);
+    /**
+     * Timestamp of use.
+     */
+    @UbiquitousLanguage(id = 403)
+    private ZonedDateTime dateTime = ZonedDateTime.now();
 }

@@ -20,25 +20,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.model.access;
+package ch.ifocusit.telecom.domain.model;
 
-import java.time.Duration;
+import java.util.HashSet;
+import java.util.Set;
+
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
+import ch.ifocusit.telecom.domain.model.common.AbstractDomain;
+import lombok.Data;
 
 /**
- * Phone call type access.
+ * Customer of the telecom service
+ *
+ * @author Julien Boz
  */
-public class CallAccess extends Access {
+@UbiquitousLanguage(id = 300)
+@Data
+public class Customer extends AbstractDomain {
 
     /**
-     * Phone call duration
+     * Name of the customer.
      */
-    private Duration duration;
+    @UbiquitousLanguage(id = 301)
+    private String name;
 
-    public Duration getDuration() {
-        return duration;
-    }
-
-    public void setDuration(final Duration duration) {
-        this.duration = duration;
-    }
+    private Set<Contract> contracts = new HashSet<>();
 }

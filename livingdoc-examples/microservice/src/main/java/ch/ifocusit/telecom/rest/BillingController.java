@@ -22,20 +22,29 @@
  */
 package ch.ifocusit.telecom.rest;
 
-import ch.ifocusit.telecom.domain.Bill;
-import ch.ifocusit.telecom.repository.BillRepository;
+import java.time.YearMonth;
+import java.util.Optional;
+
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
+
+import ch.ifocusit.telecom.domain.model.Bill;
+import ch.ifocusit.telecom.domain.service.BillService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.Setter;
-
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Inject;
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.time.YearMonth;
-import java.util.Optional;
 
 /**
  * @author Julien Boz
@@ -46,10 +55,10 @@ import java.util.Optional;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Setter
-public class BillingService {
+public class BillingController {
 
     @Inject
-    private BillRepository repository;
+    private BillService service;
 
     @GET
     @Path("/whoami")
@@ -61,12 +70,10 @@ public class BillingService {
     @GET
     @Path("/{month}")
     @ApiOperation(value = "Facturation d'un mois", response = Bill.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid input"),
-            @ApiResponse(code = 404, message = "Billing not found")}
-    )
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "Invalid input"),
+            @ApiResponse(code = 404, message = "Billing not found") })
     public Response getBill(@PathParam("month") final String month, @Context Request request) {
-        Optional<Bill> bill = repository.get(YearMonth.parse(month));
+        Optional<Bill> bill = service.getBill(YearMonth.parse(month));
 
         if (!bill.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();

@@ -20,15 +20,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.access;
-
-import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import lombok.Data;
 
 /**
- * SMS type access.
+ * @author Julien Boz
  */
-@UbiquitousLanguage(id = 600)
-@Data
-public class SmsAccess extends Access {
-}
+@CoreDomain
+package ch.ifocusit.telecom.domain.model;
+
+import ch.ifocusit.livingdoc.annotations.CoreDomain;

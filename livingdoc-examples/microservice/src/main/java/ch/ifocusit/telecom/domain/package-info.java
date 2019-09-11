@@ -24,7 +24,4 @@
 /**
  * @author Julien Boz
  */
-@CoreDomain
 package ch.ifocusit.telecom.domain;
-
-import ch.ifocusit.livingdoc.annotations.CoreDomain;

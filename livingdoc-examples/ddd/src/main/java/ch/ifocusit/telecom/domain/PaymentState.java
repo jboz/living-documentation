@@ -1,4 +1,4 @@
-package ch.ifocusit.telecom.domain;
+package ch.ifocusit.telecom.domain.model;
 
 /**
  * Bill payment state values.

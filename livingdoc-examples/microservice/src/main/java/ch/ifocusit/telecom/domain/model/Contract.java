@@ -20,29 +20,48 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain;
+package ch.ifocusit.telecom.domain.model;
+
+import java.time.LocalDate;
+import java.time.MonthDay;
+import java.util.UUID;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.telecom.domain.common.AbstractDomain;
+import ch.ifocusit.telecom.domain.model.common.AbstractDomain;
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
- * Customer of the telecom service
- *
- * @author Julien Boz
+ * Telecom contract
  */
-@UbiquitousLanguage(id = 300)
+@UbiquitousLanguage(id = 200)
 @Data
-public class Customer extends AbstractDomain {
+public class Contract extends AbstractDomain {
 
     /**
-     * Name of the customer.
+     * Contract identifier. Generate by the system and communicate to client.
      */
-    @UbiquitousLanguage(id = 301)
-    private String name;
+    @UbiquitousLanguage(id = 201)
+    private UUID id;
 
-    private Set<Contract> contracts = new HashSet<>();
+    /**
+     * Contract customer.
+     */
+    @UbiquitousLanguage(id = 202)
+    private Customer customer;
+
+    /**
+     * Contract effect date.
+     */
+    @UbiquitousLanguage(id = 203)
+    private LocalDate effectDate;
+
+    /**
+     * Extract birth day from effect date.
+     *
+     * @return the contract birth date
+     */
+    @UbiquitousLanguage(id = 204)
+    public MonthDay getBirthDay() {
+        return MonthDay.from(effectDate);
+    }
 }

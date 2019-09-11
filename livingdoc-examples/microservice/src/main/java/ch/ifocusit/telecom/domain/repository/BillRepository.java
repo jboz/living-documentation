@@ -20,25 +20,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.model.access;
+package ch.ifocusit.telecom.domain.repository;
 
-import java.time.Duration;
+import java.time.YearMonth;
+import java.util.Optional;
+
+import ch.ifocusit.telecom.domain.model.Bill;
 
 /**
- * Phone call type access.
+ * @author Julien Boz
  */
-public class CallAccess extends Access {
+public interface BillRepository {
 
-    /**
-     * Phone call duration
-     */
-    private Duration duration;
+    public Bill add(Bill bill);
 
-    public Duration getDuration() {
-        return duration;
-    }
+    public Optional<Bill> retreiveLastBill();
 
-    public void setDuration(final Duration duration) {
-        this.duration = duration;
-    }
+    public void clear();
+
+    public Optional<Bill> get(YearMonth parse);
 }
