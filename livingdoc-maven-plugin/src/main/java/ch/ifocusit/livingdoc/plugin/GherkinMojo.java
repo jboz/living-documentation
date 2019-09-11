@@ -56,26 +56,28 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     /**
      * List of source directories to browse
      */
-    @Parameter(defaultValue = "${project.basedir}/src/test/resources/features")
+    @Parameter(property = "livingdoc.gherkin.features", defaultValue = "${project.basedir}/src/test/resources/features")
     private List<String> features;
 
     /**
      * Options like use a custom template (template=path_to_my_template.erb).
      */
-    @Parameter
+    @Parameter(property = "livingdoc.gherkin.options")
     private String gherkinOptions;
 
-    @Parameter(defaultValue = "gherkin", required = true)
+    @Parameter(property = "livingdoc.gherkin.output.filename", defaultValue = "gherkin", required = true)
     private String gherkinOutputFilename;
 
-    @Parameter
+    @Parameter(property = "livingdoc.gherkin.title")
     private String gherkinTitle;
 
     /**
      * Flag to indicate if feature must be in separate files
      */
-    @Parameter(defaultValue = "false")
+    @Parameter(property = "livingdoc.gherkin.separate", defaultValue = "false")
     private boolean gerkinSeparateFeature;
+
+    protected boolean somethingWasGenerated = false;
 
     @Override
     protected String getOutputFilename() {
@@ -93,11 +95,13 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
+        if (!gerkinSeparateFeature) {
+            appendTitle(get(pageCount.get()));
+        }
+
         readFeatures().forEach(path -> {
 
-            if (!gerkinSeparateFeature) {
-                appendTitle(get(pageCount.get()));
-            } else {
+            if (gerkinSeparateFeature) {
                 // read feature title
                 try {
                     Map<String, Object> parsed = MapFormatter.parse(readFileToString(FileUtils.getFile(path), defaultCharset()));
@@ -109,11 +113,17 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
             }
             get(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
             get(pageCount.get()).textLine(EMPTY);
+            somethingWasGenerated = true;
 
             if (gerkinSeparateFeature) {
                 pageCount.incrementAndGet();
             }
         });
+
+        if (!somethingWasGenerated) {
+            // nothing generated
+            return;
+        }
 
         write(docBuilders.get(0));
     }

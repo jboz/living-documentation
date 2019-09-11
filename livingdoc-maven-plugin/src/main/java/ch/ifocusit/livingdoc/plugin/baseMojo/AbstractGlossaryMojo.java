@@ -24,13 +24,12 @@ package ch.ifocusit.livingdoc.plugin.baseMojo;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
-import ch.ifocusit.livingdoc.plugin.utils.AnchorUtil;
+import ch.ifocusit.livingdoc.plugin.mapping.MappingRespository;
 import ch.ifocusit.livingdoc.plugin.utils.ClassLoaderUtil;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaAnnotatedElement;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
-import com.thoughtworks.qdox.model.JavaField;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
@@ -46,61 +45,43 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
-import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.defaultString;
-import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.interpretNewLine;
-import static java.text.MessageFormat.format;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static java.util.Arrays.stream;
 
 /**
  * @author Julien Boz
  */
-public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
+public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo implements MappingRespository {
 
-    // first parameter is the 'id', the second, the 'name', the third the anchor link
-    protected static final String GLOSSARY_LINK_TITLE = "[[{2}]]" + NEWLINE + "=== [small]#{0}# - {1}";
-    protected static final String GLOSSARY_LINK_TITLE_LITE = "[[{2}]]" + NEWLINE + "=== {1}";
-    protected static final String GLOSSARY_LINK_INLINE_ID = "<<{2},{0}>>";
-    protected static final String GLOSSARY_LINK_INLINE_NAME = "<<{2},{1}>>";
     protected static final String JAVAX_VALIDATION_CONSTRAINTS = "javax.validation.constraints.";
     protected static final String HIBERNATE_VALIDATION_CONSTRAINTS = "org.hibernate.validator.constraints.";
 
     /**
-     * Temple for glossary title.
-     */
-    @Parameter
-    protected String glossaryTitleTemplate;
-
-    /**
      * List of source directories to browse
      */
-    @Parameter(defaultValue = "${project.build.sourceDirectory}")
+    @Parameter(property = "livingdoc.glossary.sources", defaultValue = "${project.build.sourceDirectory}")
     private List<String> sources = new ArrayList<>();
 
+    @Parameter(property = "livingdoc.glossary.packageRoot", defaultValue = "${project.groupId}.${project.artifactId}.domain")
+    private String packageRoot;
+
     @Parameter
-    private String packageRoot = EMPTY;
+    private String[] excludes = new String[0];
 
     protected AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
     protected JavaProjectBuilder javaDocBuilder;
     protected List<DomainObject> mappings;
 
-    private static Function<DomainObject, ?> key() {
-        return def -> def.getId() == null ? def.getName() : def.getId();
-    }
-
-    protected static Predicate<DomainObject> distinctByKey() {
-        Map<Object, Boolean> seen = new ConcurrentHashMap<>();
-        return t -> seen.putIfAbsent(key().apply(t), Boolean.TRUE) == null;
-    }
+    protected boolean somethingWasGenerated = false;
 
     /**
      * Main method.
@@ -124,6 +105,10 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
         } catch (Exception e) {
             throw new MojoExecutionException("error executing glossary template", e);
         }
+        if (!somethingWasGenerated) {
+            // nothing generated
+            return;
+        }
 
         write(asciiDocBuilder);
     }
@@ -143,7 +128,20 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
         return javaDocBuilder.getClasses().stream()
                 .filter(javaClass -> packageRoot == null || javaClass.getPackageName().startsWith(packageRoot))
                 .filter(this::hasAnnotation) // if annotated
+                .filter(defaultFilter())
                 ;
+    }
+
+    private static final String TEST = "Test";
+    private static final String IT = "IT";
+    private static final String PACKAGE_INFO = "package-info";
+
+    protected Predicate<JavaClass> defaultFilter() {
+        return ci -> !ci.getSimpleName().equalsIgnoreCase(PACKAGE_INFO)
+                && !ci.getSimpleName().endsWith(TEST)
+                && !ci.getSimpleName().endsWith(IT)
+                // do not load class if must be filtered
+                && stream(excludes).noneMatch(excl -> ci.getCanonicalName().matches(excl));
     }
 
     protected boolean hasAnnotation(JavaAnnotatedElement annotatedElement) {
@@ -163,7 +161,7 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
                 .orElse(Optional.empty());
     }
 
-    private Optional<DomainObject> getMapping(JavaAnnotatedElement annotatedElement) {
+    public Optional<DomainObject> getMapping(JavaAnnotatedElement annotatedElement) {
         Optional<Integer> id = getGlossaryId(annotatedElement);
         return mappings == null || !id.isPresent() ? Optional.empty() : mappings.stream().filter(def -> id.get().equals(def.getId())).findFirst();
     }
@@ -171,18 +169,6 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
     // *******************************************************
     // CLASSLOADING
     // *******************************************************
-
-    protected String getName(JavaAnnotatedElement annotatedElement, String defaultValue) {
-        return getMapping(annotatedElement).map(DomainObject::getName).orElse(defaultValue);
-    }
-
-    protected String getDescription(JavaAnnotatedElement element) {
-        return getDescription(element, element.getComment());
-    }
-
-    private String getDescription(JavaAnnotatedElement annotatedElemen, String defaultValue) {
-        return getMapping(annotatedElemen).map(DomainObject::getDescription).orElse(defaultValue);
-    }
 
     private JavaProjectBuilder buildJavaProjectBuilder() throws MojoExecutionException {
         JavaProjectBuilder javaDocBuilder = new JavaProjectBuilder();
@@ -236,54 +222,8 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo {
                     }
                 }
             } catch (Exception e) {
-                getLog().warn("Unable to load jar source " + artifact, e);
+                getLog().warn("Unable to load jar source " + artifact + " : " + e.getMessage());
             }
         });
-    }
-
-    // *******************************************************
-    // LINKING
-    // *******************************************************
-
-    /**
-     * @return a formatted text with an asciidoc anchor.
-     */
-    protected String formatAndLink(String textTemplate, DomainObject domainObject) {
-        String anchorLink = AnchorUtil.formatLink(glossaryAnchorTemplate, domainObject.getId(), domainObject.getFullName());
-        return interpretNewLine(format(textTemplate, defaultString(domainObject.getId(), EMPTY), domainObject.getFullName(), anchorLink));
-    }
-
-    // *******************************************************
-    // MAPPING DEFINITION
-    // *******************************************************
-
-    private DomainObject createMappingDefinition(JavaAnnotatedElement model, String name) {
-        DomainObject domainObject = new DomainObject();
-        domainObject.setId(getGlossaryId(model).orElse(null));
-        domainObject.setName(getName(model, name));
-        domainObject.setDescription(getDescription(model));
-        domainObject.setMapped(getMapping(model).isPresent());
-        return domainObject;
-    }
-
-    protected DomainObject map(JavaClass model) {
-        DomainObject domainObject = createMappingDefinition(model, model.getName());
-        domainObject.setNamespace(model.getPackageName());
-        return domainObject;
-    }
-
-    protected DomainObject map(JavaField model) {
-        DomainObject domainObject = createMappingDefinition(model, model.getName());
-        domainObject.setParentName(model.getDeclaringClass().getName());
-        domainObject.setNamespace(model.getDeclaringClass().getPackageName());
-        model.getAnnotations().stream()
-                .filter(annot -> annot.getType().getFullyQualifiedName().startsWith(JAVAX_VALIDATION_CONSTRAINTS)
-                        || annot.getType().getFullyQualifiedName().startsWith(HIBERNATE_VALIDATION_CONSTRAINTS))
-                .map(annot -> annot.toString().replace(JAVAX_VALIDATION_CONSTRAINTS, "").replace(HIBERNATE_VALIDATION_CONSTRAINTS, ""))
-                .forEach(domainObject::addAnnotation);
-        if (!model.isEnumConstant()) {
-            domainObject.setType(model.getType());
-        }
-        return domainObject;
     }
 }

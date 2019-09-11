@@ -6,7 +6,7 @@
     <parent>
         <groupId>ch.ifocusit.livingdoc.example</groupId>
         <artifactId>examples-parent</artifactId>
-        <version>1.7-SNAPSHOT</version>
+        <version>1.11-SNAPSHOT</version>
     </parent>
     <artifactId>microservice</artifactId>
     <packaging>jar</packaging>
@@ -166,7 +166,7 @@
                             <format>plantuml</format>
                             <interactive>false</interactive>
                             <excludes>
-                                <exclude>.*\.domain\..*</exclude>
+                                <exclude>.*\.domain\.(?!Bill$).*</exclude>
                                 <exclude>.*JAXRSConfiguration</exclude>
                                 <exclude>.*ListBillRepository</exclude>
                             </excludes>

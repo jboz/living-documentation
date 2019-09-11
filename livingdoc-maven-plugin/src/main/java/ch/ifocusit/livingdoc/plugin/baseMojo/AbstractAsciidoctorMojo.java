@@ -61,13 +61,13 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
     /**
      * Directory where the documents will be generated
      */
-    @Parameter(defaultValue = "${project.build.directory}/generated-docs", required = true)
+    @Parameter(property = "livingdoc.output.directory", defaultValue = "${project.build.directory}/generated-docs", required = true)
     protected File generatedDocsDirectory;
 
     /**
      * Templates directories.
      */
-    @Parameter(defaultValue = TEMPLATES_OUTPUT, readonly = true)
+    @Parameter(property = "livingdoc.asciidocTemplate", defaultValue = TEMPLATES_OUTPUT, readonly = true)
     private File asciidocTemplates;
 
     protected void write(AsciiDocBuilder asciiDocBuilder, Format format, String outputFilename) throws MojoExecutionException {

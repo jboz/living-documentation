@@ -46,13 +46,13 @@ public class Contract extends AbstractDomain {
     /**
      * Contract customer.
      */
-    @UbiquitousLanguage(id = 300)
+    @UbiquitousLanguage(id = 202)
     private Customer customer;
 
     /**
      * Contract effect date.
      */
-    @UbiquitousLanguage(id = 202)
+    @UbiquitousLanguage(id = 203)
     private LocalDate effectDate;
 
     /**
@@ -60,7 +60,7 @@ public class Contract extends AbstractDomain {
      *
      * @return the contract birth date
      */
-    @UbiquitousLanguage(id = 203)
+    @UbiquitousLanguage(id = 204)
     public MonthDay getBirthDay() {
         return MonthDay.from(effectDate);
     }

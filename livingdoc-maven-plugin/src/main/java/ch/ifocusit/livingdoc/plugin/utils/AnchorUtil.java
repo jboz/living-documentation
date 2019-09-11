@@ -30,12 +30,22 @@ import static java.text.MessageFormat.format;
  * @author Julien Boz
  */
 public class AnchorUtil {
+    public static final String INNER_LINK_TEMPLATE = "glossaryid-{0}";
+    public static final String OUTER_LINK_TEMPLATE = "{0}#glossaryid-{1}";
 
     private static String cleanName(String name) {
         return name.replaceAll(" ", "-").replaceAll("\\.", "_");
     }
 
-    public static String formatLink(String linkTemplate, Integer id, String name) {
-        return interpretNewLine(format(linkTemplate, defaultString(id, cleanName(name)), name));
+    public static String formatLink(Integer id, String name) {
+        return interpretNewLine(format(INNER_LINK_TEMPLATE, defaultString(id, cleanName(name))));
+    }
+
+    public static String formatLinkWithPage(String page, Integer id, String name) {
+        return interpretNewLine(format(OUTER_LINK_TEMPLATE, page, defaultString(id, cleanName(name))));
+    }
+
+    public static String glossaryLink(String parentName, String fieldName) {
+        return parentName + "." + fieldName;
     }
 }

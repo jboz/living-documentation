@@ -44,22 +44,21 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  */
 @Mojo(name = "glossary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
 public class GlossaryMojo extends AbstractGlossaryMojo {
-
     private static final String DEFAULT_GLOSSARY_TEMPLATE_MUSTACHE = "/default_glossary_template.mustache";
-    @Parameter(defaultValue = "glossary", required = true)
+
+    @Parameter(property = "livingdoc.glossary.output.filename", defaultValue = "glossary", required = true)
     private String glossaryOutputFilename;
 
-    @Parameter
+    @Parameter(property = "livingdoc.glossary.title")
     private String glossaryTitle;
 
-    @Parameter(defaultValue = "Id|Object Name|Attribute name|Type|Description|Constraints|Default Value")
+    @Parameter(property = "livingdoc.glossary.columns", defaultValue = "Id|Object Name|Attribute name|Type|Description|Constraints|Default Value")
     private String glossaryColumnsName;
 
-    // TODO generalized templating for DictionnaryMojo
-    @Parameter
+    @Parameter(property = "livingdoc.glossary.template")
     private File glossaryTemplate;
 
-    @Parameter(defaultValue = "true")
+    @Parameter(property = "livingdoc.glossary.link.activate", defaultValue = "true")
     private boolean glossaryWithLink = true;
 
     @Override
@@ -76,17 +75,20 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     protected void executeMojo() throws Exception {
 
         List<JavaClass> classes = getClasses()
-                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation, getClasses().collect(Collectors.toList())))
+                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation,
+                        getClasses().collect(Collectors.toList()), this))
                 .collect(Collectors.toList());
 
         boolean withId = classes.stream().anyMatch(JavaClass::hasId);
 
         Map<String, Object> scopes = new HashMap<>();
         scopes.put("columnsName", withId ? glossaryColumnsName : glossaryColumnsName.replace("Id|", ""));
-        scopes.put("columnsSize", (withId ? "1," : EMPTY) + "1,1,1,2,1,1");
+        scopes.put("columnsSize", (withId ? "1," : EMPTY) + "2,2,1,4,1,1");
         scopes.put("classes", classes);
         scopes.put("withLink", glossaryWithLink);
 
         asciiDocBuilder.textLine(MustacheUtil.execute(glossaryTemplate, DEFAULT_GLOSSARY_TEMPLATE_MUSTACHE, scopes));
+
+        somethingWasGenerated = !classes.isEmpty();
     }
 }

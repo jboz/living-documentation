@@ -37,7 +37,7 @@ git checkout master
 
 MAKE_RELEASE='false'
 
-if [ "${TRAVIS_COMMIT_MESSAGE}" =~ ^make\ release ] || [ "${TRAVIS_COMMIT_MESSAGE}" =~ ^create\ release ]; then
+if [[ "${TRAVIS_COMMIT_MESSAGE}" =~ ^make\ release ]] || [[ "${TRAVIS_COMMIT_MESSAGE}" =~ ^create\ release ]] || [[ "${TRAVIS_COMMIT_MESSAGE}" =~ make\ release$ ]] || [[ "${TRAVIS_COMMIT_MESSAGE}" =~ create\ release$ ]]; then
     echo "commit message indicate that a release must be create"
     MAKE_RELEASE='true'
 fi

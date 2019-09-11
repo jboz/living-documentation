@@ -1,10 +1,14 @@
 id,name,description
 100,Facture,Facture Mensuelle générée par le système à la date anniversaire du contrat
 101,Mois de facture,Mois concerné par la facture
+102,contrat,Contrat concerné par la facture
+103,accès,Accès aux services
+104,état,Etat du paiement de la facture
 200,Contrat,Contrat de téléphonie liant la société à un client
 201,Identifiant,Identifiant du contrat unique dans le système
-202,Date effet,Date à laquelle le contrat prend effet
-203,Date anniversaire,Date anniversaire du contrat. Correspond au jour/mois de la date d'effet
+202,client,Client du contrat
+203,Date effet,Date à laquelle le contrat prend effet
+204,Date anniversaire,Date anniversaire du contrat. Correspond au jour/mois de la date d'effet
 300,Client,Client du service lié par un contrat
 301,Nom,Nom d'usage du client
 400,Accès,Utilisation du service de télécommunication
@@ -15,5 +19,5 @@ id,name,description
 501,durée,Durée de l'appel téléphonique
 600,SMS,SMS
 700,Paiement,Etat de paiement de la fature
-701,Paiement.En attente,Le facture est en attente de paiement
-702,Paiement.Payé,La facture à été payé par le client
+701,En attente,Le facture est en attente de paiement
+702,Payé,La facture à été payé par le client

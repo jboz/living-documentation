@@ -29,6 +29,7 @@ import ch.ifocusit.livingdoc.plugin.domain.Cluster;
 import ch.ifocusit.livingdoc.plugin.domain.Color;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -37,6 +38,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author Julien Boz
@@ -46,7 +48,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
 
     private static final Color DEFAULT_ROOT_COLOR = Color.from("wheat", null);
 
-    @Parameter(defaultValue = "${project.groupId}.${project.artifactId}.domain", required = true)
+    @Parameter(property = "livingdoc.diagram.packageRoot", defaultValue = "${project.groupId}.${project.artifactId}.domain", required = true)
     private String packageRoot;
 
     @Parameter
@@ -55,44 +57,50 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     /**
      * Output diagram format
      */
-    @Parameter(defaultValue = "plantuml", required = true)
+    @Parameter(property = "livingdoc.diagram.type", defaultValue = "plantuml", required = true)
     private DiagramType diagramType;
 
     /**
      * Output diagram image format
      */
-    @Parameter(defaultValue = "png", required = true)
+    @Parameter(property = "livingdoc.diagram.image.format", defaultValue = "png", required = true)
     private DiagramImageType diagramImageType;
 
     /**
      * Add link into diagram to glossary
      */
-    @Parameter(defaultValue = "true")
+    @Parameter(property = "livingdoc.diagram.link.activate", defaultValue = "true")
     private boolean diagramWithLink = true;
 
     /**
      * Link template to use in diagram.
      */
-    @Parameter(defaultValue = "glossary.html")
+    @Parameter(property = "livingdoc.diagram.link.page", defaultValue = "glossary.html")
     private String diagramLinkPage;
 
     /**
      * Class color for @{@link ch.ifocusit.livingdoc.annotations.RootAggregate} class.
      */
-    @Parameter
-    private Color rootAggregateColor = DEFAULT_ROOT_COLOR;
+    @Parameter(property = "livingdoc.diagram.rootAggregate.color")
+    private Color rootAggregateColor;
 
     /**
      * Indicate if cluster must automatically detected.
      */
-    @Parameter(defaultValue = "true")
-    private boolean detectCluster = true;
+    @Parameter(property = "livingdoc.diagram.cluster.detect", defaultValue = "true")
+    private boolean detectCluster;
 
     /**
      * Effective cluster list.
      */
     @Parameter
     private List<Cluster> clusters;
+
+    @Parameter(property = "livingdoc.diagram.methods.show", defaultValue = "true")
+    private boolean diagramShowMethods;
+
+    @Parameter(property = "livingdoc.diagram.fields.show", defaultValue = "true")
+    private boolean diagramShowFields;
 
     /**
      * Header of the diagram
@@ -106,14 +114,17 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     @Parameter(defaultValue = "${project.basedir}/src/main/livingdoc/diagram.footer")
     private File diagramFooter;
 
-    @Parameter(defaultValue = "false")
-    private boolean interactive = false;
+    @Parameter(property = "livingdoc.diagram.interactive", defaultValue = "false")
+    private boolean interactive;
 
-    @Parameter(defaultValue = "diagram", required = true)
+    @Parameter(property = "livingdoc.diagram.output.filename", defaultValue = "diagram", required = true)
     private String diagramOutputFilename;
 
-    @Parameter
+    @Parameter(property = "livingdoc.diagram.title")
     private String diagramTitle;
+
+    @Parameter(property = "livingdoc.diagram.withDeps", defaultValue = "false")
+    private boolean diagramWithDependencies;
 
     @Override
     protected String getOutputFilename() {
@@ -133,6 +144,11 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
         }
         // generate diagram
         String diagram = generateDiagram();
+
+        if (StringUtils.isBlank(diagram)) {
+            // nothing to generate
+            return;
+        }
 
         switch (format) {
             case html:
@@ -161,13 +177,15 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
 
         switch (diagramType) {
             case plantuml:
-                PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot, excludes,
-                        rootAggregateColor, diagramHeader, diagramFooter);
+                PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot,
+                        Stream.of(excludes).map(s -> s.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", "")).toArray(String[]::new),
+                        rootAggregateColor == null || rootAggregateColor.isEmpty() ? DEFAULT_ROOT_COLOR : rootAggregateColor, diagramHeader, diagramFooter, diagramShowMethods, diagramShowFields,
+                        diagramWithDependencies, diagramLinkPage);
                 if (onlyAnnotated) {
                     builder.filterOnAnnotation(UbiquitousLanguage.class);
                 }
                 if (diagramWithLink && !DiagramImageType.png.equals(diagramImageType)) {
-                    builder.mapNames(glossaryMapping, UbiquitousLanguage.class, diagramLinkPage + "#" + glossaryAnchorTemplate);
+                    builder.mapNames(glossaryMapping);
                 }
                 return builder.generate();
             default:

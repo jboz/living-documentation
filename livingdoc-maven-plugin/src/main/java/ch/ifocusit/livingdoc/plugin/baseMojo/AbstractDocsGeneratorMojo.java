@@ -40,7 +40,6 @@ import java.nio.charset.Charset;
  * @author Julien Boz
  */
 public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo {
-    public static final String GLOSSARY_ANCHOR = "glossaryid-{0}";
 
     private static final String TITLE_MARKUP = AsciiDoc.DOCUMENT_TITLE.toString();
 
@@ -50,20 +49,13 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
     /**
      * Output format of the glossary (default html, others : adoc)
      */
-    @Parameter(defaultValue = "html")
+    @Parameter(property = "livingdoc.diagram.output.format", defaultValue = "html")
     protected Format format;
-
-    /**
-     * Temple for glossary anchor.
-     */
-    @Parameter(defaultValue = GLOSSARY_ANCHOR)
-    // TODO remove this parameter, no more need to change this behavior
-    protected String glossaryAnchorTemplate;
 
     /**
      * File to use for UbiquitousLanguage mapping.
      */
-    @Parameter
+    @Parameter(property = "livingdoc.diagram.glossary.mapping")
     protected File glossaryMapping;
 
     // TODO active header/footer capabilities
@@ -82,8 +74,8 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
     /**
      * Indicate that only annotated classes/fields will be used.
      */
-    @Parameter(defaultValue = "false")
-    protected boolean onlyAnnotated = false;
+    @Parameter(property = "livingdoc.diagram.onlyAnnotated", defaultValue = "false")
+    protected boolean onlyAnnotated;
 
     /**
      * @return the filename is defined by each mojo
