@@ -6,55 +6,6 @@
 |===
 |Id Glossaire|Nom de l&#39;objet|Nom de&#10;                        l&#39;attribut|Type|Description|Contraintes|Valeur par défaut
 
-    |anchor:glossaryid-400[]400
-    |anchor:glossaryid-400[]AccÃ¨s
-    |
-    |
-    |Utilisation du service de tÃ©lÃ©communication
-    |
-    |
-        |anchor:glossaryid-401[]401
-        |
-        |anchor:glossaryid-401[]TÃ©lÃ©phone
-        |String
-        |NumÃ©ro de tÃ©lÃ©phone utilisÃ©
-        |
-        |
-        |anchor:glossaryid-402[]402
-        |
-        |anchor:glossaryid-402[]Prix
-        |BigDecimal
-        |Montant de l'accÃ¨s au service
-        |
-        |
-        |anchor:glossaryid-403[]403
-        |
-        |anchor:glossaryid-403[]Horodatage
-        |ZonedDateTime
-        |Timestamp de l'utilisation du service
-        |
-        |ZonedDateTime.now()
-    |anchor:glossaryid-500[]500
-    |anchor:glossaryid-500[]Appel tÃ©lÃ©phonique
-    |
-    |
-    |
-    |
-    |
-        |anchor:glossaryid-501[]501
-        |
-        |anchor:glossaryid-501[]durÃ©e
-        |Duration
-        |DurÃ©e de l'appel tÃ©lÃ©phonique
-        |
-        |
-    |anchor:glossaryid-600[]600
-    |anchor:glossaryid-600[]SMS
-    |
-    |
-    |SMS
-    |
-    |
     |anchor:glossaryid-100[]100
     |anchor:glossaryid-100[]Facture
     |
@@ -132,6 +83,55 @@
         |Nom d'usage du client
         |
         |
+    |anchor:glossaryid-400[]400
+    |anchor:glossaryid-400[]AccÃ¨s
+    |
+    |
+    |Utilisation du service de tÃ©lÃ©communication
+    |
+    |
+        |anchor:glossaryid-401[]401
+        |
+        |anchor:glossaryid-401[]TÃ©lÃ©phone
+        |String
+        |NumÃ©ro de tÃ©lÃ©phone utilisÃ©
+        |
+        |
+        |anchor:glossaryid-402[]402
+        |
+        |anchor:glossaryid-402[]Prix
+        |BigDecimal
+        |Montant de l'accÃ¨s au service
+        |
+        |
+        |anchor:glossaryid-403[]403
+        |
+        |anchor:glossaryid-403[]Horodatage
+        |ZonedDateTime
+        |Timestamp de l'utilisation du service
+        |
+        |ZonedDateTime.now()
+    |anchor:glossaryid-500[]500
+    |anchor:glossaryid-500[]Appel tÃ©lÃ©phonique
+    |
+    |
+    |
+    |
+    |
+        |anchor:glossaryid-501[]501
+        |
+        |anchor:glossaryid-501[]durÃ©e
+        |Duration
+        |DurÃ©e de l'appel tÃ©lÃ©phonique
+        |
+        |
+    |anchor:glossaryid-600[]600
+    |anchor:glossaryid-600[]SMS
+    |
+    |
+    |SMS
+    |
+    |
     |anchor:glossaryid-700[]700
     |anchor:glossaryid-700[]Paiement
     |

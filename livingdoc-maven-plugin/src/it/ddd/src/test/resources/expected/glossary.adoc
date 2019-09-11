@@ -35,27 +35,6 @@
         |
         |ZonedDateTime.now()
     
-    |anchor:glossaryid-CallAccess[]CallAccess
-    |
-    |
-    |Phone call type access.
-    |
-    |
-        
-        |
-        |anchor:glossaryid-CallAccess_duration[]duration
-        |Duration
-        |Phone call duration
-        |
-        |
-    
-    |anchor:glossaryid-SmsAccess[]SmsAccess
-    |
-    |
-    |SMS type access.
-    |
-    |
-    
     |anchor:glossaryid-Bill[]Bill
     |
     |
@@ -90,6 +69,20 @@
         |Bill payment state
         |@NotNull()
         |PaymentState.WAITING
+    
+    |anchor:glossaryid-CallAccess[]CallAccess
+    |
+    |
+    |Phone call type access.
+    |
+    |
+        
+        |
+        |anchor:glossaryid-CallAccess_duration[]duration
+        |Duration
+        |Phone call duration
+        |
+        |
     
     |anchor:glossaryid-Contract[]Contract
     |
@@ -154,4 +147,11 @@ Generate by the system and communicate to client.
         |Client has payed.
         |
         |
+    
+    |anchor:glossaryid-SmsAccess[]SmsAccess
+    |
+    |
+    |SMS type access.
+    |
+    |
 |===

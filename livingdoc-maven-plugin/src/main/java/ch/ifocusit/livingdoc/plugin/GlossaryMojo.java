@@ -22,13 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
-import ch.ifocusit.livingdoc.plugin.glossary.JavaClass;
-import ch.ifocusit.livingdoc.plugin.utils.MustacheUtil;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.io.File;
 import java.util.HashMap;
@@ -36,7 +30,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
+import ch.ifocusit.livingdoc.plugin.glossary.JavaClass;
+import ch.ifocusit.livingdoc.plugin.utils.MustacheUtil;
 
 /**
  * Glossary of domain objects in a table representation.
@@ -75,10 +76,8 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     @Override
     protected void executeMojo() throws Exception {
 
-        List<JavaClass> classes = getClasses()
-                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation,
-                        getClasses().collect(Collectors.toList()), this))
-                .collect(Collectors.toList());
+        List<JavaClass> classes = getClasses().map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation,
+                getClasses().collect(Collectors.toList()), this)).sorted().collect(Collectors.toList());
 
         boolean withId = classes.stream().anyMatch(JavaClass::hasId);
 

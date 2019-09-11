@@ -22,19 +22,20 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
-import ch.ifocusit.livingdoc.plugin.glossary.JavaClass;
-import ch.ifocusit.livingdoc.plugin.utils.MustacheUtil;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
+import ch.ifocusit.livingdoc.plugin.glossary.JavaClass;
+import ch.ifocusit.livingdoc.plugin.utils.MustacheUtil;
 
 /**
  * Glossary of domain objects in a title/content representation.
@@ -69,17 +70,15 @@ public class DictionaryMojo extends AbstractGlossaryMojo {
 
     @Override
     protected void executeMojo() throws Exception {
-        List<JavaClass> classes = getClasses()
-                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation,
-                        getClasses().collect(Collectors.toList()), this))
-                .sorted()
-                .collect(Collectors.toList());
+        List<JavaClass> classes = getClasses().map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation,
+                getClasses().collect(Collectors.toList()), this)).sorted().collect(Collectors.toList());
 
         Map<String, Object> scopes = new HashMap<>();
         scopes.put("classes", classes);
         scopes.put("withLink", dictionaryWithLink);
 
-        asciiDocBuilder.textLine(MustacheUtil.execute(dictionaryTemplate, DEFAULT_DICTIONARY_TEMPLATE_MUSTACHE, scopes));
+        asciiDocBuilder
+                .textLine(MustacheUtil.execute(dictionaryTemplate, DEFAULT_DICTIONARY_TEMPLATE_MUSTACHE, scopes));
 
         somethingWasGenerated = !classes.isEmpty();
     }

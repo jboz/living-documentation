@@ -4,53 +4,11 @@
 |===
 |Id|Object Name|Attribute name|Type|Description|Constraints|Default Value
 
-    |anchor:glossaryid-400[]400
-    |anchor:glossaryid-400[]Access
+    
+    |anchor:glossaryid-AbstractDomain[]AbstractDomain
     |
     |
-    |Use of telecom service.
     |
-    |
-        |anchor:glossaryid-401[]401
-        |
-        |anchor:glossaryid-401[]phoneNumber
-        |String
-        |Phone number used.
-        |
-        |
-        |anchor:glossaryid-402[]402
-        |
-        |anchor:glossaryid-402[]price
-        |BigDecimal
-        |Price of use of the service.
-        |
-        |
-        |anchor:glossaryid-403[]403
-        |
-        |anchor:glossaryid-403[]dateTime
-        |ZonedDateTime
-        |Timestamp of use.
-        |
-        |ZonedDateTime.now()
-    |anchor:glossaryid-500[]500
-    |anchor:glossaryid-500[]CallAccess
-    |
-    |
-    |Phone call type access.
-    |
-    |
-        |anchor:glossaryid-501[]501
-        |
-        |anchor:glossaryid-501[]duration
-        |Duration
-        |Phone call duration
-        |
-        |
-    |anchor:glossaryid-600[]600
-    |anchor:glossaryid-600[]SmsAccess
-    |
-    |
-    |SMS type access.
     |
     |
     |anchor:glossaryid-100[]100
@@ -90,13 +48,6 @@ Generate by the system at contract birth date.
         |Flag that indicate whenever the bill has been sended to the customer.
         |
         |&#13;&#10;&#13;&#10;    &#13;&#10;      
-    
-    |anchor:glossaryid-AbstractDomain[]AbstractDomain
-    |
-    |
-    |
-    |
-    |
     |anchor:glossaryid-200[]200
     |anchor:glossaryid-200[]Contract
     |
@@ -147,4 +98,53 @@ Generate by the system and communicate to client.
         |
         |
         |new HashSet&lt;&gt;()
+    |anchor:glossaryid-400[]400
+    |anchor:glossaryid-400[]Access
+    |
+    |
+    |Use of telecom service.
+    |
+    |
+        |anchor:glossaryid-401[]401
+        |
+        |anchor:glossaryid-401[]phoneNumber
+        |String
+        |Phone number used.
+        |
+        |
+        |anchor:glossaryid-402[]402
+        |
+        |anchor:glossaryid-402[]price
+        |BigDecimal
+        |Price of use of the service.
+        |
+        |
+        |anchor:glossaryid-403[]403
+        |
+        |anchor:glossaryid-403[]dateTime
+        |ZonedDateTime
+        |Timestamp of use.
+        |
+        |ZonedDateTime.now()
+    |anchor:glossaryid-500[]500
+    |anchor:glossaryid-500[]CallAccess
+    |
+    |
+    |Phone call type access.
+    |
+    |
+        |anchor:glossaryid-501[]501
+        |
+        |anchor:glossaryid-501[]duration
+        |Duration
+        |Phone call duration
+        |
+        |
+    |anchor:glossaryid-600[]600
+    |anchor:glossaryid-600[]SmsAccess
+    |
+    |
+    |SMS type access.
+    |
+    |
 |===
