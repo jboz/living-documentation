@@ -223,8 +223,8 @@
                 <version>3.0.1</version>
                 <configuration>
                     <showVersion>true</showVersion>
-                    <streamLogs>true</streamLogs>
-                    <noLog>false</noLog>
+                    <streamLogs>false</streamLogs>
+                    <noLog>true</noLog>
                     <showErrors>true</showErrors>
                     <postBuildHookScript>verify</postBuildHookScript>
                     <!--<localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>-->
