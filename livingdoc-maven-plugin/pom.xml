@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ch.ifocusit.livingdoc</groupId>
@@ -144,7 +143,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>4.3.10.RELEASE</version>
+            <version>[4.3.18,)</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
@@ -159,7 +158,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.7.3</version>
+            <version>2.9.9.3</version>
         </dependency>
 
         <!-- test -->
@@ -269,7 +268,8 @@
             </properties>
             <build>
                 <plugins>
-                    <plugin><!-- create source artifact -->
+                    <plugin>
+                        <!-- create source artifact -->
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
                         <version>3.0.1</version>
@@ -282,7 +282,8 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin><!-- create javadoc artifact -->
+                    <plugin>
+                        <!-- create javadoc artifact -->
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>2.10.4</version>
@@ -295,7 +296,8 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin><!-- Sign artifact -->
+                    <plugin>
+                        <!-- Sign artifact -->
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>1.6</version>
@@ -309,7 +311,8 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin><!-- create project artifact -->
+                    <plugin>
+                        <!-- create project artifact -->
                         <artifactId>maven-release-plugin</artifactId>
                         <version>2.5.1</version>
                         <configuration>
@@ -332,7 +335,8 @@
                             <updateReleaseInfo>true</updateReleaseInfo>
                         </configuration>
                     </plugin>
-                    <plugin><!-- Release dist files to maven central -->
+                    <plugin>
+                        <!-- Release dist files to maven central -->
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
                         <version>1.6.8</version>
