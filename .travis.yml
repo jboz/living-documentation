@@ -10,7 +10,7 @@ addons:
     packages:
       - graphviz
 
-install: mvn install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V -U -Dline.separator=\r\n
+install: mvn install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V -U -Dline.separator='\r\n'
 
 script: echo -e "\nliving-documentation project\n"
 
