@@ -80,6 +80,7 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
+        System.setProperty("line.separator", "\r\n");
         if (StringUtils.isNotBlank(newlineCharacter)) {
             System.setProperty("line.separator", newlineCharacter);
         }
