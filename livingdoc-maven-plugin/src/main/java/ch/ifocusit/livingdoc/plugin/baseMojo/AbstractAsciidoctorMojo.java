@@ -24,8 +24,10 @@ package ch.ifocusit.livingdoc.plugin.baseMojo;
 
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.asciidoctor.Asciidoctor;
@@ -69,6 +71,22 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
      */
     @Parameter(property = "livingdoc.asciidocTemplate", defaultValue = TEMPLATES_OUTPUT, readonly = true)
     private File asciidocTemplates;
+
+    /**
+     * Templates directories.
+     */
+    @Parameter(property = "livingdoc.newlineCharacter", defaultValue = "\r\n", readonly = true)
+    private String newlineCharacter;
+
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        if (StringUtils.isNotBlank(newlineCharacter)) {
+            System.setProperty("line.separator", newlineCharacter);
+        }
+        this.executeMojo();
+    }
+
+    public abstract void executeMojo() throws MojoExecutionException, MojoFailureException;
 
     protected void write(AsciiDocBuilder asciiDocBuilder, Format format, String outputFilename) throws MojoExecutionException {
         generatedDocsDirectory.mkdirs();

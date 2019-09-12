@@ -87,7 +87,7 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
      * Main method.
      */
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void executeMojo() throws MojoExecutionException, MojoFailureException {
         javaDocBuilder = buildJavaProjectBuilder();
         appendTitle(asciiDocBuilder);
 
@@ -101,7 +101,7 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
             }
         }
         try {
-            executeMojo();
+            executeGlossaryMojo();
         } catch (Exception e) {
             throw new MojoExecutionException("error executing glossary template", e);
         }
@@ -122,7 +122,7 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
     /**
      * Implementation main method.
      */
-    protected abstract void executeMojo() throws Exception;
+    protected abstract void executeGlossaryMojo() throws Exception;
 
     protected Stream<JavaClass> getClasses() {
         return javaDocBuilder.getClasses().stream()

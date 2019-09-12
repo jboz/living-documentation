@@ -74,7 +74,7 @@ public class GlossaryMojo extends AbstractGlossaryMojo {
     }
 
     @Override
-    protected void executeMojo() throws Exception {
+    protected void executeGlossaryMojo() throws Exception {
 
         List<JavaClass> classes = getClasses().map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation,
                 getClasses().collect(Collectors.toList()), this)).sorted().collect(Collectors.toList());
