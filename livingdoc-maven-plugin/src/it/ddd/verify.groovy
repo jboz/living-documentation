@@ -9,4 +9,3 @@ new File(basedir, "./src/test/resources/expected").eachFileMatch(~/^.*\.(adoc|pl
 
     assert new File(basedir, "target/" + file.name).text == file.text
 }
-
