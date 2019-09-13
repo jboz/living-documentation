@@ -1,11 +1,14 @@
+import org.apache.commons.io.FileUtils
+
 new File(basedir, "./src/test/resources/expected").eachFileMatch(~/^.*\.(adoc|html|plantuml|svg)$/) { file ->
     println "Assert generated file " + file.name + " to exists"
 
     assert new File(basedir, "target/" + file.name).isFile()
 }
 
-new File(basedir, "./src/test/resources/expected").eachFileMatch(~/^.*\.(adoc|plantuml)$/) { file ->
-    println "Assert generated file to equals expected: " + file.name
+new File(basedir, "./src/test/resources/expected").eachFileMatch(~/^.*\.(adoc|plantuml)$/) { expected ->
+    println "Assert generated file to equals expected: " + expected.name
 
-    assert new File(basedir, "target/" + file.name).text == file.text
+    def actual = new File(basedir, "target/" + expected.name)
+    FileUtils.contentEqualsIgnoreEOL(actual, expected, null)
 }
