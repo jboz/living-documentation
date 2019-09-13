@@ -1,14 +1,16 @@
 package ch.ifocusit.livingdoc.plugin.glossary;
 
-import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
-import ch.ifocusit.livingdoc.plugin.mapping.MappingRespository;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import org.apache.commons.lang3.ObjectUtils;
+
+import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
+import ch.ifocusit.livingdoc.plugin.mapping.MappingRespository;
 
 public class JavaClass implements JavaElement, Comparable<JavaClass> {
 
@@ -71,6 +73,6 @@ public class JavaClass implements JavaElement, Comparable<JavaClass> {
         if (!hasId() && !o.hasId()) {
             return getName().compareTo(o.getName());
         }
-        return getId().compareTo(o.getId());
+        return ObjectUtils.compare(getId(), o.getId(), false);
     }
 }
