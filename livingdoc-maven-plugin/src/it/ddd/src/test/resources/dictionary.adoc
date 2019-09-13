@@ -1,0 +1,132 @@
+:sectlinks:
+:sectanchors:
+= Dictionary
+
+[[glossaryid-Access]]
+
+== Access
+
+Use of telecom service.
+
+[[glossaryid-phoneNumber]]
+
+== anchor:glossaryid-Access_phoneNumber[]Access.phoneNumber
+
+Phone number used.
+
+[[glossaryid-price]]
+
+== anchor:glossaryid-Access_price[]Access.price
+
+Price of use of the service.
+
+[[glossaryid-dateTime]]
+
+== anchor:glossaryid-Access_dateTime[]Access.dateTime
+
+Timestamp of use.
+
+[[glossaryid-Bill]]
+
+== Bill
+
+Monthly bill.
+
+[[glossaryid-month]]
+
+== anchor:glossaryid-Bill_month[]Bill.month
+
+Which month of the bill.
+
+[[glossaryid-contract]]
+
+== anchor:glossaryid-Bill_contract[]Bill.contract
+
+Contract concerned by the bill.
+
+[[glossaryid-accesses]]
+
+== anchor:glossaryid-Bill_accesses[]Bill.accesses
+
+Bill contents.
+
+[[glossaryid-paymentState]]
+
+== anchor:glossaryid-Bill_paymentState[]Bill.paymentState
+
+Bill payment state
+
+[[glossaryid-CallAccess]]
+
+== CallAccess
+
+Phone call type access.
+
+[[glossaryid-duration]]
+
+== anchor:glossaryid-CallAccess_duration[]CallAccess.duration
+
+Phone call duration
+
+[[glossaryid-Contract]]
+
+== Contract
+
+Telecom contract
+
+[[glossaryid-id]]
+
+== anchor:glossaryid-Contract_id[]Contract.id
+
+Contract identifier.
+Generate by the system and communicate to client.
+
+[[glossaryid-customer]]
+
+== anchor:glossaryid-Contract_customer[]Contract.customer
+
+Contract customer.
+
+[[glossaryid-Customer]]
+
+== Customer
+
+Customer of the telecom service
+
+[[glossaryid-email]]
+
+== anchor:glossaryid-Customer_email[]Customer.email
+
+Email of the customer.
+
+[[glossaryid-contracts]]
+
+== anchor:glossaryid-Customer_contracts[]Customer.contracts
+
+Customer's contracts.
+
+[[glossaryid-PaymentState]]
+
+== PaymentState
+
+Bill payment state values.
+
+[[glossaryid-WAITING]]
+
+== anchor:glossaryid-PaymentState_WAITING[]PaymentState.WAITING
+
+Wainting payment by the client.
+
+[[glossaryid-DONE]]
+
+== anchor:glossaryid-PaymentState_DONE[]PaymentState.DONE
+
+Client has payed.
+
+[[glossaryid-SmsAccess]]
+
+== SmsAccess
+
+SMS type access.
+
+

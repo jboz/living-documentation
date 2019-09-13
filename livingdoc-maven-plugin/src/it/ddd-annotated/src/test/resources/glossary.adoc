@@ -1,0 +1,156 @@
+:sectlinks:
+:sectanchors:
+= Glossary
+
+[cols="1,2,2,1,4,1,1",options="header"]
+|===
+|Id Glossaire|Nom de l&#39;objet|Nom de&#10;                        l&#39;attribut|Type|Description|Contraintes|Valeur par défaut
+
+    |anchor:glossaryid-100[]100
+    |anchor:glossaryid-100[]Facture
+    |
+    |
+    |Facture Mensuelle gÃ©nÃ©rÃ©e par le systÃ¨me Ã  la date anniversaire du contrat
+    |
+    |
+        |anchor:glossaryid-101[]101
+        |
+        |anchor:glossaryid-101[]Mois de facture
+        |YearMonth
+        |Mois concernÃ© par la facture
+        |
+        |
+        |anchor:glossaryid-102[]102
+        |
+        |anchor:glossaryid-102[]contrat
+        |&lt;&lt;glossaryid-200,Contract&gt;&gt;
+        |Contrat concernÃ© par la facture
+        |
+        |
+        |anchor:glossaryid-103[]103
+        |
+        |anchor:glossaryid-103[]accÃ¨s
+        |Set
+        |AccÃ¨s aux services
+        |
+        |new HashSet&lt;&gt;()
+        |anchor:glossaryid-104[]104
+        |
+        |anchor:glossaryid-104[]Ã©tat
+        |&lt;&lt;glossaryid-700,PaymentState&gt;&gt;, Enumeration
+        |Etat du paiement de la facture
+        |
+        |  &#10;      
+    |anchor:glossaryid-200[]200
+    |anchor:glossaryid-200[]Contrat
+    |
+    |
+    |Contrat de tÃ©lÃ©phonie liant la sociÃ©tÃ© Ã  un client
+    |
+    |
+        |anchor:glossaryid-201[]201
+        |
+        |anchor:glossaryid-201[]Identifiant
+        |String
+        |Identifiant du contrat unique dans le systÃ¨me
+        |
+        |
+        |anchor:glossaryid-202[]202
+        |
+        |anchor:glossaryid-202[]client
+        |&lt;&lt;glossaryid-300,Customer&gt;&gt;
+        |Client du contrat
+        |
+        |
+        |anchor:glossaryid-203[]203
+        |
+        |anchor:glossaryid-203[]Date effet
+        |LocalDate
+        |Date Ã  laquelle le contrat prend effet
+        |
+        |
+    |anchor:glossaryid-300[]300
+    |anchor:glossaryid-300[]Client
+    |
+    |
+    |Client du service liÃ© par un contrat
+    |
+    |
+        |anchor:glossaryid-301[]301
+        |
+        |anchor:glossaryid-301[]Nom
+        |String
+        |Nom d'usage du client
+        |
+        |
+    |anchor:glossaryid-400[]400
+    |anchor:glossaryid-400[]AccÃ¨s
+    |
+    |
+    |Utilisation du service de tÃ©lÃ©communication
+    |
+    |
+        |anchor:glossaryid-401[]401
+        |
+        |anchor:glossaryid-401[]TÃ©lÃ©phone
+        |String
+        |NumÃ©ro de tÃ©lÃ©phone utilisÃ©
+        |
+        |
+        |anchor:glossaryid-402[]402
+        |
+        |anchor:glossaryid-402[]Prix
+        |BigDecimal
+        |Montant de l'accÃ¨s au service
+        |
+        |
+        |anchor:glossaryid-403[]403
+        |
+        |anchor:glossaryid-403[]Horodatage
+        |ZonedDateTime
+        |Timestamp de l'utilisation du service
+        |
+        |ZonedDateTime.now()
+    |anchor:glossaryid-500[]500
+    |anchor:glossaryid-500[]Appel tÃ©lÃ©phonique
+    |
+    |
+    |
+    |
+    |
+        |anchor:glossaryid-501[]501
+        |
+        |anchor:glossaryid-501[]durÃ©e
+        |Duration
+        |DurÃ©e de l'appel tÃ©lÃ©phonique
+        |
+        |
+    |anchor:glossaryid-600[]600
+    |anchor:glossaryid-600[]SMS
+    |
+    |
+    |SMS
+    |
+    |
+    |anchor:glossaryid-700[]700
+    |anchor:glossaryid-700[]Paiement
+    |
+    |Enumeration
+    |Etat de paiement de la fature
+    |
+    |
+        |anchor:glossaryid-701[]701
+        |
+        |anchor:glossaryid-701[]En attente
+        |
+        |Le facture est en attente de paiement
+        |
+        |
+        |anchor:glossaryid-702[]702
+        |
+        |anchor:glossaryid-702[]PayÃ©
+        |
+        |La facture Ã  Ã©tÃ© payÃ© par le client
+        |
+        |
+|===

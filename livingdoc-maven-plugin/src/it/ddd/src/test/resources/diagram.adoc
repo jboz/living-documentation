@@ -1,0 +1,63 @@
+:sectlinks:
+:sectanchors:
+= Classes Diagram
+
+[plantuml, diagram, format=svg, opts=interactive]
+----
+@startuml
+
+
+
+
+
+abstract class "Access" [[glossary.html#glossaryid-Access{Access}]] {
+  phoneNumber : String [[glossary.html#glossaryid-Access_phoneNumber{phoneNumber}]]
+  price : BigDecimal [[glossary.html#glossaryid-Access_price{price}]]
+  dateTime : ZonedDateTime [[glossary.html#glossaryid-Access_dateTime{dateTime}]]
+}
+
+class "Bill" [[glossary.html#glossaryid-Bill{Bill}]] {
+  month : YearMonth [[glossary.html#glossaryid-Bill_month{month}]]
+  contract : Contract [[glossary.html#glossaryid-Bill_contract{contract}]]
+  accesses : Set<Access> [[glossary.html#glossaryid-Bill_accesses{accesses}]]
+  paymentState : PaymentState [[glossary.html#glossaryid-Bill_paymentState{paymentState}]]
+  addAccess(Access) : boolean
+  removeAccess(Access) : boolean
+}
+
+class "CallAccess" [[glossary.html#glossaryid-CallAccess{CallAccess}]] {
+  duration : Duration [[glossary.html#glossaryid-CallAccess_duration{duration}]]
+}
+
+class "Contract" [[glossary.html#glossaryid-Contract{Contract}]] {
+  id : Long [[glossary.html#glossaryid-Contract_id{id}]]
+  customer : Customer [[glossary.html#glossaryid-Contract_customer{customer}]]
+}
+
+class "Customer" [[glossary.html#glossaryid-Customer{Customer}]] {
+  email : String [[glossary.html#glossaryid-Customer_email{email}]]
+  contracts : Set<Contract> [[glossary.html#glossaryid-Customer_contracts{contracts}]]
+  addContract(Contract) : boolean
+  removeContract(Contract) : boolean
+}
+
+enum "PaymentState" [[glossary.html#glossaryid-PaymentState{PaymentState}]] {
+  WAITING [[glossary.html#glossaryid-PaymentState_WAITING{WAITING}]]
+  DONE [[glossary.html#glossaryid-PaymentState_DONE{DONE}]]
+}
+
+class "SmsAccess" [[glossary.html#glossaryid-SmsAccess{SmsAccess}]]
+
+"Access" <|-- "CallAccess"
+"Access" <|-- "SmsAccess"
+"Bill" --> "*" "Access" : accesses
+"Bill" --> "Contract" : contract
+"Bill" --> "PaymentState" : paymentState
+"Contract" "*" <-> "Customer" : customer/contracts
+
+
+
+
+
+@enduml
+----
