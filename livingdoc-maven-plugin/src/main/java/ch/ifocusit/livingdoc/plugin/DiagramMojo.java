@@ -31,7 +31,7 @@ import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 /**
  * @author Julien Boz
  */
-@Mojo(name = "diagram", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
+@Mojo(name = "diagram", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM, defaultPhase = LifecyclePhase.PROCESS_CLASSES)
 public class DiagramMojo extends AbstractDocsGeneratorMojo {
 
     private static final Color DEFAULT_ROOT_COLOR = Color.from("wheat", null);
@@ -137,7 +137,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     }
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void executeMojo() throws MojoExecutionException {
         if (interactive) {
             diagramWithLink = true;
             diagramImageType = DiagramImageType.svg;
@@ -175,22 +175,22 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
 
     String generateDiagram() throws MojoExecutionException {
 
-        switch (diagramType) {
-            case plantuml:
-                PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot,
-                        Stream.of(excludes).map(s -> s.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", "")).toArray(String[]::new),
-                        rootAggregateColor == null || rootAggregateColor.isEmpty() ? DEFAULT_ROOT_COLOR : rootAggregateColor, diagramHeader, diagramFooter, diagramShowMethods, diagramShowFields,
-                        diagramWithDependencies, diagramLinkPage);
-                if (onlyAnnotated) {
-                    builder.filterOnAnnotation(UbiquitousLanguage.class);
-                }
-                if (diagramWithLink && !DiagramImageType.png.equals(diagramImageType)) {
-                    builder.mapNames(glossaryMapping);
-                }
-                return builder.generate();
-            default:
-                throw new NotImplementedException(String.format("format %s is not implemented yet", diagramType));
+        getLog().info("generate diagram with packageRoot=" + packageRoot);
+
+        if (diagramType == DiagramType.plantuml) {
+            PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot,
+                    Stream.of(excludes).map(s -> s.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", "")).toArray(String[]::new),
+                    rootAggregateColor == null || rootAggregateColor.isEmpty() ? DEFAULT_ROOT_COLOR : rootAggregateColor, diagramHeader, diagramFooter, diagramShowMethods, diagramShowFields,
+                    diagramWithDependencies, diagramLinkPage);
+            if (onlyAnnotated) {
+                builder.filterOnAnnotation(UbiquitousLanguage.class);
+            }
+            if (diagramWithLink && !DiagramImageType.png.equals(diagramImageType)) {
+                builder.mapNames(glossaryMapping);
+            }
+            return builder.generate();
         }
+        throw new NotImplementedException(String.format("format %s is not implemented yet", diagramType));
     }
 
     public enum DiagramType {

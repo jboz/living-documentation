@@ -2,7 +2,9 @@
 .idea
 target
 *.log
+log.txt
 .vscode
+.factorypath
 .project
 *.cache
 *.gpg
@@ -11,4 +13,3 @@ target
 .classpath
 .settings
 .project
-.factorypath

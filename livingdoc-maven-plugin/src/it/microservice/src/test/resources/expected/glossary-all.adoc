@@ -1,0 +1,187 @@
+:sectlinks:
+:sectanchors:
+= All classes glossary
+
+[cols="1,2,2,1,4,1,1",options="header"]
+|===
+|Id|Object Name|Attribute name|Type|Description|Constraints|Default Value
+
+    
+    |anchor:glossaryid-AbstractDomain[]AbstractDomain
+    |
+    |
+    |
+    |
+    |
+    
+    |anchor:glossaryid-BillRepository[]BillRepository
+    |
+    |
+    |
+    |
+    |
+    
+    |anchor:glossaryid-BillingService[]BillingService
+    |
+    |
+    |
+    |
+    |
+        
+        |
+        |anchor:glossaryid-BillingService_repository[]repository
+        |&lt;&lt;glossaryid-BillRepository,BillRepository&gt;&gt;
+        |
+        |
+        |
+    
+    |anchor:glossaryid-ListBillRepository[]ListBillRepository
+    |
+    |
+    |Base on file system bill repository.
+    |
+    |
+        
+        |
+        |anchor:glossaryid-ListBillRepository_bills[]bills
+        |List
+        |
+        |
+        |new ArrayList&lt;&gt;()
+    |anchor:glossaryid-100[]100
+    |anchor:glossaryid-100[]Bill
+    |
+    |
+    |*Monthly* bill.
+[NOTE]
+Generate by the system at contract birth date.
+    |
+    |
+        |anchor:glossaryid-101[]101
+        |
+        |anchor:glossaryid-101[]month
+        |YearMonth
+        |Facturation month.
+        |
+        |
+        |anchor:glossaryid-102[]102
+        |
+        |anchor:glossaryid-102[]contract
+        |&lt;&lt;glossaryid-200,Contract&gt;&gt;
+        |Contract concerned by the bill.
+        |
+        |
+        |anchor:glossaryid-103[]103
+        |
+        |anchor:glossaryid-103[]accesses
+        |Set
+        |Bill contents.
+        |
+        |new HashSet&lt;&gt;()
+        
+        |
+        |anchor:glossaryid-Bill_customerInformed[]customerInformed
+        |boolean
+        |Flag that indicate whenever the bill has been sended to the customer.
+        |
+        |&#10;&#10;    &#10;      
+    |anchor:glossaryid-200[]200
+    |anchor:glossaryid-200[]Contract
+    |
+    |
+    |Telecom contract
+    |
+    |
+        |anchor:glossaryid-201[]201
+        |
+        |anchor:glossaryid-201[]id
+        |String
+        |Contract identifier.
+Generate by the system and communicate to client.
+        |
+        |
+        |anchor:glossaryid-202[]202
+        |
+        |anchor:glossaryid-202[]customer
+        |&lt;&lt;glossaryid-300,Customer&gt;&gt;
+        |Contract customer.
+        |
+        |
+        |anchor:glossaryid-203[]203
+        |
+        |anchor:glossaryid-203[]effectDate
+        |LocalDate
+        |Contract effect date.
+        |
+        |
+    |anchor:glossaryid-300[]300
+    |anchor:glossaryid-300[]Customer
+    |
+    |
+    |Customer of the telecom service
+    |
+    |
+        |anchor:glossaryid-301[]301
+        |
+        |anchor:glossaryid-301[]name
+        |String
+        |Name of the customer.
+        |
+        |
+        
+        |
+        |anchor:glossaryid-Customer_contracts[]contracts
+        |Set
+        |
+        |
+        |new HashSet&lt;&gt;()
+    |anchor:glossaryid-400[]400
+    |anchor:glossaryid-400[]Access
+    |
+    |
+    |Use of telecom service.
+    |
+    |
+        |anchor:glossaryid-401[]401
+        |
+        |anchor:glossaryid-401[]phoneNumber
+        |String
+        |Phone number used.
+        |
+        |
+        |anchor:glossaryid-402[]402
+        |
+        |anchor:glossaryid-402[]price
+        |BigDecimal
+        |Price of use of the service.
+        |
+        |
+        |anchor:glossaryid-403[]403
+        |
+        |anchor:glossaryid-403[]dateTime
+        |ZonedDateTime
+        |Timestamp of use.
+        |
+        |ZonedDateTime.now()
+    |anchor:glossaryid-500[]500
+    |anchor:glossaryid-500[]CallAccess
+    |
+    |
+    |Phone call type access.
+    |
+    |
+        |anchor:glossaryid-501[]501
+        |
+        |anchor:glossaryid-501[]duration
+        |Duration
+        |Phone call duration
+        |
+        |
+    |anchor:glossaryid-600[]600
+    |anchor:glossaryid-600[]SmsAccess
+    |
+    |
+    |SMS type access.
+    |
+    |
+|===

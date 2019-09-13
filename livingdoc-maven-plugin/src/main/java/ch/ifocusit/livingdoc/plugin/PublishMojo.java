@@ -29,14 +29,12 @@ import ch.ifocusit.livingdoc.plugin.publish.PublishProvider;
 import ch.ifocusit.livingdoc.plugin.publish.confluence.ConfluenceProvider;
 import ch.ifocusit.livingdoc.plugin.publish.model.Page;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -47,14 +45,14 @@ import java.util.Map;
 /**
  * @author Julien Boz
  */
-@Mojo(name = "publish")
+@Mojo(name = "publish", defaultPhase = LifecyclePhase.PACKAGE)
 public class PublishMojo extends AbstractAsciidoctorMojo {
 
     @Parameter(property = "livingdoc.publish")
     private Publish publish = new Publish();
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void executeMojo() throws MojoExecutionException {
         extractTemplatesFromJar();
         try {
             PublishProvider provider;
@@ -72,7 +70,6 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
 
     /**
      * @return html pages
-     * @throws IOException
      */
     private List<Page> readHtmlPages() throws IOException {
 
@@ -109,7 +106,7 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
         return new HtmlPostProcessor(createAsciidoctor(), options());
     }
 
-    private void publish(PublishProvider provider, List<Page> pages) throws MalformedURLException {
+    private void publish(PublishProvider provider, List<Page> pages) {
 
         pages.stream().sorted().forEach(page -> {
             // check if parent exists

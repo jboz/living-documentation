@@ -22,23 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin.baseMojo;
 
-import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
-import ch.ifocusit.livingdoc.plugin.mapping.MappingRespository;
-import ch.ifocusit.livingdoc.plugin.utils.ClassLoaderUtil;
-import com.thoughtworks.qdox.JavaProjectBuilder;
-import com.thoughtworks.qdox.model.JavaAnnotatedElement;
-import com.thoughtworks.qdox.model.JavaAnnotation;
-import com.thoughtworks.qdox.model.JavaClass;
-import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
-import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.descriptor.PluginDescriptor;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.simpleflatmapper.csv.CsvParser;
+import static java.util.Arrays.stream;
 
 import java.io.File;
 import java.io.FileReader;
@@ -55,7 +39,25 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.stream;
+import com.thoughtworks.qdox.JavaProjectBuilder;
+import com.thoughtworks.qdox.model.JavaAnnotatedElement;
+import com.thoughtworks.qdox.model.JavaAnnotation;
+import com.thoughtworks.qdox.model.JavaClass;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
+import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.descriptor.PluginDescriptor;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.simpleflatmapper.csv.CsvParser;
+
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
+import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
+import ch.ifocusit.livingdoc.plugin.mapping.MappingRespository;
+import ch.ifocusit.livingdoc.plugin.utils.ClassLoaderUtil;
+import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 
 /**
  * @author Julien Boz
@@ -87,21 +89,20 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
      * Main method.
      */
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void executeMojo() throws MojoExecutionException, MojoFailureException {
         javaDocBuilder = buildJavaProjectBuilder();
         appendTitle(asciiDocBuilder);
 
         if (glossaryMapping != null) {
             try {
-                mappings = CsvParser.mapTo(DomainObject.class)
-                        .stream(new FileReader(glossaryMapping))
+                mappings = CsvParser.mapTo(DomainObject.class).stream(new FileReader(glossaryMapping))
                         .collect(Collectors.toList());
             } catch (IOException e) {
                 throw new MojoExecutionException("error reading mappings file", e);
             }
         }
         try {
-            executeMojo();
+            executeGlossaryMojo();
         } catch (Exception e) {
             throw new MojoExecutionException("error executing glossary template", e);
         }
@@ -122,14 +123,13 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
     /**
      * Implementation main method.
      */
-    protected abstract void executeMojo() throws Exception;
+    protected abstract void executeGlossaryMojo() throws Exception;
 
     protected Stream<JavaClass> getClasses() {
         return javaDocBuilder.getClasses().stream()
                 .filter(javaClass -> packageRoot == null || javaClass.getPackageName().startsWith(packageRoot))
                 .filter(this::hasAnnotation) // if annotated
-                .filter(defaultFilter())
-                ;
+                .filter(defaultFilter());
     }
 
     private static final String TEST = "Test";
@@ -137,8 +137,7 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
     private static final String PACKAGE_INFO = "package-info";
 
     protected Predicate<JavaClass> defaultFilter() {
-        return ci -> !ci.getSimpleName().equalsIgnoreCase(PACKAGE_INFO)
-                && !ci.getSimpleName().endsWith(TEST)
+        return ci -> !ci.getSimpleName().equalsIgnoreCase(PACKAGE_INFO) && !ci.getSimpleName().endsWith(TEST)
                 && !ci.getSimpleName().endsWith(IT)
                 // do not load class if must be filtered
                 && stream(excludes).noneMatch(excl -> ci.getCanonicalName().matches(excl));
@@ -156,14 +155,16 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
 
     private Optional<Integer> getGlossaryId(JavaAnnotatedElement annotatedElement) {
         Optional<JavaAnnotation> annotation = getGlossary(annotatedElement);
-        return annotation.map(annot -> annot.getProperty("id") == null ? null :
-                Optional.ofNullable(Integer.valueOf(String.valueOf(annot.getNamedParameter("id")))))
+        return annotation
+                .map(annot -> annot.getProperty("id") == null ? null
+                        : Optional.ofNullable(Integer.valueOf(String.valueOf(annot.getNamedParameter("id")))))
                 .orElse(Optional.empty());
     }
 
     public Optional<DomainObject> getMapping(JavaAnnotatedElement annotatedElement) {
         Optional<Integer> id = getGlossaryId(annotatedElement);
-        return mappings == null || !id.isPresent() ? Optional.empty() : mappings.stream().filter(def -> id.get().equals(def.getId())).findFirst();
+        return mappings == null || !id.isPresent() ? Optional.empty()
+                : mappings.stream().filter(def -> id.get().equals(def.getId())).findFirst();
     }
 
     // *******************************************************
@@ -212,13 +213,14 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
 
         // load source file into javadoc builder
         result.getArtifacts().forEach(artifact -> {
-            try {
-                JarFile jarFile = new JarFile(artifact.getFile());
-                for (Enumeration entries = jarFile.entries(); entries.hasMoreElements(); ) {
+            try (JarFile jarFile = new JarFile(artifact.getFile())) {
+
+                for (Enumeration<?> entries = jarFile.entries(); entries.hasMoreElements();) {
                     JarEntry entry = (JarEntry) entries.nextElement();
                     String name = entry.getName();
                     if (name.endsWith(".java") && !name.endsWith("/package-info.java")) {
-                        javaDocBuilder.addSource(new URL("jar:" + artifact.getFile().toURI().toURL().toString() + "!/" + name));
+                        javaDocBuilder.addSource(
+                                new URL("jar:" + artifact.getFile().toURI().toURL().toString() + "!/" + name));
                     }
                 }
             } catch (Exception e) {

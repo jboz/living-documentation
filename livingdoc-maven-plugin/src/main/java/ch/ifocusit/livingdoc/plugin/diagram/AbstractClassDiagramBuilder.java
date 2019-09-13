@@ -22,17 +22,8 @@
  */
 package ch.ifocusit.livingdoc.plugin.diagram;
 
-import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.livingdoc.plugin.mapping.GlossaryNamesMapper;
-import ch.ifocusit.livingdoc.plugin.utils.AnchorUtil;
-import ch.ifocusit.livingdoc.plugin.utils.AnnotationUtil;
-import ch.ifocusit.livingdoc.plugin.utils.ClassLoaderUtil;
-import ch.ifocusit.plantuml.classdiagram.LinkMaker;
-import ch.ifocusit.plantuml.classdiagram.NamesMapper;
-import ch.ifocusit.plantuml.classdiagram.model.Link;
-import com.google.common.reflect.ClassPath;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
+import static ch.ifocusit.livingdoc.plugin.utils.FileUtils.read;
+import static java.util.Arrays.stream;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,8 +32,19 @@ import java.lang.reflect.Field;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static ch.ifocusit.livingdoc.plugin.utils.FileUtils.read;
-import static java.util.Arrays.stream;
+import com.google.common.reflect.ClassPath;
+
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
+import ch.ifocusit.livingdoc.plugin.mapping.GlossaryNamesMapper;
+import ch.ifocusit.livingdoc.plugin.utils.AnchorUtil;
+import ch.ifocusit.livingdoc.plugin.utils.AnnotationUtil;
+import ch.ifocusit.livingdoc.plugin.utils.ClassLoaderUtil;
+import ch.ifocusit.plantuml.classdiagram.LinkMaker;
+import ch.ifocusit.plantuml.classdiagram.NamesMapper;
+import ch.ifocusit.plantuml.classdiagram.model.Link;
 
 /**
  * @author Julien Boz
@@ -62,7 +64,6 @@ public abstract class AbstractClassDiagramBuilder implements LinkMaker, NamesMap
     protected String linkPage;
 
     protected NamesMapper namesMapper = this;
-    private Class<? extends Annotation> mappingAnnotation;
 
     public AbstractClassDiagramBuilder(MavenProject project, String prefix, String[] excludes, File header, File footer,
                                        boolean diagramWithDependencies, String linkPage) {

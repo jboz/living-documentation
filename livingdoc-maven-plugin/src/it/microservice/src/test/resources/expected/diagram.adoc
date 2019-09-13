@@ -1,0 +1,58 @@
+:sectlinks:
+:sectanchors:
+[plantuml, diagram, format=png, opts=interactive]
+----
+@startuml
+
+
+
+
+
+abstract class "AbstractDomain" [[glossary.html#glossaryid-AbstractDomain{AbstractDomain}]]
+
+abstract class "Access" [[glossary.html#glossaryid-400{Access}]] {
+  phoneNumber : String [[glossary.html#glossaryid-401{phoneNumber}]]
+  price : BigDecimal [[glossary.html#glossaryid-402{price}]]
+  dateTime : ZonedDateTime [[glossary.html#glossaryid-403{dateTime}]]
+}
+
+class "Bill" [[glossary.html#glossaryid-100{Bill}]] #wheat {
+  month : YearMonth [[glossary.html#glossaryid-101{month}]]
+  contract : Contract [[glossary.html#glossaryid-102{contract}]]
+  accesses : Set<Access> [[glossary.html#glossaryid-103{accesses}]]
+  customerInformed : boolean [[glossary.html#glossaryid-Bill_customerInformed{customerInformed}]]
+}
+
+class "CallAccess" [[glossary.html#glossaryid-500{CallAccess}]] {
+  duration : Duration [[glossary.html#glossaryid-501{duration}]]
+}
+
+class "Contract" [[glossary.html#glossaryid-200{Contract}]] {
+  id : String [[glossary.html#glossaryid-201{id}]]
+  customer : Customer [[glossary.html#glossaryid-202{customer}]]
+  effectDate : LocalDate [[glossary.html#glossaryid-203{effectDate}]]
+}
+
+class "Customer" [[glossary.html#glossaryid-300{Customer}]] {
+  name : String [[glossary.html#glossaryid-301{name}]]
+  contracts : Set<Contract> [[glossary.html#glossaryid-Customer_contracts{contracts}]]
+}
+
+class "SmsAccess" [[glossary.html#glossaryid-600{SmsAccess}]]
+
+"AbstractDomain" <|-- "Access"
+"AbstractDomain" <|-- "Bill"
+"AbstractDomain" <|-- "Contract"
+"AbstractDomain" <|-- "Customer"
+"Access" <|-- "CallAccess"
+"Access" <|-- "SmsAccess"
+"Bill" --> "*" "Access" : accesses
+"Bill" --> "Contract" : contract
+"Contract" "*" <-> "Customer" : customer/contracts
+
+
+
+
+
+@enduml
+----
