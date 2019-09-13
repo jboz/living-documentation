@@ -1,0 +1,4 @@
+# https://help.github.com/en/articles/configuring-git-to-handle-line-endings
+# Declare files that will always have CRLF line endings on checkout.
+*.adoc text eol=crlf
+*.plantuml text eol=crlf
