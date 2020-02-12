@@ -1,0 +1,8 @@
+- install typescript/jest
+- tests :
+  - service class that use a repository as dep and an aggregate class
+  - aggregate defined with interfaces
+  - hide method
+  - hide members
+- define a class as root aggregate
+- create annotations (c.f. java version)
