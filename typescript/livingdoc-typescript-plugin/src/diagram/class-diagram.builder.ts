@@ -1,6 +1,7 @@
+import { EOL } from 'os';
 import { ClassLikeDeclarationBase, forEachChild, SourceFile, SyntaxKind, TypeChecker } from 'typescript';
-import { Class } from '../models/class';
 import { Model } from '../models/model';
+import { ClassFactory } from '../transformer/class.factory';
 
 export class ClassDiagramBuilder {
   sources!: readonly SourceFile[];
@@ -18,7 +19,7 @@ export class ClassDiagramBuilder {
     const output = ['@startuml'];
     this.models.forEach(model => output.push(model.toPlantuml()));
     output.push('@enduml');
-    return output.join('\n\n');
+    return output.join(`${EOL}`);
   }
 
   private readSources() {
@@ -35,7 +36,7 @@ export class ClassDiagramBuilder {
             if (classSymbol === undefined) {
               return;
             }
-            this.models.push(Class.create(classSymbol, this.checker));
+            this.models.push(ClassFactory.create(classSymbol, this.checker));
           }
         });
       }
