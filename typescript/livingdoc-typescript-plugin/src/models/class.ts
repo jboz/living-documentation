@@ -1,4 +1,3 @@
-import { EOL } from 'os';
 import { Model } from './model';
 
 export class Class implements Model {
@@ -11,6 +10,6 @@ export class Class implements Model {
     if (this.members.length > 0) {
       statements.push('}');
     }
-    return statements.join(EOL);
+    return statements.join(`\n`);
   }
 }

@@ -1,4 +1,3 @@
-import { EOL } from 'os';
 import { ClassLikeDeclarationBase, forEachChild, SourceFile, SyntaxKind, TypeChecker } from 'typescript';
 import { Model } from '../models/model';
 import { ClassFactory } from '../transformer/class.factory';
@@ -16,10 +15,14 @@ export class ClassDiagramBuilder {
 
   public build(): string {
     this.readSources();
-    const output = ['@startuml'];
-    this.models.forEach(model => output.push(model.toPlantuml()));
+    const output = ['', '@startuml', ''];
+    this.models.forEach(model => {
+      output.push(model.toPlantuml());
+      output.push('');
+    });
     output.push('@enduml');
-    return output.join(`${EOL}`);
+    output.push('');
+    return output.join(`\n`);
   }
 
   private readSources() {
