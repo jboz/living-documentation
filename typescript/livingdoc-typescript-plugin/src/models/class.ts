@@ -1,15 +1,18 @@
-import { Model } from './model';
+import { Statement } from './statement';
 
-export class Class implements Model {
-  public members: string[] = [];
-  constructor(public readonly name: string) {}
+export class Class extends Statement {
+  public members: Statement[] = [];
+
+  constructor(name: string) {
+    super(name);
+  }
 
   toPlantuml() {
     const statements = [`class ${this.name}${this.members.length > 0 ? ' {' : ''}`];
-    this.members.forEach(member => statements.push(`  ${member}`));
+    this.members.forEach(member => statements.push(`${this.indent}${member.toPlantuml()}`));
     if (this.members.length > 0) {
       statements.push('}');
     }
-    return statements.join(`\n`);
+    return statements.join(this.eol);
   }
 }
