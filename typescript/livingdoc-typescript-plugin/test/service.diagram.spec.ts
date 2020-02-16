@@ -5,7 +5,19 @@ describe('Diagram generator', () => {
     expect(diagram.generateDiagram(['test/resources/domain/service/MyService.service.ts'])).toEqual(`
 @startuml
 
-class MyRootAggregate
+interface MyRootIdentity {
+  value: string;
+}
+
+interface MyValueObject {
+  aStringProperty: string;
+  aNumberProperty: number;
+}
+
+interface MyRootAggregate {
+  identity: MyRootIdentity;
+  vo: MyValueObject;
+}
 
 class MyRepository
 

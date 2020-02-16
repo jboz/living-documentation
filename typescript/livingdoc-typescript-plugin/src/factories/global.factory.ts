@@ -2,6 +2,7 @@ import {
   ArrayTypeNode,
   ClassLikeDeclarationBase,
   FunctionDeclaration,
+  InterfaceDeclaration,
   Node,
   ParameterDeclaration,
   SyntaxKind,
@@ -14,6 +15,7 @@ import { Simple } from '../models/simple';
 import { Statement } from '../models/statement';
 import { Type } from '../models/type';
 import { ClassFactory } from './class.factory';
+import { InterfaceFactory } from './interface.factory';
 
 const KINDS_METHOD = [SyntaxKind.MethodDeclaration, SyntaxKind.MethodSignature];
 const KINDS_PROPERTY = [
@@ -37,6 +39,15 @@ export class GlobalFactory {
         return;
       }
       return ClassFactory.create(classSymbol, checker, deep);
+      //
+    } else if (node.kind === SyntaxKind.InterfaceDeclaration) {
+      const interfaceChild = node as InterfaceDeclaration;
+      // This is a top level class, get its symbol
+      const interfaceSymbol = checker.getSymbolAtLocation(interfaceChild.name);
+      if (interfaceSymbol === undefined) {
+        return;
+      }
+      return InterfaceFactory.create(interfaceSymbol, checker, deep);
       //
     } else if (node.kind === SyntaxKind.TypeReference) {
       const typeNode = node as TypeReferenceNode;
