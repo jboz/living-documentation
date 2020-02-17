@@ -5,7 +5,7 @@ import { Statement } from '../models/statement';
 import { GlobalFactory } from './global.factory';
 
 export class MethodFactory {
-  static create(declaration: FunctionDeclaration, checker: TypeChecker, deep: boolean): Statement | undefined {
+  public static create(declaration: FunctionDeclaration, checker: TypeChecker, deep: boolean): Statement | undefined {
     if (declaration.type === undefined) {
       return new Simple(declaration.getFullText());
     }
@@ -14,6 +14,7 @@ export class MethodFactory {
     }
     const parameters = declaration.parameters.map(parameter => GlobalFactory.create(parameter, checker, false));
     const returnType = GlobalFactory.create(declaration.type, checker, false);
+
     return new Method(declaration.name.getText(), parameters, [returnType], declaration.type.getText());
   }
 }

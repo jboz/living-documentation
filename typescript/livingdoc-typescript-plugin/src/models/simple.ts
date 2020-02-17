@@ -5,7 +5,7 @@ export class Simple extends Statement {
     super(name);
   }
 
-  toPlantuml() {
+  public toPlantuml() {
     return this.name;
   }
 }

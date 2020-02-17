@@ -10,7 +10,7 @@ export class Association extends Statement {
     super('association');
   }
 
-  toPlantuml() {
+  public toPlantuml() {
     return `${this.left.name} ${this.link} ${this.right.name}${this.linkName ? ': ' + this.linkName : ''}`;
   }
 }

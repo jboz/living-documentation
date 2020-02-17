@@ -10,7 +10,7 @@ export class PropertyFactory {
    * @param checker
    * @param deep
    */
-  static create(declaration: ParameterDeclaration, checker: TypeChecker, deep: boolean): Statement {
+  public static create(declaration: ParameterDeclaration, checker: TypeChecker, deep: boolean): Statement {
     if (declaration.type === undefined) {
       return new Simple(declaration.getText());
     }
@@ -25,6 +25,7 @@ export class PropertyFactory {
         propertyTypes = [GlobalFactory.create(declaration.type, checker, deep)];
       }
     }
+
     return new Property(declaration.name.getText(), propertyTypes, declaration.type.getText());
   }
 }

@@ -26,7 +26,7 @@ const KINDS_PROPERTY = [
 const KINDS_PROPERTY_SIMPLE = [SyntaxKind.StringKeyword, SyntaxKind.NumberKeyword, SyntaxKind.AnyKeyword, SyntaxKind.BooleanKeyword];
 
 export class GlobalFactory {
-  static create(node: Node, checker: TypeChecker, deep = true): Statement | undefined {
+  public static create(node: Node, checker: TypeChecker, deep = true): Statement | undefined {
     if (node.kind === SyntaxKind.ClassDeclaration) {
       return ClassFactory.create(node as ClassLikeDeclarationBase, checker, deep);
       //
@@ -35,6 +35,7 @@ export class GlobalFactory {
       //
     } else if (node.kind === SyntaxKind.TypeReference) {
       const typeNode = node as TypeReferenceNode;
+
       return new Type(typeNode.typeName.getText());
       //
     } else if (KINDS_PROPERTY.includes(node.kind)) {
@@ -44,6 +45,7 @@ export class GlobalFactory {
       return MethodFactory.create(node as FunctionDeclaration, checker, deep);
       //
     }
+
     return;
   }
 }

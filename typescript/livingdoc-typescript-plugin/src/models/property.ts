@@ -5,7 +5,7 @@ export class Property extends Statement {
     super(name);
   }
 
-  toPlantuml() {
+  public toPlantuml() {
     return `${this.name}${this.typeName ? ': ' + this.typeName : ''}`;
   }
 }

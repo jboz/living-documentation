@@ -13,6 +13,7 @@ export namespace diagram {
         })
       )
       .build();
+
     return diagram;
   };
 }
