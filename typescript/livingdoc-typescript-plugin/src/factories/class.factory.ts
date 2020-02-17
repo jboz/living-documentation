@@ -1,10 +1,19 @@
-import { Symbol, TypeChecker } from 'typescript';
+import { ClassLikeDeclarationBase, TypeChecker } from 'typescript';
 import { Class } from '../models/class';
 import { Statement } from '../models/statement';
 import { GlobalFactory } from './global.factory';
 
 export class ClassFactory {
-  public static create(classSymbol: Symbol, checker: TypeChecker, deep = true): Class {
+  public static create(declaration: ClassLikeDeclarationBase, checker: TypeChecker, deep = true): Class | undefined {
+    if (declaration.name === undefined) {
+      return;
+    }
+    // This is a top level class, get its symbol
+    const classSymbol = checker.getSymbolAtLocation(declaration.name);
+    if (classSymbol === undefined) {
+      return;
+    }
+
     const classStatement = new Class(classSymbol.getName());
 
     if (deep && classSymbol.members !== undefined) {
@@ -13,8 +22,8 @@ export class ClassFactory {
         if (declarations === undefined) {
           return;
         }
-        declarations.forEach(declaration => {
-          ClassFactory.addMember(GlobalFactory.create(declaration, checker, false), classStatement);
+        declarations.forEach(decl => {
+          ClassFactory.addMember(GlobalFactory.create(decl, checker, false), classStatement);
         });
       });
     }
