@@ -1,7 +1,9 @@
 export abstract class Statement {
   constructor(public readonly name: string) {}
 
-  abstract toPlantuml(): string;
+  public toPlantuml(): string {
+    return `${this.name}`;
+  }
 
   get eol() {
     return `\n`;

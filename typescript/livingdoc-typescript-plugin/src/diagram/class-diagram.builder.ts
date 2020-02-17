@@ -1,11 +1,11 @@
 import { forEachChild, SourceFile, TypeChecker } from 'typescript';
 import { GlobalFactory } from '../factories/global.factory';
 import { Association } from '../models/association';
-import { Class } from '../models/class';
 import { Method } from '../models/method';
 import { Property } from '../models/property';
 import { Statement } from '../models/statement';
 import { Type } from '../models/type';
+import { WithMembersStatement } from '../models/with-members.statement';
 
 export class ClassDiagramBuilder extends Statement {
   private sources!: readonly SourceFile[];
@@ -58,21 +58,25 @@ export class ClassDiagramBuilder extends Statement {
 
   private detectAssociations() {
     this.statements.forEach(statement => {
-      if (statement instanceof Class) {
-        const classStatement = statement as Class;
-        classStatement.members.forEach(member => {
-          if (member instanceof Type || member instanceof Class) {
-            this.addAssociation(new Association(classStatement, member, '-->'));
+      if (statement instanceof WithMembersStatement) {
+        const statementWith = statement as WithMembersStatement;
+        statementWith.members.forEach(member => {
+          if (member instanceof Type) {
+            this.addAssociation(new Association(statementWith, member, '-->'));
           } else if (member instanceof Property) {
             const property = member as Property;
-            if (property.type instanceof Type) {
-              this.addAssociation(new Association(classStatement, property.type, '-->'));
-            }
+            property.types.forEach(type => {
+              if (type instanceof Type) {
+                this.addAssociation(new Association(statementWith, type, '-->'));
+              }
+            });
           } else if (member instanceof Method) {
             const methodMember = member as Method;
-            if (methodMember.returnType instanceof Type) {
-              this.addAssociation(new Association(classStatement, methodMember.returnType, '--'));
-            }
+            methodMember.returnTypes.forEach(type => {
+              if (type instanceof Type) {
+                this.addAssociation(new Association(statementWith, type, '--', 'use'));
+              }
+            });
           }
         });
       }

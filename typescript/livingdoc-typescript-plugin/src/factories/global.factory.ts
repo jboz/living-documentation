@@ -1,5 +1,4 @@
 import {
-  ArrayTypeNode,
   ClassLikeDeclarationBase,
   FunctionDeclaration,
   InterfaceDeclaration,
@@ -22,9 +21,10 @@ const KINDS_PROPERTY = [
   SyntaxKind.PropertySignature,
   SyntaxKind.PropertyDeclaration,
   SyntaxKind.GetAccessor,
-  SyntaxKind.Parameter,
-  SyntaxKind.StringKeyword
+  SyntaxKind.SetAccessor,
+  SyntaxKind.Parameter
 ];
+const KINDS_PROPERTY_SIMPLE = [SyntaxKind.StringKeyword, SyntaxKind.NumberKeyword, SyntaxKind.AnyKeyword, SyntaxKind.BooleanKeyword];
 
 export class GlobalFactory {
   static create(node: Node, checker: TypeChecker, deep = true): Statement | undefined {
@@ -53,17 +53,23 @@ export class GlobalFactory {
       const typeNode = node as TypeReferenceNode;
       return new Type(typeNode.typeName.getText());
       //
-    } else if (node.kind === SyntaxKind.ArrayType) {
-      const arrayNode = node as ArrayTypeNode;
-      return new Type(arrayNode.elementType.getText(), '[]');
-      //
-    } else if (node.kind === SyntaxKind.Parameter) {
+    } else if (KINDS_PROPERTY.includes(node.kind)) {
       const childProperty = node as ParameterDeclaration;
       if (childProperty.type === undefined) {
         return new Simple(childProperty.getText());
       }
-      const propertyType = GlobalFactory.create(childProperty.type, checker, false);
-      return new Property(childProperty.name.getText(), propertyType);
+      let propertyTypes: (Statement | undefined)[] = [];
+      if (childProperty.type.kind === SyntaxKind.TypeReference || childProperty.type.kind === SyntaxKind.ArrayType) {
+        const typeNode = childProperty.type as TypeReferenceNode;
+        if (typeNode.typeArguments) {
+          // if type arguments are specified we don't care about the type itself
+          propertyTypes = typeNode.typeArguments.map(argument => GlobalFactory.create(argument, checker, deep));
+        } else {
+          // no argument types specified, maybe the type is interesting
+          propertyTypes = [GlobalFactory.create(childProperty.type, checker, deep)];
+        }
+      }
+      return new Property(childProperty.name.getText(), propertyTypes, childProperty.type.getText());
       //
     } else if (KINDS_METHOD.includes(node.kind)) {
       const declaration = node as FunctionDeclaration;
@@ -75,10 +81,7 @@ export class GlobalFactory {
       }
       const parameters = declaration.parameters.map(parameter => GlobalFactory.create(parameter, checker, false));
       const returnType = GlobalFactory.create(declaration.type, checker, false);
-      return new Method(declaration.name.getText(), parameters, returnType);
-      //
-    } else if (KINDS_PROPERTY.includes(node.kind)) {
-      return new Simple(node.getText());
+      return new Method(declaration.name.getText(), parameters, [returnType], declaration.type.getText());
       //
     }
     return;

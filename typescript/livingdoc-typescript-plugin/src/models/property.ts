@@ -1,11 +1,11 @@
 import { Statement } from './statement';
 
 export class Property extends Statement {
-  constructor(name: string, public readonly type: Statement | undefined) {
+  constructor(readonly name: string, public readonly types: (Statement | undefined)[], readonly typeName: string | undefined) {
     super(name);
   }
 
   toPlantuml() {
-    return `${this.name}${this.type ? ': ' + this.type.name : ''}`;
+    return `${this.name}${this.typeName ? ': ' + this.typeName : ''}`;
   }
 }

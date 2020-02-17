@@ -1,12 +1,6 @@
-import { Statement } from './statement';
+import { WithMembersStatement } from './with-members.statement';
 
-export class Interface extends Statement {
-  public members: Statement[] = [];
-
-  constructor(name: string) {
-    super(name);
-  }
-
+export class Interface extends WithMembersStatement {
   toPlantuml() {
     const statements = [`interface ${this.name}${this.members.length > 0 ? ' {' : ''}`];
     this.members.forEach(member => statements.push(`${this.indent}${member.toPlantuml()}`));
