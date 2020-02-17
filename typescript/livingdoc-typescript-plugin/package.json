@@ -25,6 +25,7 @@
   "dependencies": {
     "commander": "^4.1.1",
     "glob": "^7.1.6",
+    "plantuml-encoder": "^1.4.0",
     "typescript": "^3.7.5"
   },
   "devDependencies": {
