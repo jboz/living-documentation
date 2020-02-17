@@ -7,7 +7,7 @@ program
   .version('0.0.1')
   .option('-i, --input <path>', 'Define the path of the Typescript file')
   .option('-o, --output <path>', "Define the path of the output file. If not defined, it'll output on the STDOUT")
-  .option('-d, --deep <boolean>', 'Indicate if program must go throw depencies content or not', true);
+  .option('-d, --deep <boolean>', 'Indicate if program must through dependancies content or not', true);
 
 program.parse(process.argv);
 
