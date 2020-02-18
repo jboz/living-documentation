@@ -26,6 +26,21 @@ function deploy {
     fi
 }
 
+function deployIfCodeChanges {
+    CHECK_PATH=$1'/'
+    if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
+        # This is PR
+        echo "Checking changes since ${TRAVIS_COMMIT_RANGE} against ${CHECK_PATH}"
+        GITDIFF=`git diff --name-only ${TRAVIS_COMMIT_RANGE} | grep ${CHECK_PATH} | tr -d '[:space:]'`
+        if [ "$GITDIFF" == "" ]; then
+            echo "No code changes, skipped script"
+            exit 1
+        fi
+        echo "$1 code change, deploy version"
+        deploy $1
+    fi
+}
+
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify
 if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "master" ]; then
     echo "Skipping deploy; just doing a build."
@@ -37,7 +52,7 @@ git checkout master
 
 MAKE_RELEASE='false'
 
-if [[ "${TRAVIS_COMMIT_MESSAGE}" =~ ^make\ release ]] || [[ "${TRAVIS_COMMIT_MESSAGE}" =~ ^create\ release ]] || [[ "${TRAVIS_COMMIT_MESSAGE}" =~ make\ release$ ]] || [[ "${TRAVIS_COMMIT_MESSAGE}" =~ create\ release$ ]]; then
+if [ "${TRAVIS_COMMIT_MESSAGE}" =~ maven\ release ] && [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
     echo "commit message indicate that a release must be create"
     MAKE_RELEASE='true'
 fi
@@ -54,11 +69,8 @@ fi
 echo "reading project version..."
 PROJECT_VERSION=`mvn -q exec:exec -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive`
 
-if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
-    # deploy this 2 artifacts only
-    deploy livingdoc-annotations
-    deploy livingdoc-maven-plugin
-fi
+deployIfCodeChanges livingdoc-annotations
+deployIfCodeChanges livingdoc-maven-plugin
 
 if [ "$MAKE_RELEASE" = 'true' ]; then
     git config user.name "Travis CI"

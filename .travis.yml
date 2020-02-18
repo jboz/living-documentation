@@ -1,31 +1,48 @@
-language: java
+dist: trusty
+sudo: required
 
-sudo: false
+before_install:
+  - chmod +x $GPG_DIR/deploy_npm
+  - chmod +x $GPG_DIR/deploy_maven
+  - export PATH=$PATH:$GPG_DIR
 
-jdk:
-  - openjdk8
+jobs:
+  include:
 
-addons:
-  apt:
-    packages:
-      - graphviz
+    - name: Job java maven plugin
+    language: java
+    jdk: openjdk8
+    addons:
+      apt:
+        packages:
+          - graphviz
+    script: mvn install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V -U
+    cache:
+      directories:
+        - '$HOME/.m2'
+    after_success:
+      - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/pubring.gpg.enc -out $GPG_DIR/pubring.gpg -d
+      - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/secring.gpg.enc -out $GPG_DIR/secring.gpg -d
+    deploy:
+      provider: script
+      script: deploy_maven
+      skip_cleanup: true
 
-install: mvn install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V -U
-
-script: echo -e "\nliving-documentation project\n"
-
-branches:
-  only:
-    - master
-
-cache:
-  directories:
-    - '$HOME/.m2'
-
-after_success:
-  - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/pubring.gpg.enc -out $GPG_DIR/pubring.gpg -d
-  - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/secring.gpg.enc -out $GPG_DIR/secring.gpg -d
-  - chmod +x $GPG_DIR/deploy.sh
+    - name: Job typescript plugin
+    language: node_js
+    node_js:
+      - "node"
+    before_script:
+      - cd livingdoc-typescript-plugin
+    install: npm install
+    script: 
+      - npm test
+      - npm run build
+    deploy:
+      provider: npm
+      email: "YOUR_EMAIL_ADDRESS"
+      api_key: "YOUR_AUTH_TOKEN"
+      script: deploy_npm
 
 env:
   global:
@@ -37,13 +54,12 @@ env:
     - secure: fc5vZkD60K68Mp/B1teDqU1P3dJ153CFT9FqLLQ+q8VJ1keJby+cfkQgrbZ/RtEW6UoobvXTRZjj1l17T77nsxCaKwoDNPeZkiPmQW9be7bwNOk+9IJHXupNmYiqkVSmlN/PWkBdR95X7fWAN6rQ7i5OVo6kxIgHAOcO/ZzvfKDR9DXG5VWgfs58MeSezrjxI/ExI+x2z43V70gdWz1XW8isysBJ1tET9mVaZ55nfFtUjCihoqnL03R94QwP1jX6m2tVRz5CGaNtX0o+iIZ3uHPIzeYZE7NPtpiQ3JLdXKYWs1ApKenqvGqNcez6fI69dyYWqORL6wEqz/8EVMD6bp+dsLFGQiqvSa2lzB7eHBLoLt6iGzpSlg++ZWv9GHdi0lP1H7mCHGLNa/0HFf5cayNme0ZAQzXsJDC3XyLMCluPGWzrgjU+8kSA3M9EU+DF+QPUsS6gDFRmYRefc2rh+pm+rF3HWdVKjhULgr3vTAVWZeGHHFvy5DTC72bXy3aYswf8bbvz4hORsC3ZVBXL+ZqqWU6VPMW1LJxn+1xpmCVTOA6BVcq8iBn7lHO8X7HFG5nZGZSWsR9xva3X8jD4lto296/Ca1DmLXlt7028xsoje6aXm4ylDEUJQTeikXUX9RFbR3BzZ30cnZh9wsxsMdt/rJ6JyYppLgmqBoLW8Vg=
     - secure: V3+qzEX/fZ7LiLzce9T3bbMHW6FFp2LiJlRKuMNgn5l84A9hCI1puUnSO1e2+6t1O0ddgzMzOSUI/FVT6kAWMOJrafNNHAkDCCIkVC92l2DHEgHI8PQNUn4sOfQNhcbTayymtQjG5AxpQZkyohjydFewrSKwcQ/T3cNRPFBdswhlXxqk2zqcBMqyc4Bgjr0ZFqFEtci1uHKQ7+6HnL1fqGH7wIXVmvkS+C2mlUlNG3Vzq8SUC+gXXb6kMqjPywxQU6bXc7eyvj5JYSHVVsXcAy5XkMaq8YrrKcefttImLqAfYGjWrllLli9FNDVpzLIWmsrAxJBSKM4nw4DkZkwpCbRchNy2MQLqTSJF8ElskJe5dvQfoRXtVxucJqyOdRj1KurURUy3HoHMCHHd2yyO+9Pdyu3IbSD1gxNpJEtqAoFWdp2mlE+gLG5ULnAN0wafQyNhOsfMo8bCnQ7B4paMmHEhRfpmuVi2TQnM+JIzPBPC3RJjfzCXROOolCelQAj2SUotIqZ08fCHQ7xzsAoUQAwLwOvgE53j+bQQTzLHanNApekLhW9EUPpB+jO1bUqY0s/XH1HxDTgk9bEUDqiOI3Kt5eu4TX2pCVw3JnDkwiehUhP2Q9WYZjwzp8AlskBQYvYP35X7LaZuMy16B4R23vh9ttqOM1HzfWOHEjt0MaE=
 
+branches:
+  only:
+    - master
+
 notifications:
   email:
     - julienboz@gmail.com
   on_success: change
   on_failure: always
-
-deploy:
-  provider: script
-  script: $GPG_DIR/deploy.sh
-  skip_cleanup: true

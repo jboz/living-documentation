@@ -64,3 +64,4 @@ Publish specific HTML version to Altassian Conlluence Server.
 
 See *https://github.com/jboz/living-documentation/tree/master/livingdoc-examples[livingdoc-examples]* for more uses cases.
 
+Coin des développeurs : https://github.com/jboz/living-documentation/blob/master/DEV.md[readme développeur]
