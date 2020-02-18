@@ -1,0 +1,50 @@
+{
+  "name": "livingdoc-typescript-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Julien Boz",
+  "contributors": [
+    "Julien Boz <julienboz@gmailcom> (https://ifocusit.ch)"
+  ],
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "livingdoc-typescript-plugin": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:dev": "tsc --sourceMap -w",
+    "test": "jest --watch",
+    "lint": "tslint -p .",
+    "lint:fix": "tslint -p . --fix"
+  },
+  "dependencies": {
+    "commander": "^4.1.1",
+    "glob": "^7.1.6",
+    "plantuml-encoder": "^1.4.0",
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/jest": "^25.1.2",
+    "@types/node": "^13.7.1",
+    "jest": "^25.1.0",
+    "pre-commit": "^1.2.2",
+    "ts-jest": "^25.2.0",
+    "ts-node": "^8.6.2",
+    "tslint": "^6.0.0",
+    "tslint-microsoft-contrib": "^6.2.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ]
+}
