@@ -9,6 +9,7 @@ log.txt
 *.cache
 *.gpg
 *.versionsBackup
+.sts4-cache
 
 .classpath
 .settings
