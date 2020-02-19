@@ -6,6 +6,5 @@ echo "Checking changes since ${TRAVIS_COMMIT_RANGE} against ${CHECK_PATH}"
 GITDIFF=$(git diff --name-only ${TRAVIS_COMMIT_RANGE} | grep ${CHECK_PATH} | tr -d '[:space:]')
 if [ "$GITDIFF" == "" ]; then
     echo "No code changes, skipped Job"
-    exit 1
+    travis_terminate 0
 fi
-echo "$1 code change, deploy version"
