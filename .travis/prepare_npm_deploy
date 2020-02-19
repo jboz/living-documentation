@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#npm run build:ci
-
 PROJECT_VERSION="$(node -p "require('./package.json').version")"
 echo "PROJECT_VERSION=$PROJECT_VERSION"
 NPM_PACKAGE_VERSION="0.0.0" #"$(npm view livingdoc-typescript-plugin version)"
@@ -31,6 +29,8 @@ npm version minor
 PROJECT_VERSION="$(node -p "require('./package.json').version")"
 git add -A .
 git commit -m "set new minor version to $PROJECT_VERSION"
+
+#npm run build:ci
 
 REPO=$(git config remote.origin.url)
 echo "pushing new development version..."
