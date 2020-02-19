@@ -41,7 +41,7 @@ jobs:
         - cd livingdoc-typescript-plugin
       install: skip #npm install
       script: skip #npm run test:ci
-      before_deploy:
+      after_success:
         # - check_changes src || travis_terminate 0;
         - chmod +x $GPG_DIR/prepare_npm_deploy
         - prepare_npm_deploy
