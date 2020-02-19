@@ -9,12 +9,12 @@ before_install:
 jobs:
   include:
     - name: Job java maven plugin
-    language: java
-    script: echo "job 1"
-    
+      language: java
+      script: echo "job 1"
+
     - name: Job typescript plugin
-    language: node_js
-    script: echo "job 2"
+      language: node_js
+      script: echo "job 2"
 
     # jdk: openjdk8
     # addons:
