@@ -1,7 +1,7 @@
 import program from 'commander';
 import G from 'glob';
 import { diagram } from './diagram.mojo';
-import { exportDocument } from './export.puml';
+import { exportDocument } from './export';
 
 program
   .version(require('../package.json').version, '-v, --version', 'output the current version')
