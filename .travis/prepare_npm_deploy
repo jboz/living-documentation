@@ -5,15 +5,8 @@ echo "PROJECT_VERSION=$PROJECT_VERSION"
 NPM_PACKAGE_VERSION="0.0.0" #"$(npm view livingdoc-typescript-plugin version)"
 echo "NPM_PACKAGE_VERSION=$NPM_PACKAGE_VERSION"
 
-NEED_CHANGE_VERSION=1
-# check that the version was upgrade with 'npm version xxx' command
-if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ "$PROJECT_VERSION" = "$NPM_PACKAGE_VERSION" ]; then
-    NEED_CHANGE_VERSION=1
-fi
-
-#if [ $NEED_CHANGE_VERSION = 1 ]; then
-# reconnect master to origin
-git checkout master
+# check if a new version is needed
+# if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ "$PROJECT_VERSION" = "$NPM_PACKAGE_VERSION" ]; then
 
 # tag git repository
 git config user.name "Travis CI"
@@ -37,4 +30,4 @@ echo "pushing new development version..."
 git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" --follow-tags
 
 echo "release $PROJECT_VERSION done, tag $GIT_TAG pushed"
-#fi
+# fi

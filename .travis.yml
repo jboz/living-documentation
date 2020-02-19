@@ -1,11 +1,6 @@
 dist: xenial
 sudo: required
 
-before_install:
-  - chmod +x $GPG_DIR/deploy_npm
-  - chmod +x $GPG_DIR/deploy_maven
-  - chmod +x $GPG_DIR/check_changes
-
 jobs:
   include:
     - name: Job java projects
