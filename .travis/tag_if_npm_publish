@@ -2,16 +2,16 @@
 
 npm run build:ci
 
-PROJECT_VERSION="$(node -p "require('./package.json').version")"
-echo "PROJECT_VERSION=$PROJECT_VERSION"
-NPM_PACKAGE_VERSION="$(npm view livingdoc-typescript-plugin version)"
-echo "NPM_PACKAGE_VERSION=$NPM_PACKAGE_VERSION"
+# PROJECT_VERSION="$(node -p "require('./package.json').version")"
+# echo "PROJECT_VERSION=$PROJECT_VERSION"
+# NPM_PACKAGE_VERSION="$(npm view livingdoc-typescript-plugin version)"
+# echo "NPM_PACKAGE_VERSION=$NPM_PACKAGE_VERSION"
 
-# check that the version was upgrade with 'npm version xxx' command
-if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" == "master" ] && [ "$PROJECT_VERSION" == "$NPM_PACKAGE_VERSION" ]; then
-    echo -e '\033[0;31mPackage version must be higher than the current one.'
-    exit 1
-fi
+# # check that the version was upgrade with 'npm version xxx' command
+# if [ "$TRAVIS_PULL_REQUEST" != "false" ] && [ "$TRAVIS_BRANCH" == "master" ] && [ "$PROJECT_VERSION" == "$NPM_PACKAGE_VERSION" ]; then
+#     echo -e '\033[0;31mPackage version must be higher than the current one.'
+#     exit 1
+# fi
 
 if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
     # tag git repository
