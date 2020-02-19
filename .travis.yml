@@ -5,7 +5,6 @@ before_install:
   - chmod +x $GPG_DIR/deploy_npm
   - chmod +x $GPG_DIR/deploy_maven
   - chmod +x $GPG_DIR/check_changes
-  - export PATH=$PATH:$GPG_DIR
 
 jobs:
   include:
@@ -65,6 +64,7 @@ jobs:
 env:
   global:
     - GPG_DIR="`pwd`/.travis"
+    - PATH=$PATH:$GPG_DIR
     # export SONATYPE_USERNAME
     - secure: llf7R4RqxrKbM0CDpgAu38bt3ojrPeWbUq/9K8xN4UDCa7FOlbUx5/vlpDzaHSZlW2G04pl1lHjH+Wq9IultDrY7/FmWs8hGrNwEg8ZBKiz9ydImJzgMoJGfjlIgtlLaIksxdU4GesGPehUrk65uyoI2dCsQLunOX5nF9tnbrBcOzg8NngHEp6/p13P07C+ls3XBmTtgbelGTyRG4A1IHXqonwQnhfJyfHOY0nx7IwHnFviK0docJCWq2XWg2XfOHJBtOCS1iQYIoxNEd75M47T9sbir6j5PORV0Y+sGAas8yuAEJvSpwJicWiCMNWTKu06DCZLu3IqMMmS7Mahe77n5R17Eo1MfrIAp/jYj8DpI8vzikaSUxaP8lu3HHSBsEaDq0Q9NgeA0xUi7jbmrMHHJWy9GXxRhK2LOL9mVxYf2a4Lv9qaGeNhxnpggJmBgAjWATatpBwwk/tRlyV79XNgFXXXbU3q7YXGodIDdwQDTcTUqZ9SaP/lGq5Vw4lji1Rosvv8Nfhgoeddxq6I6X1brV6qihn2AFEPmY6lQ+BvW9/QGyjEmtzAK90QsBszNTFQ+HjjAbDcZ5ZqRO6sFM5LL4r8Zd6bwKWE3GruVAcRZ56jfQ0skfBDiPbEwFlxIesG+Ov+qRB1Lh1bSNHkn194JwSvFmRRrgT3VvC7geAg=
     # export SONATYPE_PASSWORD
