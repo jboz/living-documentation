@@ -8,8 +8,10 @@ before_install:
 
 jobs:
   include:
-    - script: echo "job 1"
-    - script: echo "job 2"
+    - name: Job 1
+    script: echo "job 1"
+    - name: Job 2
+    script: echo "job 2"
 
     # - name: Job java maven plugin
     # language: java
