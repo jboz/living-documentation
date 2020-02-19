@@ -14,9 +14,11 @@ jobs:
         - chmod +x $GPG_DIR/check_changes
         - check_changes livingdoc-typescript-plugin || travis_terminate 0;
         - chmod +x $GPG_DIR/deploy_npm
-      install: echo "job install"
-      before_script: echo "job before script"
-      script: echo "job script"
+        - cd livingdoc-typescript-plugin
+      install: npm install
+      script:
+        - npm test
+        - npm run build
 
     # - name: Job livingdoc-annotations
     # language: java
