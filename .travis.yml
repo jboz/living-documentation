@@ -17,7 +17,7 @@ jobs:
             - graphviz
       before_install:
         - chmod +x $GPG_DIR/check_changes
-        - check_changes livingdoc-annotations || check_changes livingdoc-maven-plugin || check_changes livingdoc-examples || travis_terminate 0;
+        - check_changes livingdoc-annotations livingdoc-maven-plugin livingdoc-examples || travis_terminate 0;
         - chmod +x $GPG_DIR/deploy_maven
       install: mvn install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V -U
       script: skip
