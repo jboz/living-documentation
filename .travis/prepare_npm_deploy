@@ -1,6 +1,6 @@
 #!/bin/bash
 
-npm run build:ci
+#npm run build:ci
 
 PROJECT_VERSION="$(node -p "require('./package.json').version")"
 echo "PROJECT_VERSION=$PROJECT_VERSION"
