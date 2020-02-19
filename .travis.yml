@@ -43,8 +43,8 @@ jobs:
       script: npm run test:ci
       after_success:
         - check_changes src || travis_terminate 0;
-        - chmod +x $GPG_DIR/prepare_npm_deploy
-        - prepare_npm_deploy
+        - chmod +x $GPG_DIR/tag_if_npm_publish
+        - tag_if_npm_publish
       deploy:
         provider: npm
         email: $NPM_EMAIL
