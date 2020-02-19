@@ -8,41 +8,42 @@ before_install:
 
 jobs:
   include:
+    - script: echo "job 1"
+    - script: echo "job 2"
 
-    - name: Job java maven plugin
-    language: java
-    jdk: openjdk8
-    addons:
-      apt:
-        packages:
-          - graphviz
-    script: mvn install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V -U
-    cache:
-      directories:
-        - '$HOME/.m2'
-    after_success:
-      - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/pubring.gpg.enc -out $GPG_DIR/pubring.gpg -d
-      - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/secring.gpg.enc -out $GPG_DIR/secring.gpg -d
-    deploy:
-      provider: script
-      script: deploy_maven
-      skip_cleanup: true
-
-    - name: Job typescript plugin
-    language: node_js
-    node_js:
-      - "node"
-    before_script:
-      - cd livingdoc-typescript-plugin
-    install: npm install
-    script: 
-      - npm test
-      - npm run build
-    deploy:
-      provider: npm
-      email: "YOUR_EMAIL_ADDRESS"
-      api_key: "YOUR_AUTH_TOKEN"
-      script: deploy_npm
+    # - name: Job java maven plugin
+    # language: java
+    # jdk: openjdk8
+    # addons:
+    #   apt:
+    #     packages:
+    #       - graphviz
+    # script: mvn install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V -U
+    # cache:
+    #   directories:
+    #     - '$HOME/.m2'
+    # after_success:
+    #   - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/pubring.gpg.enc -out $GPG_DIR/pubring.gpg -d
+    #   - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/secring.gpg.enc -out $GPG_DIR/secring.gpg -d
+    # deploy:
+    #   provider: script
+    #   script: deploy_maven
+    #   skip_cleanup: true
+    # - name: Job typescript plugin
+    # language: node_js
+    # node_js:
+    #   - "node"
+    # before_script:
+    #   - cd livingdoc-typescript-plugin
+    # install: npm install
+    # script:
+    #   - npm test
+    #   - npm run build
+    # deploy:
+    #   provider: npm
+    #   email: "YOUR_EMAIL_ADDRESS"
+    #   api_key: "YOUR_AUTH_TOKEN"
+    #   script: deploy_npm
 
 env:
   global:
