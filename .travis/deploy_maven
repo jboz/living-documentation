@@ -2,7 +2,7 @@
 
 echo "running deployment script..."
 
-function setReleaseVersion {
+function setReleaseVersion() {
     echo "set $1 to release version"
     if ! mvn -f $1/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit; then
         echo "set release version failed"
@@ -10,7 +10,7 @@ function setReleaseVersion {
     fi
 }
 
-function setNextDevVersion {
+function setNextDevVersion() {
     echo "set $1 to next development version"
     if ! mvn -f $1/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit; then
         echo "set next development version failed"
@@ -18,20 +18,20 @@ function setNextDevVersion {
     fi
 }
 
-function deploy {
+function deploy() {
     echo "deploying version $PROJECT_VERSION of $1 to maven centrale..."
-    if ! mvn -f $1/pom.xml deploy --settings $GPG_DIR/settings.xml -Prelease -DskipTests=true -B;then
+    if ! mvn -f $1/pom.xml deploy --settings $GPG_DIR/settings.xml -Prelease -DskipTests=true -B; then
         echo "maven deploy failed"
         exit 1
     fi
 }
 
-function deployIfCodeChanges {
+function deployIfCodeChanges() {
     CHECK_PATH=$1'/'
     if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
         # This is PR
         echo "Checking changes since ${TRAVIS_COMMIT_RANGE} against ${CHECK_PATH}"
-        GITDIFF=`git diff --name-only ${TRAVIS_COMMIT_RANGE} | grep ${CHECK_PATH} | tr -d '[:space:]'`
+        GITDIFF=$(git diff --name-only ${TRAVIS_COMMIT_RANGE} | grep ${CHECK_PATH} | tr -d '[:space:]')
         if [ "$GITDIFF" == "" ]; then
             echo "No code changes, skipped script"
             exit 1
@@ -67,15 +67,16 @@ else
 fi
 
 echo "reading project version..."
-PROJECT_VERSION=`mvn -q exec:exec -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive`
+PROJECT_VERSION=$(mvn -q exec:exec -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive)
 
+# deploy release and snapshot
 deployIfCodeChanges livingdoc-annotations
 deployIfCodeChanges livingdoc-maven-plugin
 
 if [ "$MAKE_RELEASE" = 'true' ]; then
     git config user.name "Travis CI"
     git config user.email "travis-ci@ifocusit.ch"
-    GIT_TAG=v$PROJECT_VERSION
+    GIT_TAG="release/java-plugin/v$PROJECT_VERSION"
     echo "create git tag $GIT_TAG"
     git tag "$GIT_TAG" -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
 
@@ -86,14 +87,14 @@ if [ "$MAKE_RELEASE" = 'true' ]; then
     setNextDevVersion livingdoc-annotations
     setNextDevVersion livingdoc-maven-plugin
 
-    NEXT_VERSION=`mvn -q exec:exec -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive`
+    NEXT_VERSION=$(mvn -q exec:exec -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive)
     echo "next development version will be $NEXT_VERSION"
 
     # Commit the "changes", i.e. the new version.
     git add -A .
     git commit -m "set next development version to $NEXT_VERSION"
 
-    REPO=`git config remote.origin.url`
+    REPO=$(git config remote.origin.url)
     echo "pushing new development version..."
     git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" --follow-tags
 
