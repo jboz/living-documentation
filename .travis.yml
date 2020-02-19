@@ -1,4 +1,4 @@
-language: minimal
+dist: xenial
 sudo: required
 
 before_install:
@@ -8,51 +8,46 @@ before_install:
 
 jobs:
   include:
+    - name: Job java projects
+      language: java
+      jdk: openjdk8
+      addons:
+        apt:
+          packages:
+            - graphviz
+      before_install:
+        - chmod +x $GPG_DIR/check_changes
+        - check_changes livingdoc-annotations || check_changes livingdoc-maven-plugin || check_changes livingdoc-examples || travis_terminate 0;
+        - chmod +x $GPG_DIR/deploy_maven
+      install: mvn install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V -U
+      script: skip
+      cache:
+        directories:
+          - "$HOME/.m2"
+      after_success:
+        - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/pubring.gpg.enc -out $GPG_DIR/pubring.gpg -d
+        - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/secring.gpg.enc -out $GPG_DIR/secring.gpg -d
+      deploy:
+        provider: script
+        script: deploy_maven
+        skip_cleanup: true
+
     - name: Job livingdoc-typescript-plugin
       language: node_js
+      node_js: "node"
       before_install:
         - chmod +x $GPG_DIR/check_changes
         - check_changes livingdoc-typescript-plugin || travis_terminate 0;
         - chmod +x $GPG_DIR/deploy_npm
         - cd livingdoc-typescript-plugin
       install: npm install
-      script:
-        - npm test
-        - npm run build
-
-    # - name: Job livingdoc-annotations
-    # language: java
-    # jdk: openjdk8
-    # addons:
-    #   apt:
-    #     packages:
-    #       - graphviz
-    # script: mvn install -Dgpg.skip -Dmaven.javadoc.skip=true -B -V -U
-    # cache:
-    #   directories:
-    #     - '$HOME/.m2'
-    # after_success:
-    #   - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/pubring.gpg.enc -out $GPG_DIR/pubring.gpg -d
-    #   - openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $GPG_DIR/secring.gpg.enc -out $GPG_DIR/secring.gpg -d
-    # deploy:
-    #   provider: script
-    #   script: deploy_maven
-    #   skip_cleanup: true
-    # - name: Job typescript plugin
-    # language: node_js
-    # node_js:
-    #   - "node"
-    # before_script:
-    #   - cd livingdoc-typescript-plugin
-    # install: npm install
-    # script:
-    #   - npm test
-    #   - npm run build
-    # deploy:
-    #   provider: npm
-    #   email: "YOUR_EMAIL_ADDRESS"
-    #   api_key: "YOUR_AUTH_TOKEN"
-    #   script: deploy_npm
+      script: npm test
+      after_success: npm run build
+      # deploy:
+      #   provider: npm
+      #   email: "YOUR_EMAIL_ADDRESS"
+      #   api_key: "YOUR_AUTH_TOKEN"
+      #   script: deploy_npm
 
 env:
   global:
