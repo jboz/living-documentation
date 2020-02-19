@@ -8,33 +8,18 @@ before_install:
 
 jobs:
   include:
-    - name: Job livingdoc-annotations
-      language: java
-      before_install:
-        - chmod +x $GPG_DIR/check_changes
-        - check_changes livingdoc-annotations
-      install: skip
-      before_script: skip
-      script: echo "job 1"
-
-    - name: Job livingdoc-maven-plugin
-      language: java
-      before_install:
-        - chmod +x $GPG_DIR/check_changes
-        - check_changes livingdoc-maven-plugin
-      install: skip
-      before_script: skip
-      script: echo "job 1"
-
     - name: Job livingdoc-typescript-plugin
       language: node_js
       before_install:
         - chmod +x $GPG_DIR/check_changes
         - check_changes livingdoc-typescript-plugin
+        - chmod +x $GPG_DIR/deploy_npm
       install: skip
       before_script: skip
       script: echo "job 2"
 
+    # - name: Job livingdoc-annotations
+    # language: java
     # jdk: openjdk8
     # addons:
     #   apt:
