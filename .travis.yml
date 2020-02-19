@@ -14,9 +14,9 @@ jobs:
         - chmod +x $GPG_DIR/check_changes
         - check_changes livingdoc-typescript-plugin || travis_terminate 0;
         - chmod +x $GPG_DIR/deploy_npm
-      install: skip
-      before_script: skip
-      script: echo "job 2"
+      install: echo "job install"
+      before_script: echo "job before script"
+      script: echo "job script"
 
     # - name: Job livingdoc-annotations
     # language: java

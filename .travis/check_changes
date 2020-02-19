@@ -5,6 +5,6 @@ CHECK_PATH=$1'/'
 echo "Checking changes since ${TRAVIS_COMMIT_RANGE} against ${CHECK_PATH}"
 GITDIFF=$(git diff --name-only ${TRAVIS_COMMIT_RANGE} | grep ${CHECK_PATH} | tr -d '[:space:]')
 if [ "$GITDIFF" == "" ]; then
-    echo "No code changes, skipped Job"
+    echo "No code changes, skipped job"
     travis_terminate 0
 fi
