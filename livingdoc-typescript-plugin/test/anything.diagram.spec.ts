@@ -2,7 +2,7 @@ import { diagram } from '../src/diagram.mojo';
 
 describe('Diagram generator', () => {
   it('should generate diagram for a single file', () => {
-    expect(diagram.generateDiagram(['test/resources/anything/domain/service/MyService.service.ts'], true)).toEqual(`
+    expect(diagram.generateDiagram(['test/resources/anything/domain/service/MyService.service.ts'], false)).toEqual(`
 @startuml
 
 class MyService {
