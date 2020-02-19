@@ -4,20 +4,30 @@ sudo: required
 before_install:
   - chmod +x $GPG_DIR/deploy_npm
   - chmod +x $GPG_DIR/deploy_maven
+  - chmod +x $GPG_DIR/check_changes
   - export PATH=$PATH:$GPG_DIR
 
 jobs:
   include:
-    - name: Job java maven plugin
+    - name: Job livingdoc-annotations
       language: java
-      before_install: skip
+      before_install: check_changes livingdoc-annotations
       install: skip
+      before_script: skip
       script: echo "job 1"
 
-    - name: Job typescript plugin
-      language: node_js
-      before_install: skip
+    - name: Job livingdoc-maven-plugin
+      language: java
+      before_install: check_changes livingdoc-maven-plugin
       install: skip
+      before_script: skip
+      script: echo "job 1"
+
+    - name: Job livingdoc-typescript-plugin
+      language: node_js
+      before_install: check_changes livingdoc-typescript-plugin
+      install: skip
+      before_script: skip
       script: echo "job 2"
 
     # jdk: openjdk8
