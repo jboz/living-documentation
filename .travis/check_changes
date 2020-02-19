@@ -8,3 +8,4 @@ if [ "$GITDIFF" == "" ]; then
     echo "No code changes, skipped"
     travis_terminate 0
 fi
+echo "Code changes, run"

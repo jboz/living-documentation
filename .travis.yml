@@ -41,8 +41,8 @@ jobs:
         - chmod +x $GPG_DIR/deploy_npm
         - cd livingdoc-typescript-plugin
       install: npm install
-      script: npm test
-      after_success: npm run build
+      script: npx jest
+      after_success: npx tsc
       # deploy:
       #   provider: npm
       #   email: "YOUR_EMAIL_ADDRESS"
