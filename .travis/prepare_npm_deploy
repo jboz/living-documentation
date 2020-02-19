@@ -11,6 +11,7 @@ if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ 
     # tag git repository
     git config user.name "Travis CI"
     git config user.email "travis-ci@ifocusit.ch"
+    git config --global push.followTags true # push commit and tag
 
     echo "set new version minor"
     npm version minor
@@ -22,13 +23,11 @@ if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ 
 
     REPO=$(git config remote.origin.url)
     echo "pushing new version..."
-    git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" --follow-tags
+    git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" HEAD:origin/master --follow-tags
 
     GIT_TAG="release/typescript-plugin/v$PROJECT_VERSION"
     echo "create git tag $GIT_TAG"
     git tag "$GIT_TAG" -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
-
-    git config --global push.followTags true # push commit and tag
 
     echo "release $PROJECT_VERSION done, tag $GIT_TAG pushed"
 fi
