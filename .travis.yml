@@ -1,11 +1,6 @@
 dist: xenial
 sudo: required
 
-before_install:
-  - chmod +x $GPG_DIR/deploy_npm
-  - chmod +x $GPG_DIR/deploy_maven
-  - chmod +x $GPG_DIR/check_changes
-
 jobs:
   include:
     - name: Job java projects
@@ -43,8 +38,8 @@ jobs:
       script: npm run test:ci
       after_success:
         - check_changes src || travis_terminate 0;
-        - chmod +x $GPG_DIR/tag_if_npm_publish
-        - tag_if_npm_publish
+        - chmod +x $GPG_DIR/prepare_npm_deploy
+        - prepare_npm_deploy
       deploy:
         provider: npm
         email: $NPM_EMAIL
