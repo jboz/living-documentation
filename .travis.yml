@@ -41,10 +41,10 @@ jobs:
         - cd livingdoc-typescript-plugin
       install: npm install
       script: npm run test:ci
-      after_success:
+      before_deploy:
         - check_changes src || travis_terminate 0;
-        - chmod +x $GPG_DIR/tag_if_npm_publish
-        - tag_if_npm_publish
+        - chmod +x $GPG_DIR/prepare_npm_deploy
+        - prepare_npm_deploy
       deploy:
         provider: npm
         email: $NPM_EMAIL
