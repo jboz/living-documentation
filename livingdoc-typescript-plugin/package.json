@@ -16,9 +16,10 @@
     "livingdoc-typescript-plugin": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build:ci": "tsc",
     "build:dev": "tsc --sourceMap -w",
     "test": "jest --watch",
+    "test:ci": "jest",
     "lint": "tslint -p .",
     "lint:fix": "tslint -p . --fix"
   },

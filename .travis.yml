@@ -41,8 +41,7 @@ jobs:
         - cd livingdoc-typescript-plugin
       install: npm install
       script:
-        - npx jest
-        - tslint -p .
+        - npm run test:ci
       before_deploy:
         - check_changes src || travis_terminate 0;
         - chmod +x $GPG_DIR/prepare_npm_deploy
