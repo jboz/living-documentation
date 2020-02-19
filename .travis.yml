@@ -40,9 +40,8 @@ jobs:
         - check_changes livingdoc-typescript-plugin || travis_terminate 0;
         - cd livingdoc-typescript-plugin
       install: npm install
-      script:
-        - npm run test:ci
-      before_deploy:
+      script: npm run test:ci
+      after_success:
         - check_changes src || travis_terminate 0;
         - chmod +x $GPG_DIR/prepare_npm_deploy
         - prepare_npm_deploy
