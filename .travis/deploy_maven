@@ -78,11 +78,11 @@ fi
 if [ "$MAKE_RELEASE" = 'true' ]; then
     git config user.name "Travis CI"
     git config user.email "travis-ci@ifocusit.ch"
+    git config --global push.followTags true # push commit and tag
+
     GIT_TAG="release/java-plugin/v$PROJECT_VERSION"
     echo "create git tag $GIT_TAG"
     git tag "$GIT_TAG" -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
-
-    git config --global push.followTags true # push commit and tag
 
     echo "preparing next version..."
     setNextDevVersion .
