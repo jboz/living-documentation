@@ -34,10 +34,10 @@ jobs:
         - chmod +x $GPG_DIR/check_changes
         - check_changes livingdoc-typescript-plugin || travis_terminate 0;
         - cd livingdoc-typescript-plugin
-      install: skip #npm install
-      script: skip #npm run test:ci
+      install: npm install
+      script: npm run test:ci
       after_success:
-        # - check_changes src || travis_terminate 0;
+        - check_changes src || travis_terminate 0;
         - chmod +x $GPG_DIR/prepare_npm_deploy
         - prepare_npm_deploy
       deploy:
