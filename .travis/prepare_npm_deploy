@@ -26,7 +26,7 @@ if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
     git tag "$GIT_TAG" -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
 
     echo "pushing new version..."
-    git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" HEAD:refs/heads/master --follow-tags
+    git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" HEAD:refs/heads/master
 
     echo "release $PROJECT_VERSION done, tag $GIT_TAG pushed"
 fi

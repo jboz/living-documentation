@@ -46,7 +46,10 @@ jobs:
         email: $NPM_EMAIL
         api_key: $NPM_TOKEN
         on:
-          tags: true
+          branches:
+            only:
+              - master
+              - /release/typescript-plugin/v.*/
         skip_cleanup: true
 
 env:

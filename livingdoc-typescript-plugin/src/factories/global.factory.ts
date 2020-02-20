@@ -23,7 +23,6 @@ const KINDS_PROPERTY = [
   SyntaxKind.SetAccessor,
   SyntaxKind.Parameter
 ];
-const KINDS_PROPERTY_SIMPLE = [SyntaxKind.StringKeyword, SyntaxKind.NumberKeyword, SyntaxKind.AnyKeyword, SyntaxKind.BooleanKeyword];
 
 export class GlobalFactory {
   public static create(node: Node, checker: TypeChecker, deep = true): Statement | undefined {
