@@ -13,7 +13,7 @@ export class ClassDiagramBuilder extends Statement {
   private readonly associations: Association[] = [];
 
   constructor(private readonly checker: TypeChecker) {
-    super('builder');
+    super('ClassDiagramBuilder');
   }
 
   public addSources(sources: readonly SourceFile[]): ClassDiagramBuilder {
