@@ -40,4 +40,4 @@ git config --global push.followTags true # push commit and tag
 echo "something" >test.txt
 git add -A .
 git commit -m "something change ;)"
-git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" HEAD:origin/master --follow-tags
+git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git"
