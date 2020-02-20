@@ -40,7 +40,7 @@ git config --global push.followTags true # push commit and tag
 echo "try do push something on $TRAVIS_BRANCH"
 echo "something" >test.txt
 git status
-git add test.text
+git add test.txt
 git commit -m "something change ;)" test.txt
 echo "ready to push ?"
 git status
