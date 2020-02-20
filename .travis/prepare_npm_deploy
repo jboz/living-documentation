@@ -5,44 +5,28 @@ echo "PROJECT_VERSION=$PROJECT_VERSION"
 NPM_PACKAGE_VERSION="0.0.0" #"$(npm view livingdoc-typescript-plugin version)"
 echo "NPM_PACKAGE_VERSION=$NPM_PACKAGE_VERSION"
 
+if [ "$PROJECT_VERSION" = "$NPM_PACKAGE_VERSION" ]; then
+    echo "set to new minor version"
+    npm version minor
+    PROJECT_VERSION="$(node -p "require('./package.json').version")"
+    git add -A .
+    git commit -m "new minor version: $PROJECT_VERSION"
+fi
+
 # check if a new version is needed
-if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ "$PROJECT_VERSION" = "$NPM_PACKAGE_VERSION" ]; then
+if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
 
     # tag git repository
     git config user.name "Travis CI"
     git config user.email "travis-ci@ifocusit.ch"
     git config --global push.followTags true # push commit and tag
 
-    echo "set new version minor"
-    npm version minor
-    PROJECT_VERSION="$(node -p "require('./package.json').version")"
-    git add -A .
-    git commit -m "set new minor version to $PROJECT_VERSION"
-
-    npm run build:ci
-
-    REPO=$(git config remote.origin.url)
-    echo "pushing new version..."
-    git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" HEAD:origin/master --follow-tags
-
     GIT_TAG="release/typescript-plugin/v$PROJECT_VERSION"
     echo "create git tag $GIT_TAG"
     git tag "$GIT_TAG" -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
 
+    echo "pushing new version..."
+    git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" HEAD:refs/heads/master --follow-tags
+
     echo "release $PROJECT_VERSION done, tag $GIT_TAG pushed"
 fi
-
-# tag git repository
-git config user.name "Travis CI"
-git config user.email "travis-ci@ifocusit.ch"
-git config --global push.followTags true # push commit and tag
-
-echo "reconnect branch"
-git checkout $TRAVIS_PULL_REQUEST_BRANCH
-echo "something" >test.txt
-echo "add changes"
-git add -A .
-echo "commit changes"
-git commit -m "something change ;)" test.txt
-echo "push changes"
-git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" HEAD:refs/heads/$TRAVIS_PULL_REQUEST_BRANCH
