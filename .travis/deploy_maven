@@ -96,7 +96,6 @@ if [ "$MAKE_RELEASE" = 'true' ]; then
     git add -A .
     git commit -m "set next development version to $NEXT_VERSION"
 
-    REPO=$(git config remote.origin.url)
     echo "pushing new development version..."
     git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" --follow-tags
 

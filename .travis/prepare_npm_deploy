@@ -37,8 +37,12 @@ git config user.name "Travis CI"
 git config user.email "travis-ci@ifocusit.ch"
 git config --global push.followTags true # push commit and tag
 
+echo "reconnect branch"
 git checkout $TRAVIS_PULL_REQUEST_BRANCH
 echo "something" >test.txt
+echo "add changes"
 git add -A .
+echo "commit changes"
 git commit -m "something change ;)" test.txt
-git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" refs/heads/$TRAVIS_PULL_REQUEST_BRANCH --follow-tags
+echo "push changes"
+git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" --follow-tags
