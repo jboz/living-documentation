@@ -37,7 +37,11 @@ git config user.name "Travis CI"
 git config user.email "travis-ci@ifocusit.ch"
 git config --global push.followTags true # push commit and tag
 
+echo "try do push something"
+git rev-parse --abbrev-ref HEAD
 echo "something" >test.txt
+git status
 git add -A .
 git commit -m "something change ;)"
+git status
 git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git"

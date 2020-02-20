@@ -47,14 +47,14 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "master" ]; then
     exit 0
 fi
 
-# reconnect master to origin
-git checkout master
-
 MAKE_RELEASE='false'
 
 if [ "${TRAVIS_COMMIT_MESSAGE}" =~ maven\ release ] && [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
     echo "commit message indicate that a release must be create"
     MAKE_RELEASE='true'
+
+    # reconnect master to origin
+    git checkout master
 fi
 
 if [ "$MAKE_RELEASE" = 'true' ]; then
