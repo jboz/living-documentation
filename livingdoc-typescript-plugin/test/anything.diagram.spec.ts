@@ -55,7 +55,7 @@ class MyService {
   findById(rootAggregateId: string): MyRootAggregate
 }
 
-MyValueObject --> MyAbstractBean: beans
+MyValueObject --> "*" MyAbstractBean: beans
 MyRootAggregate --> MyRootIdentity: identity
 MyRootAggregate --> MyValueObject: vo
 MyService --> MyRepository: repository

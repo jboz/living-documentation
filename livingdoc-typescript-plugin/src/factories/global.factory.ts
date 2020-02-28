@@ -24,6 +24,7 @@ const KINDS_PROPERTY = [
   SyntaxKind.SetAccessor,
   SyntaxKind.Parameter
 ];
+export const COLLECTION_NAMES = ['Set', 'Array', 'Map', 'List'];
 
 export class GlobalFactory {
   public static create(node: Node, parent: Statement | undefined, checker: TypeChecker, deep = true): Statement | undefined {
@@ -36,12 +37,7 @@ export class GlobalFactory {
     } else if (node.kind === SyntaxKind.TypeReference) {
       const typeNode = node as TypeReferenceNode;
       const indentity = typeNode.typeName as Identifier;
-      if (
-        indentity.escapedText === 'Set' ||
-        indentity.escapedText === 'Array' ||
-        indentity.escapedText === 'Map' ||
-        indentity.escapedText === 'List'
-      ) {
+      if (COLLECTION_NAMES.includes(indentity.escapedText.toString())) {
         return undefined;
       }
       return new Type(parent, typeNode.typeName.getText());

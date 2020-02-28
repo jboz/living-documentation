@@ -13,7 +13,7 @@ export class AssociationFactory {
           if ((member.parent instanceof Method || member.parent instanceof Property) && parent.parent) {
             parent = parent.parent;
           }
-          return [new Association(parent, member, this.associationType(member), this.associationName(member))];
+          return [new Association(parent, member, this.rightName(member), this.associationType(member), this.associationName(member))];
         }
       } else if (member instanceof Property) {
         const property = member;
@@ -26,14 +26,18 @@ export class AssociationFactory {
     return [undefined];
   }
 
-  public static associationType(member: Statement): string {
+  private static rightName(member: Type): string | undefined {
+    return member.parent instanceof Property && (member.parent as Property).many ? '*' : undefined;
+  }
+
+  private static associationType(member: Statement): string {
     if (member.parent instanceof Method) {
       return '--';
     }
     return '-->';
   }
 
-  public static associationName(member: Statement): string | undefined {
+  private static associationName(member: Statement): string | undefined {
     if (member.parent instanceof Method) {
       return 'use';
     }

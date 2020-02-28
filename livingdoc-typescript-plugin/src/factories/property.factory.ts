@@ -2,7 +2,7 @@ import { ArrayTypeNode, ParameterDeclaration, SyntaxKind, TypeChecker, TypeRefer
 import { Property } from '../models/property';
 import { Simple } from '../models/simple';
 import { Statement } from '../models/statement';
-import { GlobalFactory } from './global.factory';
+import { COLLECTION_NAMES, GlobalFactory } from './global.factory';
 
 export class PropertyFactory {
   /**
@@ -18,13 +18,13 @@ export class PropertyFactory {
     if (declaration.type.kind === SyntaxKind.TypeReference) {
       const typeNode = declaration.type as TypeReferenceNode;
       if (typeNode.typeArguments) {
-        // if type arguments are specified we don't care about the type itself
         propertyStatement.types = typeNode.typeArguments.map(argument => GlobalFactory.create(argument, propertyStatement, checker, deep));
       }
+      propertyStatement.many = COLLECTION_NAMES.includes(typeNode.typeName.getText());
     } else if (declaration.type.kind === SyntaxKind.ArrayType) {
       const typeNode = declaration.type as ArrayTypeNode;
-      // if type arguments are specified we don't care about the type itself
       propertyStatement.types = [GlobalFactory.create(typeNode.elementType, propertyStatement, checker, deep)];
+      propertyStatement.many = true;
     }
     // no argument types specified, maybe the type is interesting
     propertyStatement.types.push(GlobalFactory.create(declaration.type, propertyStatement, checker, deep));
