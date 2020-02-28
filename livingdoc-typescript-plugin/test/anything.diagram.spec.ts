@@ -11,7 +11,7 @@ class MyService {
   findById(rootAggregateId: string): MyRootAggregate
 }
 
-MyService --> MyRepository
+MyService --> MyRepository: repository
 MyService -- MyRootAggregate: use
 
 @enduml
@@ -55,10 +55,10 @@ class MyService {
   findById(rootAggregateId: string): MyRootAggregate
 }
 
-MyValueObject --> MyAbstractBean
-MyRootAggregate --> MyRootIdentity
-MyRootAggregate --> MyValueObject
-MyService --> MyRepository
+MyValueObject --> MyAbstractBean: beans
+MyRootAggregate --> MyRootIdentity: identity
+MyRootAggregate --> MyValueObject: vo
+MyService --> MyRepository: repository
 MyService -- MyRootAggregate: use
 
 @enduml

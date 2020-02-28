@@ -38,7 +38,7 @@ export class AssociationFactory {
       return 'use';
     }
     if (member.parent instanceof Property) {
-      return member.name;
+      return member.parent.name;
     }
     return undefined;
   }

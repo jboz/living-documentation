@@ -1,6 +1,7 @@
 import { forEachChild, SourceFile, TypeChecker } from 'typescript';
 import { AssociationFactory } from '../factories/association.factory';
 import { GlobalFactory } from '../factories/global.factory';
+import { GlobalParameters } from '../global-parameters';
 import { Association } from '../models/association';
 import { Statement } from '../models/statement';
 import { WithMembersStatement } from '../models/with-members.statement';
@@ -40,7 +41,7 @@ export class ClassDiagramBuilder extends Statement {
     output.push('@enduml');
     output.push('');
 
-    return output.join(this.eol);
+    return output.join(GlobalParameters.eol);
   }
 
   private readSources() {

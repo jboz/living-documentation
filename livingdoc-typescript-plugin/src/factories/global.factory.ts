@@ -44,7 +44,6 @@ export class GlobalFactory {
       ) {
         return undefined;
       }
-
       return new Type(parent, typeNode.typeName.getText());
       //
     } else if (KINDS_PROPERTY.includes(node.kind)) {
