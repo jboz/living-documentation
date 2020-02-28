@@ -7,6 +7,20 @@
     "Julien Boz <julienboz@gmailcom> (https://ifocusit.ch)"
   ],
   "license": "MIT",
+  "homepage": "https://github.com/jboz/living-documentation/tree/master/livingdoc-typescript-plugin",
+  "bugs": {
+    "url": "https://github.com/jboz/living-documentation/issues"
+  },
+  "keywords": [
+    "living documentation",
+    "livingdoc",
+    "class diagram",
+    "uml diagram",
+    "plantuml",
+    "typescript",
+    "uml",
+    "cli"
+  ],
   "files": [
     "dist"
   ],

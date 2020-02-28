@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import program from 'commander';
 import G from 'glob';
 import { diagram } from './diagram.mojo';
