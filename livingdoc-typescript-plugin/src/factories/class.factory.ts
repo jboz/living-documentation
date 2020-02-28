@@ -23,7 +23,7 @@ export class ClassFactory {
           return;
         }
         declarations.forEach(decl => {
-          ClassFactory.addMember(GlobalFactory.create(decl, checker, false), classStatement);
+          ClassFactory.addMember(GlobalFactory.create(decl, classStatement, checker, false), classStatement);
         });
       });
     }

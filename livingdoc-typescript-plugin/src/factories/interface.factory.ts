@@ -20,7 +20,7 @@ export class InterfaceFactory {
           return;
         }
         declarations.forEach(decl => {
-          InterfaceFactory.addMember(GlobalFactory.create(decl, checker, false), interfaceStatement);
+          InterfaceFactory.addMember(GlobalFactory.create(decl, interfaceStatement, checker, false), interfaceStatement);
         });
       });
     }

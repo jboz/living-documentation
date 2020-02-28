@@ -4,7 +4,7 @@ export abstract class WithMembersStatement extends Statement {
   public members: Statement[] = [];
 
   constructor(name: string) {
-    super(name);
+    super(undefined, name);
   }
 
   public toPlantuml() {

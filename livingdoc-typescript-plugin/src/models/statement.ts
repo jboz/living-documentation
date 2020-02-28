@@ -1,5 +1,5 @@
 export abstract class Statement {
-  constructor(public readonly name: string) {}
+  constructor(public readonly parent: Statement | undefined, public readonly name: string) {}
 
   get eol() {
     return `\n`;

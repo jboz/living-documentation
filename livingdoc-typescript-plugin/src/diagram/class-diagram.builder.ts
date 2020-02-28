@@ -1,10 +1,8 @@
 import { forEachChild, SourceFile, TypeChecker } from 'typescript';
+import { AssociationFactory } from '../factories/association.factory';
 import { GlobalFactory } from '../factories/global.factory';
 import { Association } from '../models/association';
-import { Method } from '../models/method';
-import { Property } from '../models/property';
 import { Statement } from '../models/statement';
-import { Type } from '../models/type';
 import { WithMembersStatement } from '../models/with-members.statement';
 
 export class ClassDiagramBuilder extends Statement {
@@ -13,7 +11,7 @@ export class ClassDiagramBuilder extends Statement {
   private readonly associations: Association[] = [];
 
   constructor(private readonly checker: TypeChecker) {
-    super('ClassDiagramBuilder');
+    super(undefined, 'ClassDiagramBuilder');
   }
 
   public addSources(sources: readonly SourceFile[]): ClassDiagramBuilder {
@@ -49,8 +47,8 @@ export class ClassDiagramBuilder extends Statement {
     this.sources.forEach(source => {
       if (!source.isDeclarationFile) {
         forEachChild(source, child => {
-          // TODO mark deep as false is input filename pattern doesn't match the source path
-          const statement = GlobalFactory.create(child, this.checker);
+          // TODO mark deep as false if input filename pattern doesn't match the source path
+          const statement = GlobalFactory.create(child, undefined, this.checker);
           if (statement) {
             this.statements.push(statement);
           }
@@ -64,34 +62,20 @@ export class ClassDiagramBuilder extends Statement {
       if (statement instanceof WithMembersStatement) {
         const statementWith = statement;
         statementWith.members.forEach(member => {
-          if (member instanceof Type) {
-            this.addAssociation(new Association(statementWith, member, '-->'));
-          } else if (member instanceof Property) {
-            const property = member;
-            property.types.forEach(type => {
-              if (type instanceof Type) {
-                this.addAssociation(new Association(statementWith, type, '-->'));
-              }
-            });
-          } else if (member instanceof Method) {
-            const methodMember = member;
-            methodMember.returnTypes.forEach(type => {
-              if (type instanceof Type) {
-                this.addAssociation(new Association(statementWith, type, '--', 'use'));
-              }
-            });
-          }
+          AssociationFactory.create(member).forEach(assoc => this.addAssociation(assoc));
         });
       }
     });
   }
 
-  private addAssociation(newAssoc: Association) {
-    const existingAssoc = this.associations.find(
-      assoc => assoc.left.name === newAssoc.left.name && assoc.right.name === newAssoc.right.name
-    );
-    if (existingAssoc === undefined) {
-      this.associations.push(newAssoc);
+  private addAssociation(newAssoc: Association | undefined) {
+    if (newAssoc) {
+      const existingAssoc = this.associations.find(
+        assoc => assoc.left.name === newAssoc.left.name && assoc.right.name === newAssoc.right.name
+      );
+      if (existingAssoc === undefined) {
+        this.associations.push(newAssoc);
+      }
     }
   }
 }

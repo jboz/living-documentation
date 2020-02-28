@@ -7,7 +7,7 @@ export class Association extends Statement {
     public readonly link: string,
     public readonly linkName: string | undefined = undefined
   ) {
-    super('association');
+    super(undefined, 'association');
   }
 
   public toPlantuml() {
