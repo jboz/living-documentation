@@ -61,10 +61,9 @@ export class ClassDiagramBuilder extends Statement {
   private detectAssociations() {
     this.statements.forEach(statement => {
       if (statement instanceof WithMembersStatement) {
-        const statementWith = statement;
-        statementWith.members.forEach(member => {
-          AssociationFactory.create(member).forEach(assoc => this.addAssociation(assoc));
-        });
+        const root = statement;
+        root.members.forEach(member => AssociationFactory.create(member).forEach(assoc => this.addAssociation(assoc)));
+        root.inheritance.forEach(member => AssociationFactory.create(member).forEach(assoc => this.addAssociation(assoc)));
       }
     });
   }

@@ -19,7 +19,8 @@ MyService -- MyRootAggregate: use
   });
 
   it('should generate diagram with dependencies and uses models', () => {
-    expect(diagram.generateDiagram(['test/resources/anything/index.ts'])).toEqual(`
+    return diagram.generateDiagramFromPath('test/resources/anything/**/*.ts').then(document => {
+      expect(document).toEqual(`
 @startuml
 
 interface MyRootIdentity {
@@ -47,6 +48,10 @@ interface MyRootAggregate {
   vo: MyValueObject
 }
 
+interface MyFirstConcretBean
+
+interface MySecondConcretBean
+
 class MyRepository
 
 class MyService {
@@ -58,10 +63,13 @@ class MyService {
 MyValueObject --> "*" MyAbstractBean: beans
 MyRootAggregate --> MyRootIdentity: identity
 MyRootAggregate --> MyValueObject: vo
+MyFirstConcretBean -|> MyAbstractBean
+MySecondConcretBean -|> MyAbstractBean
 MyService --> MyRepository: repository
 MyService -- MyRootAggregate: use
 
 @enduml
 `);
+    });
   });
 });

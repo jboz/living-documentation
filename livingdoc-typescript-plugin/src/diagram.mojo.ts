@@ -1,8 +1,20 @@
+import G from 'glob';
 import { createProgram } from 'typescript';
 import { ClassDiagramBuilder } from './diagram/class-diagram.builder';
 
 export namespace diagram {
-  export const generateDiagram = (roots: ReadonlyArray<string>, deep = true) => {
+  export const generateDiagramFromPath = (path: string, deep = true): Promise<string> => {
+    return new Promise<string[]>((resolve, reject) => {
+      G('test/resources/anything/**/*.ts', (err: Error | null, matches: string[]) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(matches);
+      });
+    }).then(matches => generateDiagram(matches, deep));
+  };
+
+  export const generateDiagram = (roots: ReadonlyArray<string>, deep = true): string => {
     // if true, only reference of dependencies will be showned, without content
     const singleFile = !deep && roots.length === 1; // && !fs.lstatSync(roots[0]).isDirectory();
     const program = createProgram(roots, {});
