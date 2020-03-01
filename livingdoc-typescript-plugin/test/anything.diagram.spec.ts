@@ -27,6 +27,12 @@ interface MyRootIdentity {
   value: string
 }
 
+class AbstractClass
+
+class First
+
+class Second
+
 interface MyAbstractBean
 
 interface MyValueObject {
@@ -41,6 +47,7 @@ interface MyValueObject {
   anotherArray: string[]
   aMap: Map<number, string>
   beans: MyAbstractBean[]
+  classesBeans: AbstractClass[]
 }
 
 interface MyRootAggregate {
@@ -62,7 +69,10 @@ class MyService {
   findById(rootAggregateId: string): MyRootAggregate
 }
 
+First -|> AbstractClass
+Second -|> AbstractClass
 MyValueObject --> "*" MyAbstractBean: beans
+MyValueObject --> "*" AbstractClass: classesBeans
 MyRootAggregate --> MyRootIdentity: identity
 MyRootAggregate --> MyValueObject: vo
 MyFirstConcretBean -|> MyAbstractBean
