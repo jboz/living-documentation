@@ -3,7 +3,6 @@ import { Method } from '../models/method';
 import { Property } from '../models/property';
 import { Statement } from '../models/statement';
 import { Type } from '../models/type';
-import { WithMembersStatement } from '../models/with-members.statement';
 
 export class AssociationFactory {
   public static create(member: Statement | undefined): (Association | undefined)[] {
@@ -27,6 +26,19 @@ export class AssociationFactory {
     return [undefined];
   }
 
+  public static createInheritance(member: Statement | undefined): (Association | undefined)[] {
+    if (member) {
+      if (member.parent) {
+        let parent = member.parent;
+        if ((member.parent instanceof Method || member.parent instanceof Property) && parent.parent) {
+          parent = parent.parent;
+        }
+        return [new Association(member, parent, undefined, '<|-', undefined)];
+      }
+    }
+    return [undefined];
+  }
+
   private static rightName(member: Type): string | undefined {
     return member.parent instanceof Property && (member.parent as Property).many ? '*' : undefined;
   }
@@ -34,9 +46,6 @@ export class AssociationFactory {
   private static associationType(member: Statement): string {
     if (member.parent instanceof Method) {
       return '--';
-    }
-    if (member.parent instanceof WithMembersStatement) {
-      return '-|>';
     }
     return '-->';
   }

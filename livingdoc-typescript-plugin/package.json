@@ -40,12 +40,14 @@
   "dependencies": {
     "commander": "^4.1.1",
     "glob": "^7.1.6",
+    "lodash": "^4.17.15",
     "plantuml-encoder": "^1.4.0",
     "typescript": "^3.7.5"
   },
   "devDependencies": {
     "@types/glob": "^7.1.1",
     "@types/jest": "^25.1.2",
+    "@types/lodash": "^4.14.149",
     "@types/node": "^13.7.1",
     "jest": "^25.1.0",
     "pre-commit": "^1.2.2",

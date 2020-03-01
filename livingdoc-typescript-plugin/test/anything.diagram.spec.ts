@@ -23,17 +23,34 @@ MyService -- MyRootAggregate: use
       expect(document).toEqual(`
 @startuml
 
-interface MyRootIdentity {
-  value: string
-}
-
 class AbstractClass
 
 class First
 
-class Second
-
 interface MyAbstractBean
+
+interface MyFirstConcretBean {
+  data: string
+}
+
+class MyRepository
+
+interface MyRootAggregate {
+  identity: MyRootIdentity
+  vo: MyValueObject
+}
+
+interface MyRootIdentity {
+  value: string
+}
+
+interface MySecondConcretBean
+
+class MyService {
+  repository: MyRepository
+  findAll(): MyRootAggregate[]
+  findById(rootAggregateId: string): MyRootAggregate
+}
 
 interface MyValueObject {
   aString: string
@@ -50,35 +67,18 @@ interface MyValueObject {
   classesBeans: AbstractClass[]
 }
 
-interface MyRootAggregate {
-  identity: MyRootIdentity
-  vo: MyValueObject
-}
+class Second
 
-interface MyFirstConcretBean {
-  data: string
-}
-
-interface MySecondConcretBean
-
-class MyRepository
-
-class MyService {
-  repository: MyRepository
-  findAll(): MyRootAggregate[]
-  findById(rootAggregateId: string): MyRootAggregate
-}
-
-First -|> AbstractClass
-Second -|> AbstractClass
-MyValueObject --> "*" MyAbstractBean: beans
-MyValueObject --> "*" AbstractClass: classesBeans
+AbstractClass <|- First
+AbstractClass <|- Second
+MyAbstractBean <|- MyFirstConcretBean
+MyAbstractBean <|- MySecondConcretBean
 MyRootAggregate --> MyRootIdentity: identity
 MyRootAggregate --> MyValueObject: vo
-MyFirstConcretBean -|> MyAbstractBean
-MySecondConcretBean -|> MyAbstractBean
 MyService --> MyRepository: repository
 MyService -- MyRootAggregate: use
+MyValueObject --> "*" AbstractClass: classesBeans
+MyValueObject --> "*" MyAbstractBean: beans
 
 @enduml
 `);

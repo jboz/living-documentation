@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { forEachChild, SourceFile, TypeChecker } from 'typescript';
 import { AssociationFactory } from '../factories/association.factory';
 import { GlobalFactory } from '../factories/global.factory';
@@ -8,8 +9,8 @@ import { WithMembersStatement } from '../models/with-members.statement';
 
 export class ClassDiagramBuilder extends Statement {
   private sources!: readonly SourceFile[];
-  private readonly statements: Statement[] = [];
-  private readonly associations: Association[] = [];
+  private statements: Statement[] = [];
+  private associations: Association[] = [];
 
   constructor(private readonly checker: TypeChecker) {
     super(undefined, 'ClassDiagramBuilder');
@@ -56,6 +57,7 @@ export class ClassDiagramBuilder extends Statement {
         });
       }
     });
+    this.statements = _.sortBy(this.statements, 'name');
   }
 
   private detectAssociations() {
@@ -63,9 +65,10 @@ export class ClassDiagramBuilder extends Statement {
       if (statement instanceof WithMembersStatement) {
         const root = statement;
         root.members.forEach(member => AssociationFactory.create(member).forEach(assoc => this.addAssociation(assoc)));
-        root.inheritance.forEach(member => AssociationFactory.create(member).forEach(assoc => this.addAssociation(assoc)));
+        root.inheritance.forEach(member => AssociationFactory.createInheritance(member).forEach(assoc => this.addAssociation(assoc)));
       }
     });
+    this.associations = _.sortBy(this.associations, ['left.name', 'right.name']);
   }
 
   private addAssociation(newAssoc: Association | undefined) {
