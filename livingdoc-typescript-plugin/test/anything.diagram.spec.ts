@@ -48,7 +48,9 @@ interface MyRootAggregate {
   vo: MyValueObject
 }
 
-interface MyFirstConcretBean
+interface MyFirstConcretBean {
+  data: string
+}
 
 interface MySecondConcretBean
 
