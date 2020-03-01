@@ -5,7 +5,7 @@ import { ClassDiagramBuilder } from './diagram/class-diagram.builder';
 export namespace diagram {
   export const generateDiagramFromPath = (path: string, deep = true): Promise<string> => {
     return new Promise<string[]>((resolve, reject) => {
-      G('test/resources/anything/**/*.ts', (err: Error | null, matches: string[]) => {
+      G(path, (err: Error | null, matches: string[]) => {
         if (err) {
           return reject(err);
         }
