@@ -1,6 +1,7 @@
-import { ClassLikeDeclarationBase, TypeChecker } from 'typescript';
+import { ClassDeclaration, ClassLikeDeclarationBase, HeritageClause, NodeArray, SyntaxKind, TypeChecker } from 'typescript';
 import { Class } from '../models/class';
 import { Statement } from '../models/statement';
+import { Type } from '../models/type';
 import { GlobalFactory } from './global.factory';
 
 export class ClassFactory {
@@ -23,10 +24,18 @@ export class ClassFactory {
           return;
         }
         declarations.forEach(decl => {
-          ClassFactory.addMember(GlobalFactory.create(decl, checker, false), classStatement);
+          ClassFactory.addMember(GlobalFactory.create(decl, classStatement, checker, false), classStatement);
         });
       });
     }
+    classSymbol.declarations
+      .map(decla => (decla as ClassDeclaration).heritageClauses as NodeArray<HeritageClause>)
+      .filter(clauses => !!clauses)
+      .forEach(clauses =>
+        clauses
+          .filter(clause => clause.token === SyntaxKind.ExtendsKeyword)
+          .forEach(clause => classStatement.inheritance.push(new Type(classStatement, clause.types[0].expression.getText())))
+      );
 
     return classStatement;
   }

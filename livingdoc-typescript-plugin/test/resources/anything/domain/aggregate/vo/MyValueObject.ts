@@ -1,3 +1,6 @@
+import { AbstractClass } from './InheritanceClass';
+import { MyAbstractBean } from './MyAbstractBean';
+
 export interface MyValueObject {
   aString: string;
   aNumber: number;
@@ -9,4 +12,6 @@ export interface MyValueObject {
   aArray: Array<string>;
   anotherArray: string[];
   aMap: Map<number, string>;
+  beans: MyAbstractBean[];
+  classesBeans: AbstractClass[];
 }

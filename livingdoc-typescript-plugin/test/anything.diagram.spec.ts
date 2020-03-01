@@ -11,7 +11,7 @@ class MyService {
   findById(rootAggregateId: string): MyRootAggregate
 }
 
-MyService --> MyRepository
+MyService --> MyRepository: repository
 MyService -- MyRootAggregate: use
 
 @enduml
@@ -19,12 +19,21 @@ MyService -- MyRootAggregate: use
   });
 
   it('should generate diagram with dependencies and uses models', () => {
-    expect(diagram.generateDiagram(['test/resources/anything/index.ts'])).toEqual(`
+    return diagram.generateDiagramFromPath('test/resources/anything/**/*.ts').then(document => {
+      expect(document).toEqual(`
 @startuml
 
 interface MyRootIdentity {
   value: string
 }
+
+class AbstractClass
+
+class First
+
+class Second
+
+interface MyAbstractBean
 
 interface MyValueObject {
   aString: string
@@ -37,12 +46,20 @@ interface MyValueObject {
   aArray: Array<string>
   anotherArray: string[]
   aMap: Map<number, string>
+  beans: MyAbstractBean[]
+  classesBeans: AbstractClass[]
 }
 
 interface MyRootAggregate {
   identity: MyRootIdentity
   vo: MyValueObject
 }
+
+interface MyFirstConcretBean {
+  data: string
+}
+
+interface MySecondConcretBean
 
 class MyRepository
 
@@ -52,12 +69,19 @@ class MyService {
   findById(rootAggregateId: string): MyRootAggregate
 }
 
-MyRootAggregate --> MyRootIdentity
-MyRootAggregate --> MyValueObject
-MyService --> MyRepository
+First -|> AbstractClass
+Second -|> AbstractClass
+MyValueObject --> "*" MyAbstractBean: beans
+MyValueObject --> "*" AbstractClass: classesBeans
+MyRootAggregate --> MyRootIdentity: identity
+MyRootAggregate --> MyValueObject: vo
+MyFirstConcretBean -|> MyAbstractBean
+MySecondConcretBean -|> MyAbstractBean
+MyService --> MyRepository: repository
 MyService -- MyRootAggregate: use
 
 @enduml
 `);
+    });
   });
 });

@@ -1,8 +1,11 @@
 import { Statement } from './statement';
 
 export class Property extends Statement {
-  constructor(readonly name: string, public readonly types: (Statement | undefined)[], readonly typeName: string | undefined) {
-    super(name);
+  public types: (Statement | undefined)[] = [];
+  public many: boolean = false;
+
+  constructor(public readonly parent: Statement | undefined, readonly name: string, readonly typeName: string | undefined) {
+    super(parent, name);
   }
 
   public toPlantuml() {

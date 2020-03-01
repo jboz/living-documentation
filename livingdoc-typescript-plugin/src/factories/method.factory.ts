@@ -5,16 +5,22 @@ import { Statement } from '../models/statement';
 import { GlobalFactory } from './global.factory';
 
 export class MethodFactory {
-  public static create(declaration: FunctionDeclaration, checker: TypeChecker, deep: boolean): Statement | undefined {
+  public static create(
+    parent: Statement | undefined,
+    declaration: FunctionDeclaration,
+    checker: TypeChecker,
+    deep: boolean
+  ): Statement | undefined {
     if (declaration.type === undefined) {
-      return new Simple(declaration.getFullText());
+      return new Simple(parent, declaration.getFullText());
     }
     if (declaration.name === undefined) {
       return;
     }
-    const parameters = declaration.parameters.map(parameter => GlobalFactory.create(parameter, checker, false));
-    const returnType = GlobalFactory.create(declaration.type, checker, false);
+    const methodStatement = new Method(parent, declaration.name.getText(), declaration.type.getText());
+    methodStatement.paramters = declaration.parameters.map(parameter => GlobalFactory.create(parameter, methodStatement, checker, false));
+    methodStatement.returnTypes = [GlobalFactory.create(declaration.type, methodStatement, checker, false)];
 
-    return new Method(declaration.name.getText(), parameters, [returnType], declaration.type.getText());
+    return methodStatement;
   }
 }

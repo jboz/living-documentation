@@ -1,7 +1,7 @@
 import { Statement } from './statement';
 
 export class Type extends Statement {
-  constructor(name: string) {
-    super(name);
+  constructor(public readonly parent: Statement | undefined, name: string) {
+    super(parent, name);
   }
 }

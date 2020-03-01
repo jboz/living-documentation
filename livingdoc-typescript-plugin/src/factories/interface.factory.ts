@@ -1,7 +1,8 @@
-import { InterfaceDeclaration, TypeChecker } from 'typescript';
+import { HeritageClause, InterfaceDeclaration, NodeArray, SyntaxKind, TypeChecker } from 'typescript';
 import { Class } from '../models/class';
 import { Interface } from '../models/interface';
 import { Statement } from '../models/statement';
+import { Type } from '../models/type';
 import { GlobalFactory } from './global.factory';
 
 export class InterfaceFactory {
@@ -20,10 +21,18 @@ export class InterfaceFactory {
           return;
         }
         declarations.forEach(decl => {
-          InterfaceFactory.addMember(GlobalFactory.create(decl, checker, false), interfaceStatement);
+          InterfaceFactory.addMember(GlobalFactory.create(decl, interfaceStatement, checker, false), interfaceStatement);
         });
       });
     }
+    interfaceSymbol.declarations
+      .map(decla => (decla as InterfaceDeclaration).heritageClauses as NodeArray<HeritageClause>)
+      .filter(clauses => !!clauses)
+      .forEach(clauses =>
+        clauses
+          .filter(clause => clause.token === SyntaxKind.ExtendsKeyword)
+          .forEach(clause => interfaceStatement.inheritance.push(new Type(interfaceStatement, clause.types[0].expression.getText())))
+      );
 
     return interfaceStatement;
   }

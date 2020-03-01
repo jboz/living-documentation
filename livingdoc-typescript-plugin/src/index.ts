@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import program from 'commander';
-import G from 'glob';
 import { diagram } from './diagram.mojo';
 import { exportDocument } from './export';
 
@@ -18,7 +17,4 @@ if (!program.input) {
   process.exit(1);
 }
 
-G(<string>program.input, (err: Error | null, matches: string[]) => {
-  const document = diagram.generateDiagram(matches, program.deep);
-  exportDocument(document, program.output);
-});
+diagram.generateDiagramFromPath(<string>program.input, program.deep).then(document => exportDocument(document, program.output));
