@@ -1,5 +1,6 @@
 import { AbstractClass } from './InheritanceClass';
 import { MyAbstractBean } from './MyAbstractBean';
+import { MyEnum } from './MyEnum';
 
 export interface MyValueObject {
   aString: string;
@@ -14,4 +15,5 @@ export interface MyValueObject {
   aMap: Map<number, string>;
   beans: MyAbstractBean[];
   classesBeans: AbstractClass[];
+  theEnum: MyEnum;
 }
