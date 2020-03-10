@@ -1,5 +1,6 @@
 import {
   ClassLikeDeclarationBase,
+  EnumDeclaration,
   FunctionDeclaration,
   Identifier,
   InterfaceDeclaration,
@@ -12,6 +13,7 @@ import {
 import { Statement } from '../models/statement';
 import { Type } from '../models/type';
 import { ClassFactory } from './class.factory';
+import { EnumFactory } from './enum.factory';
 import { InterfaceFactory } from './interface.factory';
 import { MethodFactory } from './method.factory';
 import { PropertyFactory } from './property.factory';
@@ -22,7 +24,8 @@ const KINDS_PROPERTY = [
   SyntaxKind.PropertyDeclaration,
   SyntaxKind.GetAccessor,
   SyntaxKind.SetAccessor,
-  SyntaxKind.Parameter
+  SyntaxKind.Parameter,
+  SyntaxKind.EnumMember
 ];
 export const COLLECTION_NAMES = ['Set', 'Array', 'Map', 'List'];
 
@@ -33,6 +36,10 @@ export class GlobalFactory {
       //
     } else if (node.kind === SyntaxKind.InterfaceDeclaration) {
       return InterfaceFactory.create(node as InterfaceDeclaration, checker, deep);
+      //
+    }
+    if (node.kind === SyntaxKind.EnumDeclaration) {
+      return EnumFactory.create(node as EnumDeclaration, checker, deep);
       //
     } else if (node.kind === SyntaxKind.TypeReference) {
       const typeNode = node as TypeReferenceNode;

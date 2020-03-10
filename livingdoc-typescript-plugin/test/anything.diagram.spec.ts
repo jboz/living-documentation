@@ -29,6 +29,11 @@ class First
 
 interface MyAbstractBean
 
+enum MyEnum {
+  CONST_1
+  CONST_2
+}
+
 interface MyFirstConcretBean {
   data: string
 }
@@ -65,6 +70,7 @@ interface MyValueObject {
   aMap: Map<number, string>
   beans: MyAbstractBean[]
   classesBeans: AbstractClass[]
+  theEnum: MyEnum
 }
 
 class Second
@@ -79,6 +85,7 @@ MyService --> MyRepository: repository
 MyService -- MyRootAggregate: use
 MyValueObject --> "*" AbstractClass: classesBeans
 MyValueObject --> "*" MyAbstractBean: beans
+MyValueObject --> MyEnum: theEnum
 
 @enduml
 `);
