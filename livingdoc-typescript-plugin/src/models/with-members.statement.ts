@@ -9,8 +9,10 @@ export abstract class WithMembersStatement extends Statement {
     super(undefined, name);
   }
 
+  abstract get type(): string;
+
   public toPlantuml() {
-    const statements = [`class ${this.name}${this.members.length > 0 ? ' {' : ''}`];
+    const statements = [`${this.type} ${this.name}${this.members.length > 0 ? ' {' : ''}`];
     this.members.forEach(member => statements.push(`${GlobalParameters.indent}${member.toPlantuml()}`));
     if (this.members.length > 0) {
       statements.push('}');
