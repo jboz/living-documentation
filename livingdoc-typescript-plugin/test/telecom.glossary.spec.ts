@@ -25,7 +25,7 @@ describe('Glossary', () => {
 |Customer|||Customer of the telecom service|
 ||email|string|Email of the customer.|
 ||contracts|Contract[]|Customer's contracts.|
-|PaymentState|||Bill payment state values.|
+|PaymentState||Enumeration|Bill payment state values.|
 ||WAITING||Wainting payment by the client.|
 ||DONE||Client has payed.|
 |SmsAccess||||
