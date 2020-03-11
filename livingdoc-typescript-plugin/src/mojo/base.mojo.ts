@@ -1,8 +1,11 @@
 import G from 'glob';
 import { createProgram, TypeChecker } from 'typescript';
+import { Options } from '..';
 import { BaseBuilder } from '../builders/base.builder';
 
 export abstract class BaseMojo {
+  constructor(readonly options?: Options) {}
+
   generateFromPath = (path: string, deep = true): Promise<string> => {
     return new Promise<string[]>((resolve, reject) => {
       G(path, (err: Error | null, matches: string[]) => {

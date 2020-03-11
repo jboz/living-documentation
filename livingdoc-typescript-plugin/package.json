@@ -33,9 +33,15 @@
     "build:ci": "rm -rf dist && tsc",
     "build:dev": "rm -rf dist && tsc --sourceMap -w",
     "test": "jest --watch",
+    "test:coverage": "jest --coverage",
     "test:ci": "jest",
     "lint": "tslint -p .",
-    "lint:fix": "tslint -p . --fix"
+    "lint:fix": "tslint -p . --fix",
+    "doc": "npm run doc:diagram && npm run doc:diagram-svg && npm run doc:glossary",
+    "predoc": "npm run build:ci",
+    "doc:diagram": "node dist/index.js diagram -l -i test/resources/telecom/**/*.ts -o docs/diagram.puml",
+    "doc:diagram-svg": "node dist/index.js diagram -l -i test/resources/telecom/**/*.ts -o docs/diagram.svg",
+    "doc:glossary": "node dist/index.js glossary -i test/resources/telecom/**/*.ts -o docs/glossary.md"
   },
   "dependencies": {
     "commander": "^4.1.1",
@@ -58,7 +64,11 @@
   },
   "jest": {
     "preset": "ts-jest",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coverageDirectory": "dist/coverage",
+    "coverageReporters": [
+      "html"
+    ]
   },
   "pre-commit": [
     "lint",

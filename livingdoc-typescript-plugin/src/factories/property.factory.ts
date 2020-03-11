@@ -3,7 +3,7 @@ import { Enum } from '../models/enum';
 import { Property } from '../models/property';
 import { Simple } from '../models/simple';
 import { Statement } from '../models/statement';
-import { extractComment } from '../utils/comments.utils';
+import { extractComments } from '../utils/comments.utils';
 import { COLLECTION_NAMES, GlobalFactory } from './global.factory';
 
 export class PropertyFactory {
@@ -15,7 +15,7 @@ export class PropertyFactory {
   public static create(parent: Statement | undefined, declaration: ParameterDeclaration, checker: TypeChecker, deep: boolean): Statement {
     if (declaration.type === undefined && parent instanceof Enum) {
       const property = new Property(parent, declaration.getText(), undefined);
-      property.comment = extractComment(declaration, checker);
+      property.comments = extractComments(declaration, checker);
       return property;
     }
     if (declaration.type === undefined) {
@@ -35,7 +35,7 @@ export class PropertyFactory {
     }
     // no argument types specified, maybe the type is interesting
     propertyStatement.types.push(GlobalFactory.create(declaration.type, propertyStatement, checker, deep));
-    propertyStatement.comment = extractComment(declaration, checker);
+    propertyStatement.comments = extractComments(declaration, checker);
 
     return propertyStatement;
   }

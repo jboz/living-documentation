@@ -1,0 +1,52 @@
+
+@startuml
+
+interface Access [[#Access]] {
+  phoneNumber: string
+  price: number
+  dateTime: string
+}
+
+class Bill [[#Bill]] #wheat {
+  month: string
+  contract: Contract
+  accesses: Access[]
+  paymentState: PaymentState
+}
+
+interface BillsService [[#BillsService]] {
+  getBills(): Bill[]
+  getBill(month: string): Bill
+}
+
+interface CallAccess [[#CallAccess]] {
+  duration: string
+}
+
+interface Contract [[#Contract]] {
+  id: number
+  customer: Customer
+}
+
+interface Customer [[#Customer]] {
+  email: string
+  contracts: Contract[]
+}
+
+enum PaymentState [[#PaymentState]] {
+  WAITING
+  DONE
+}
+
+interface SmsAccess [[#SmsAccess]]
+
+Access <|- CallAccess
+Access <|- SmsAccess
+Bill --> "*" Access: accesses
+Bill --> Contract: contract
+Bill --> PaymentState: paymentState
+BillsService -- Bill: use
+Contract --> Customer: customer
+Customer --> "*" Contract: contracts
+
+@enduml

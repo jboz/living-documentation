@@ -1,8 +1,16 @@
-import { ClassDeclaration, ClassLikeDeclarationBase, HeritageClause, NodeArray, SyntaxKind, TypeChecker } from 'typescript';
+import {
+  ClassDeclaration,
+  ClassLikeDeclarationBase,
+  ConstructorDeclaration,
+  HeritageClause,
+  NodeArray,
+  SyntaxKind,
+  TypeChecker
+} from 'typescript';
 import { Class } from '../models/class';
 import { Statement } from '../models/statement';
 import { Type } from '../models/type';
-import { extractComment } from '../utils/comments.utils';
+import { extractComments } from '../utils/comments.utils';
 import { GlobalFactory } from './global.factory';
 
 export class ClassFactory {
@@ -17,16 +25,24 @@ export class ClassFactory {
     }
 
     const classStatement = new Class(classSymbol.getName());
-    classStatement.comment = extractComment(declaration, checker);
+    classStatement.comments = extractComments(declaration, checker);
+    classStatement.decorators = declaration.decorators?.map(decorator => decorator.getText());
 
-    if (deep && classSymbol.members !== undefined) {
-      classSymbol.members.forEach(member => {
+    if (deep) {
+      classSymbol.members?.forEach(member => {
         const declarations = member.getDeclarations();
         if (declarations === undefined) {
           return;
         }
         declarations.forEach(decl => {
-          ClassFactory.addMember(GlobalFactory.create(decl, classStatement, checker, false), classStatement);
+          if (decl.kind === SyntaxKind.Constructor) {
+            const construct = decl as ConstructorDeclaration;
+            construct.parameters.forEach(parameter =>
+              ClassFactory.addMember(GlobalFactory.create(parameter, classStatement, checker, false), classStatement)
+            );
+          } else {
+            ClassFactory.addMember(GlobalFactory.create(decl, classStatement, checker, false), classStatement);
+          }
         });
       });
     }
@@ -43,7 +59,7 @@ export class ClassFactory {
   }
 
   private static addMember(member: Statement | undefined, clazz: Class) {
-    if (member) {
+    if (member && !clazz.members.find(stmt => stmt.name === member.name)) {
       clazz.members.push(member);
     }
   }

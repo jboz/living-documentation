@@ -1,3 +1,5 @@
+import { Options } from '..';
+import { GlobalParameters } from '../global-parameters';
 import { Statement } from './statement';
 
 export class Property extends Statement {
@@ -8,11 +10,11 @@ export class Property extends Statement {
     super(parent, name);
   }
 
-  public toPlantuml() {
+  public toPlantuml(options?: Options) {
     return `${this.name}${this.typeName ? ': ' + this.typeName : ''}`;
   }
 
   public toTable() {
-    return `||${this.name}|${this.typeName ? this.typeName : ''}|${this.comment ? this.comment : ''}|`;
+    return `||${this.nameWithAnchor}|${this.typeName ? this.typeName : ''}|${this.comments?.join(GlobalParameters.br)}|`;
   }
 }

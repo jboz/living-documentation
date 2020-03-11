@@ -1,8 +1,7 @@
 import { EnumDeclaration, TypeChecker } from 'typescript';
-import { Class } from '../models/class';
 import { Enum } from '../models/enum';
 import { Statement } from '../models/statement';
-import { extractComment } from '../utils/comments.utils';
+import { extractComments } from '../utils/comments.utils';
 import { GlobalFactory } from './global.factory';
 
 export class EnumFactory {
@@ -16,10 +15,10 @@ export class EnumFactory {
     }
 
     const enumStatement = new Enum(enumSymbol.getName());
-    enumStatement.comment = extractComment(declaration, checker);
+    enumStatement.comments = extractComments(declaration, checker);
 
-    if (deep && declaration.members !== undefined) {
-      declaration.members.forEach(member => {
+    if (deep) {
+      declaration.members?.forEach(member => {
         this.addMember(GlobalFactory.create(member, enumStatement, checker, false), enumStatement);
       });
     }
@@ -27,7 +26,7 @@ export class EnumFactory {
     return enumStatement;
   }
 
-  private static addMember(member: Statement | undefined, clazz: Class) {
+  private static addMember(member: Statement | undefined, clazz: Enum) {
     if (member) {
       clazz.members.push(member);
     }

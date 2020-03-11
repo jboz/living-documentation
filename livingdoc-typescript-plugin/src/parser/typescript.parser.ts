@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import sortBy from 'lodash/sortBy';
 import { forEachChild, SourceFile, TypeChecker } from 'typescript';
 import { GlobalFactory } from '../factories/global.factory';
 import { Statement } from '../models/statement';
@@ -17,6 +17,6 @@ export class TypescriptParser {
         });
       }
     });
-    return _.sortBy(statements, 'name');
+    return sortBy(statements, 'name');
   }
 }
