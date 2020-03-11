@@ -19,4 +19,5 @@
 - [ ] color aggregate of 'main' class
 - [ ] create annotations (c.f. java version)
 - [ ] link
-- [ ] glossary
+- [x] glossary
+- [ ] glossary : default value
