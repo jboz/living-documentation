@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import sortBy from 'lodash/sortBy';
 import { SourceFile, TypeChecker } from 'typescript';
 import { AssociationFactory } from '../factories/association.factory';
 import { GlobalParameters } from '../global-parameters';
@@ -58,7 +58,7 @@ export class ClassDiagramBuilder extends BaseBuilder {
         root.inheritance.forEach(member => AssociationFactory.createInheritance(member).forEach(assoc => this.addAssociation(assoc)));
       }
     });
-    this.associations = _.sortBy(this.associations, ['left.name', 'right.name']);
+    this.associations = sortBy(this.associations, ['left.name', 'right.name']);
   }
 
   private addAssociation(newAssoc: Association | undefined) {

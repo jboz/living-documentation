@@ -1,9 +1,8 @@
 import { HeritageClause, InterfaceDeclaration, NodeArray, SyntaxKind, TypeChecker } from 'typescript';
-import { Class } from '../models/class';
 import { Interface } from '../models/interface';
 import { Statement } from '../models/statement';
 import { Type } from '../models/type';
-import { extractComment } from '../utils/comments.utils';
+import { extractComments } from '../utils/comments.utils';
 import { GlobalFactory } from './global.factory';
 
 export class InterfaceFactory {
@@ -14,10 +13,10 @@ export class InterfaceFactory {
       return;
     }
     const interfaceStatement = new Interface(interfaceSymbol.getName());
-    interfaceStatement.comment = extractComment(declaration, checker);
+    interfaceStatement.comments = extractComments(declaration, checker);
 
-    if (deep && interfaceSymbol.members !== undefined) {
-      interfaceSymbol.members.forEach(member => {
+    if (deep) {
+      interfaceSymbol.members?.forEach(member => {
         const declarations = member.getDeclarations();
         if (declarations === undefined) {
           return;
@@ -39,7 +38,7 @@ export class InterfaceFactory {
     return interfaceStatement;
   }
 
-  private static addMember(member: Statement | undefined, clazz: Class) {
+  private static addMember(member: Statement | undefined, clazz: Interface) {
     if (member) {
       clazz.members.push(member);
     }

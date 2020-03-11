@@ -1,3 +1,4 @@
+import { GlobalParameters } from '../global-parameters';
 import { Statement } from './statement';
 
 export class Property extends Statement {
@@ -13,6 +14,6 @@ export class Property extends Statement {
   }
 
   public toTable() {
-    return `||${this.name}|${this.typeName ? this.typeName : ''}|${this.comment ? this.comment : ''}|`;
+    return `||${this.name}|${this.typeName ? this.typeName : ''}|${this.comments?.join(GlobalParameters.br)}|`;
   }
 }

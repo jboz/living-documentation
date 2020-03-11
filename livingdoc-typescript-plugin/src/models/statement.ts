@@ -1,5 +1,5 @@
 export abstract class Statement {
-  public comment?: string;
+  public comments?: string[];
 
   constructor(public readonly parent: Statement | undefined, public readonly name: string) {}
 

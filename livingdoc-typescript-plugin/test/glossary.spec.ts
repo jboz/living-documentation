@@ -1,7 +1,7 @@
 import { Glossary } from '../src/glossary.mojo';
 
 describe('Glossary', () => {
-  it('should generate diagram for a single file', () => {
+  test('should generate glossary', () => {
     expect(
       new Glossary().generateFromPath('test/resources/telecom/**/*.ts', false).then((document: string) => {
         expect(document).toEqual(`
@@ -11,7 +11,7 @@ describe('Glossary', () => {
 ||phoneNumber|string||
 ||price|number||
 ||dateTime|string||
-|Bill|||Monthly bill.|
+|Bill|||@RootAggregate<br>Monthly bill.|
 ||month|string|Which month of the bill.|
 ||contract|Contract|Contract concerned by the bill.|
 ||accesses|Access[]|Bill contents.|
@@ -20,7 +20,7 @@ describe('Glossary', () => {
 |CallAccess||||
 ||duration|string||
 |Contract|||Telecom contract|
-||id|number|Contract identifier. Generate by the system and communicate to client.|
+||id|number|Contract identifier.<br>Generate by the system and communicate to client.|
 ||customer|Customer|Contract customer.|
 |Customer|||Customer of the telecom service|
 ||email|string|Email of the customer.|
