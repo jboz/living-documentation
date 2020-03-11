@@ -49,7 +49,7 @@ fi
 
 MAKE_RELEASE='false'
 
-if [ "${TRAVIS_COMMIT_MESSAGE}" =~ maven\ release ] && [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
+if [ ${TRAVIS_COMMIT_MESSAGE} =~ maven\ release ] && [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
     echo "commit message indicate that a release must be create"
     MAKE_RELEASE='true'
 

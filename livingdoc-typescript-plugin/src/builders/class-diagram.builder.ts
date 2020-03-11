@@ -1,13 +1,14 @@
 import _ from 'lodash';
-import { forEachChild, SourceFile, TypeChecker } from 'typescript';
+import { SourceFile, TypeChecker } from 'typescript';
 import { AssociationFactory } from '../factories/association.factory';
-import { GlobalFactory } from '../factories/global.factory';
 import { GlobalParameters } from '../global-parameters';
 import { Association } from '../models/association';
 import { Statement } from '../models/statement';
 import { WithMembersStatement } from '../models/with-members.statement';
+import { TypescriptParser } from '../parser/typescript.parser';
+import { BaseBuilder } from './base.builder';
 
-export class ClassDiagramBuilder extends Statement {
+export class ClassDiagramBuilder extends BaseBuilder {
   private sources!: readonly SourceFile[];
   private statements: Statement[] = [];
   private associations: Association[] = [];
@@ -46,18 +47,7 @@ export class ClassDiagramBuilder extends Statement {
   }
 
   private readSources() {
-    this.sources.forEach(source => {
-      if (!source.isDeclarationFile) {
-        forEachChild(source, child => {
-          // TODO mark deep as false if input filename pattern doesn't match the source path
-          const statement = GlobalFactory.create(child, undefined, this.checker);
-          if (statement) {
-            this.statements.push(statement);
-          }
-        });
-      }
-    });
-    this.statements = _.sortBy(this.statements, 'name');
+    this.statements = TypescriptParser.parse(this.sources, this.checker);
   }
 
   private detectAssociations() {

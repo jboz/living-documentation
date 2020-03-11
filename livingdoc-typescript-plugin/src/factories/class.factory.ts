@@ -2,6 +2,7 @@ import { ClassDeclaration, ClassLikeDeclarationBase, HeritageClause, NodeArray, 
 import { Class } from '../models/class';
 import { Statement } from '../models/statement';
 import { Type } from '../models/type';
+import { extractComment } from '../utils/comments.utils';
 import { GlobalFactory } from './global.factory';
 
 export class ClassFactory {
@@ -16,6 +17,7 @@ export class ClassFactory {
     }
 
     const classStatement = new Class(classSymbol.getName());
+    classStatement.comment = extractComment(declaration, checker);
 
     if (deep && classSymbol.members !== undefined) {
       classSymbol.members.forEach(member => {

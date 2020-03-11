@@ -6,7 +6,7 @@ NPM_PACKAGE_VERSION="$(npm view livingdoc-typescript-plugin version)"
 echo "NPM_PACKAGE_VERSION=$NPM_PACKAGE_VERSION"
 
 if [ "$PROJECT_VERSION" = "$NPM_PACKAGE_VERSION" ]; then
-    if [ "$TRAVIS_PULL_REQUEST_BRANCH" =~ ^fix/ ]; then
+    if [ $TRAVIS_PULL_REQUEST_BRANCH =~ ^fix/ ]; then
         echo "set to new patch version"
         npm version patch
     else
