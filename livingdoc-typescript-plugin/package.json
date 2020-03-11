@@ -1,6 +1,6 @@
 {
   "name": "livingdoc-typescript-plugin",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Generate a nice living documentation for your typescript projects.",
   "author": "Julien Boz",
   "contributors": [
