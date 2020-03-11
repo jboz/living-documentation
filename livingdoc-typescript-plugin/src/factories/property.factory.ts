@@ -1,4 +1,5 @@
 import { ArrayTypeNode, ParameterDeclaration, SyntaxKind, TypeChecker, TypeReferenceNode } from 'typescript';
+import { Enum } from '../models/enum';
 import { Property } from '../models/property';
 import { Simple } from '../models/simple';
 import { Statement } from '../models/statement';
@@ -11,6 +12,9 @@ export class PropertyFactory {
    * @param deep
    */
   public static create(parent: Statement | undefined, declaration: ParameterDeclaration, checker: TypeChecker, deep: boolean): Statement {
+    if (declaration.type === undefined && parent instanceof Enum) {
+      return new Property(parent, declaration.getText(), undefined);
+    }
     if (declaration.type === undefined) {
       return new Simple(parent, declaration.getText());
     }

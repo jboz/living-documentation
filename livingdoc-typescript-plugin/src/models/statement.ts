@@ -4,4 +4,8 @@ export abstract class Statement {
   public toPlantuml(): string {
     return `${this.name}`;
   }
+
+  public toTable(): string {
+    return `${this.name}`;
+  }
 }

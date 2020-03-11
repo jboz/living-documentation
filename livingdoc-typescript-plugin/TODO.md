@@ -3,8 +3,8 @@
 - [x] aggregate defined with interfaces
 - [x] command line
 - [x] input with wildcard/file/directory
-- [ ] npm publish
-  - [ ] still mono repo ? => +1
+- [x] npm publish
+  - [x] still mono repo ? => +1
   - [ ] readme
   - [ ] licence
   - [ ] source header ?
@@ -19,3 +19,4 @@
 - [ ] color aggregate of 'main' class
 - [ ] create annotations (c.f. java version)
 - [ ] link
+- [ ] glossary
