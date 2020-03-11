@@ -23,13 +23,19 @@ npx livingdoc ...
 ### Generate classes diagram
 
 ```bash
-livingdoc -i src\domain\**\*.ts -o dist\domain-classes.svg
+livingdoc-typescript-plugin diagram -i src\domain\**\*.ts -o dist\domain-classes.svg
 ```
 
 Result example :
 <img src="./docs/diagram.svg">
 
 ### Generate glossary
+
+```bash
+livingdoc-typescript-plugin glossary -i src\domain\**\*.ts -o dist\glossary.md
+```
+
+Result example :
 
 | ObjectName   | Attribute name | Type         | Description                                                            |
 | ------------ | -------------- | ------------ | ---------------------------------------------------------------------- |
