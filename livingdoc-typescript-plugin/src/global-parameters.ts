@@ -6,4 +6,8 @@ export class GlobalParameters {
   static get indent() {
     return '  ';
   }
+
+  static get br() {
+    return '<br>';
+  }
 }
