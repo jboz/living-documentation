@@ -13,6 +13,6 @@ export class Property extends Statement {
   }
 
   public toTable() {
-    return `||${this.name}|${this.typeName ? this.typeName : ''}||`;
+    return `||${this.name}|${this.typeName ? this.typeName : ''}|${this.comment ? this.comment : ''}|`;
   }
 }

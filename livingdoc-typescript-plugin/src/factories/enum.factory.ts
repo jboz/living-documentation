@@ -2,6 +2,7 @@ import { EnumDeclaration, TypeChecker } from 'typescript';
 import { Class } from '../models/class';
 import { Enum } from '../models/enum';
 import { Statement } from '../models/statement';
+import { extractComment } from '../utils/comments.utils';
 import { GlobalFactory } from './global.factory';
 
 export class EnumFactory {
@@ -15,6 +16,7 @@ export class EnumFactory {
     }
 
     const enumStatement = new Enum(enumSymbol.getName());
+    enumStatement.comment = extractComment(declaration, checker);
 
     if (deep && declaration.members !== undefined) {
       declaration.members.forEach(member => {

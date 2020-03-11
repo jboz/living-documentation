@@ -3,6 +3,7 @@ import { Enum } from '../models/enum';
 import { Property } from '../models/property';
 import { Simple } from '../models/simple';
 import { Statement } from '../models/statement';
+import { extractComment } from '../utils/comments.utils';
 import { COLLECTION_NAMES, GlobalFactory } from './global.factory';
 
 export class PropertyFactory {
@@ -13,7 +14,9 @@ export class PropertyFactory {
    */
   public static create(parent: Statement | undefined, declaration: ParameterDeclaration, checker: TypeChecker, deep: boolean): Statement {
     if (declaration.type === undefined && parent instanceof Enum) {
-      return new Property(parent, declaration.getText(), undefined);
+      const property = new Property(parent, declaration.getText(), undefined);
+      property.comment = extractComment(declaration, checker);
+      return property;
     }
     if (declaration.type === undefined) {
       return new Simple(parent, declaration.getText());
@@ -32,6 +35,7 @@ export class PropertyFactory {
     }
     // no argument types specified, maybe the type is interesting
     propertyStatement.types.push(GlobalFactory.create(declaration.type, propertyStatement, checker, deep));
+    propertyStatement.comment = extractComment(declaration, checker);
 
     return propertyStatement;
   }

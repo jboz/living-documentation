@@ -23,7 +23,7 @@ export abstract class WithMembersStatement extends Statement {
   }
 
   public toTable() {
-    const statements = [`|${this.name}||||`];
+    const statements = [`|${this.name}|||${this.comment ? this.comment : ''}|`];
     this.members.filter(member => member instanceof Property).forEach(member => statements.push(member.toTable()));
     return statements.join(GlobalParameters.eol);
   }
