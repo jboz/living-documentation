@@ -1,8 +1,8 @@
-import { diagram } from '../src/diagram.mojo';
+import { Diagram } from '../src/diagram.mojo';
 
-describe('Diagram generator', () => {
+describe('Diagram', () => {
   it('should generate diagram for a single file', () => {
-    expect(diagram.generateDiagram(['test/resources/anything/domain/service/MyService.service.ts'], false)).toEqual(`
+    expect(new Diagram().generate(['test/resources/anything/domain/service/MyService.service.ts'], false)).toEqual(`
 @startuml
 
 class MyService {
@@ -19,7 +19,7 @@ MyService -- MyRootAggregate: use
   });
 
   it('should generate diagram with dependencies and uses models', () => {
-    return diagram.generateDiagramFromPath('test/resources/anything/**/*.ts').then(document => {
+    return new Diagram().generateFromPath('test/resources/anything/**/*.ts').then(document => {
       expect(document).toEqual(`
 @startuml
 

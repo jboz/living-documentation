@@ -11,4 +11,8 @@ export class Property extends Statement {
   public toPlantuml() {
     return `${this.name}${this.typeName ? ': ' + this.typeName : ''}`;
   }
+
+  public toTable() {
+    return `||${this.name}|${this.typeName ? this.typeName : ''}|${this.comment ? this.comment : ''}|`;
+  }
 }
