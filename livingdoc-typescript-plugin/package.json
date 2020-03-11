@@ -37,7 +37,11 @@
     "test:ci": "jest",
     "lint": "tslint -p .",
     "lint:fix": "tslint -p . --fix",
-    "doc": "npm run build:ci && node dist/index.js glossary -i test/resources/telecom/**/*.ts -o docs/glossary.md && node dist/index.js diagram -l -i test/resources/telecom/**/*.ts -o docs/diagram.svg"
+    "doc": "npm run doc:diagram && npm run doc:diagram-svg && npm run doc:glossary",
+    "predoc": "npm run build:ci",
+    "doc:diagram": "node dist/index.js diagram -l -i test/resources/telecom/**/*.ts -o docs/diagram.puml",
+    "doc:diagram-svg": "node dist/index.js diagram -l -i test/resources/telecom/**/*.ts -o docs/diagram.svg",
+    "doc:glossary": "node dist/index.js glossary -i test/resources/telecom/**/*.ts -o docs/glossary.md"
   },
   "dependencies": {
     "commander": "^4.1.1",

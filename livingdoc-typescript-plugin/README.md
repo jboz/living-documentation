@@ -28,6 +28,7 @@ livingdoc-typescript-plugin diagram -i src\domain\**\*.ts -o dist\domain-classes
 
 Result example :
 <img src="./docs/diagram.svg">
+<img src="https://raw.githubusercontent.com/jboz/living-documentation/feature/annotations/livingdoc-typescript-plugin/docs/diagram.svg?sanitize=true">
 
 ### Generate glossary
 
