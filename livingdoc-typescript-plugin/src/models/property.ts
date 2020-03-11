@@ -11,7 +11,7 @@ export class Property extends Statement {
   }
 
   public toPlantuml(options?: Options) {
-    return `${this.name}${this.typeName ? ': ' + this.typeName : ''}${options?.links ? ' ' + this.diagramLink : ''}`;
+    return `${this.name}${this.typeName ? ': ' + this.typeName : ''}`;
   }
 
   public toTable() {

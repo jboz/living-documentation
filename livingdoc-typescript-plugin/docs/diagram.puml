@@ -2,16 +2,16 @@
 @startuml
 
 interface Access [[#Access]] {
-  phoneNumber: string [[#phoneNumber]]
-  price: number [[#price]]
-  dateTime: string [[#dateTime]]
+  phoneNumber: string
+  price: number
+  dateTime: string
 }
 
 class Bill [[#Bill]] #wheat {
-  month: string [[#month]]
-  contract: Contract [[#contract]]
-  accesses: Access[] [[#accesses]]
-  paymentState: PaymentState [[#paymentState]]
+  month: string
+  contract: Contract
+  accesses: Access[]
+  paymentState: PaymentState
 }
 
 interface BillsService [[#BillsService]] {
@@ -20,22 +20,22 @@ interface BillsService [[#BillsService]] {
 }
 
 interface CallAccess [[#CallAccess]] {
-  duration: string [[#duration]]
+  duration: string
 }
 
 interface Contract [[#Contract]] {
-  id: number [[#id]]
-  customer: Customer [[#customer]]
+  id: number
+  customer: Customer
 }
 
 interface Customer [[#Customer]] {
-  email: string [[#email]]
-  contracts: Contract[] [[#contracts]]
+  email: string
+  contracts: Contract[]
 }
 
 enum PaymentState [[#PaymentState]] {
-  WAITING [[#WAITING]]
-  DONE [[#DONE]]
+  WAITING
+  DONE
 }
 
 interface SmsAccess [[#SmsAccess]]
