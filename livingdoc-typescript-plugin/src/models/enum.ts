@@ -1,3 +1,4 @@
+import { Options } from '..';
 import { GlobalParameters } from '../global-parameters';
 import { WithMembersStatement } from './with-members.statement';
 
@@ -8,9 +9,9 @@ export class Enum extends WithMembersStatement {
     return this.members.length > 0 ? ' {' : '';
   }
 
-  public toPlantuml() {
-    const statements = [`${this.type} ${this.name}${this.openBrace}`];
-    this.members.forEach(member => statements.push(`${GlobalParameters.indent}${member.toPlantuml()}`));
+  public toPlantuml(options?: Options) {
+    const statements = [`${this.type} ${this.getName(options)}${this.openBrace}`];
+    this.members.forEach(member => statements.push(`${GlobalParameters.indent}${member.toPlantuml(options)}`));
     if (this.members.length > 0) {
       statements.push('}');
     }
@@ -19,7 +20,7 @@ export class Enum extends WithMembersStatement {
   }
 
   public toTable() {
-    const statements = [`|${this.name}||Enumeration|${this.comments?.join(GlobalParameters.br)}|`];
+    const statements = [`|${this.nameWithAnchor}||Enumeration|${this.comments?.join(GlobalParameters.br)}|`];
     this.members.forEach(member => statements.push(member.toTable()));
     return statements.join(GlobalParameters.eol);
   }

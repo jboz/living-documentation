@@ -1,4 +1,5 @@
 import { SourceFile, TypeChecker } from 'typescript';
+import { Options } from '..';
 import { GlobalParameters } from '../global-parameters';
 import { Statement } from '../models/statement';
 import { TypescriptParser } from '../parser/typescript.parser';
@@ -8,7 +9,7 @@ export class GlossaryBuilder extends BaseBuilder {
   private sources!: readonly SourceFile[];
   private statements: Statement[] = [];
 
-  constructor(private readonly checker: TypeChecker) {
+  constructor(private readonly checker: TypeChecker, private readonly options?: Options) {
     super(undefined, 'ClassDiagramBuilder');
   }
 
@@ -26,7 +27,7 @@ export class GlossaryBuilder extends BaseBuilder {
   public toTable() {
     const output = ['', '| ObjectName | Attribute name | Type | Description |', '| ---------- | -------------- | ---- | ----------- |'];
     this.statements.forEach(model => {
-      output.push(model.toTable());
+      output.push(model.toTable(this.options));
     });
     output.push('');
 

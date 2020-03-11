@@ -1,3 +1,4 @@
+import { Options } from '..';
 import { GlobalParameters } from '../global-parameters';
 import { Statement } from './statement';
 
@@ -9,11 +10,11 @@ export class Property extends Statement {
     super(parent, name);
   }
 
-  public toPlantuml() {
-    return `${this.name}${this.typeName ? ': ' + this.typeName : ''}`;
+  public toPlantuml(options?: Options) {
+    return `${this.name}${this.typeName ? ': ' + this.typeName : ''}${options?.links ? ' ' + this.diagramLink : ''}`;
   }
 
   public toTable() {
-    return `||${this.name}|${this.typeName ? this.typeName : ''}|${this.comments?.join(GlobalParameters.br)}|`;
+    return `||${this.nameWithAnchor}|${this.typeName ? this.typeName : ''}|${this.comments?.join(GlobalParameters.br)}|`;
   }
 }

@@ -4,6 +4,6 @@ import { BaseMojo } from './mojo/base.mojo';
 
 export class Diagram extends BaseMojo {
   instance(checker: TypeChecker): ClassDiagramBuilder {
-    return new ClassDiagramBuilder(checker);
+    return new ClassDiagramBuilder(checker, this.options);
   }
 }

@@ -37,7 +37,7 @@
     "test:ci": "jest",
     "lint": "tslint -p .",
     "lint:fix": "tslint -p . --fix",
-    "doc": "npm run build:ci && node dist/index.js glossary -i test/resources/telecom/**/*.ts -o docs/glossary.md && node dist/index.js diagram -i test/resources/telecom/**/*.ts -o docs/diagram.svg"
+    "doc": "npm run build:ci && node dist/index.js glossary -i test/resources/telecom/**/*.ts -o docs/glossary.md && node dist/index.js diagram -l -i test/resources/telecom/**/*.ts -o docs/diagram.svg"
   },
   "dependencies": {
     "commander": "^4.1.1",

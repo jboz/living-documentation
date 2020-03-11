@@ -1,5 +1,6 @@
 import sortBy from 'lodash/sortBy';
 import { SourceFile, TypeChecker } from 'typescript';
+import { Options } from '..';
 import { AssociationFactory } from '../factories/association.factory';
 import { GlobalParameters } from '../global-parameters';
 import { Association } from '../models/association';
@@ -13,7 +14,7 @@ export class ClassDiagramBuilder extends BaseBuilder {
   private statements: Statement[] = [];
   private associations: Association[] = [];
 
-  constructor(private readonly checker: TypeChecker) {
+  constructor(private readonly checker: TypeChecker, private readonly options?: Options) {
     super(undefined, 'ClassDiagramBuilder');
   }
 
@@ -33,7 +34,7 @@ export class ClassDiagramBuilder extends BaseBuilder {
   public toPlantuml() {
     const output = ['', '@startuml', ''];
     this.statements.forEach(model => {
-      output.push(model.toPlantuml());
+      output.push(model.toPlantuml(this.options));
       output.push('');
     });
     if (this.associations.length > 0) {

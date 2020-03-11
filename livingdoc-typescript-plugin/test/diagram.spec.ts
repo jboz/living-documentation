@@ -94,43 +94,43 @@ MyValueObject --> MyEnum: theEnum
 
   test('should generate diagram with color and links', () => {
     expect(
-      new Diagram().generateFromPath('test/resources/telecom/domain/aggregate/**/*.ts', false).then((document: string) => {
+      new Diagram({ links: true }).generateFromPath('test/resources/telecom/domain/aggregate/**/*.ts', false).then((document: string) => {
         expect(document).toEqual(`
 @startuml
 
-interface Access {
-  phoneNumber: string
-  price: number
-  dateTime: string
+interface Access [[#Access]] {
+  phoneNumber: string [[#phoneNumber]]
+  price: number [[#price]]
+  dateTime: string [[#dateTime]]
 }
 
-class Bill #wheat {
-  month: string
-  contract: Contract
-  accesses: Access[]
-  paymentState: PaymentState
+class Bill [[#Bill]] #wheat {
+  month: string [[#month]]
+  contract: Contract [[#contract]]
+  accesses: Access[] [[#accesses]]
+  paymentState: PaymentState [[#paymentState]]
 }
 
-interface CallAccess {
-  duration: string
+interface CallAccess [[#CallAccess]] {
+  duration: string [[#duration]]
 }
 
-interface Contract {
-  id: number
-  customer: Customer
+interface Contract [[#Contract]] {
+  id: number [[#id]]
+  customer: Customer [[#customer]]
 }
 
-interface Customer {
-  email: string
-  contracts: Contract[]
+interface Customer [[#Customer]] {
+  email: string [[#email]]
+  contracts: Contract[] [[#contracts]]
 }
 
-enum PaymentState {
-  WAITING
-  DONE
+enum PaymentState [[#PaymentState]] {
+  WAITING [[#WAITING]]
+  DONE [[#DONE]]
 }
 
-interface SmsAccess
+interface SmsAccess [[#SmsAccess]]
 
 Access <|- CallAccess
 Access <|- SmsAccess
