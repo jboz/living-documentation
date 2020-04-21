@@ -77,6 +77,12 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     private String diagramLinkPage;
 
     /**
+     * Define the root aggregare class.
+     */
+    @Parameter(property = "livingdoc.diagram.rootAggregate.class")
+    private String rootAggregateClassMatcher;
+
+    /**
      * Class color for @{@link ch.ifocusit.livingdoc.annotations.RootAggregate}
      * class.
      */
@@ -181,6 +187,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
             PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot,
                     Stream.of(excludes).map(s -> s.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", ""))
                             .toArray(String[]::new),
+                    rootAggregateClassMatcher,
                     rootAggregateColor == null || rootAggregateColor.isEmpty() ? DEFAULT_ROOT_COLOR
                             : rootAggregateColor,
                     diagramHeader, diagramFooter, diagramShowMethods, diagramShowFields, diagramWithDependencies,

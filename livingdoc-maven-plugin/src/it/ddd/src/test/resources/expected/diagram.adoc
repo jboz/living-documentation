@@ -16,7 +16,7 @@ abstract class "Access" [[glossary.html#glossaryid-Access{Access}]] {
   dateTime : ZonedDateTime [[glossary.html#glossaryid-Access_dateTime{dateTime}]]
 }
 
-class "Bill" [[glossary.html#glossaryid-Bill{Bill}]] {
+class "Bill" [[glossary.html#glossaryid-Bill{Bill}]] #orange {
   month : YearMonth [[glossary.html#glossaryid-Bill_month{month}]]
   contract : Contract [[glossary.html#glossaryid-Bill_contract{contract}]]
   accesses : Set<Access> [[glossary.html#glossaryid-Bill_accesses{accesses}]]
