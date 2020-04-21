@@ -40,7 +40,7 @@
         |&lt;&lt;glossaryid-700,PaymentState&gt;&gt;, Enumeration
         |Etat du paiement de la facture
         |
-        |  &#10;      
+        |  &#13;&#10;      
     |anchor:glossaryid-200[]200
     |anchor:glossaryid-200[]Contrat
     |
