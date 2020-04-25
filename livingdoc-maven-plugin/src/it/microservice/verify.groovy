@@ -10,5 +10,6 @@ new File(basedir, "./src/test/resources/expected").eachFileMatch(~/^.*\.(adoc|pl
     println "Assert generated file to equals expected: " + expected.name
 
     def actual = new File(basedir, "target/generated-docs/" + expected.name)
+    // assert 
     FileUtils.contentEqualsIgnoreEOL(actual, expected, null)
 }

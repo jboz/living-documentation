@@ -22,18 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin.diagram;
 
-import ch.ifocusit.livingdoc.annotations.RootAggregate;
-import ch.ifocusit.livingdoc.plugin.domain.Color;
-import ch.ifocusit.livingdoc.plugin.utils.AnnotationUtil;
-import ch.ifocusit.plantuml.classdiagram.ClassDiagramBuilder;
-import ch.ifocusit.plantuml.classdiagram.model.clazz.JavaClazz;
-import com.google.common.reflect.ClassPath;
-import com.google.common.reflect.ClassPath.ClassInfo;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.project.MavenProject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -42,7 +31,20 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
+import com.google.common.reflect.ClassPath;
+import com.google.common.reflect.ClassPath.ClassInfo;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.project.MavenProject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ch.ifocusit.livingdoc.annotations.RootAggregate;
+import ch.ifocusit.livingdoc.plugin.domain.Color;
+import ch.ifocusit.livingdoc.plugin.utils.AnnotationUtil;
+import ch.ifocusit.plantuml.classdiagram.ClassDiagramBuilder;
+import ch.ifocusit.plantuml.classdiagram.model.clazz.JavaClazz;
 
 /**
  * @author Julien Boz
@@ -56,9 +58,9 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
     private boolean showMethods;
     private boolean showFields;
 
-    public PlantumlClassDiagramBuilder(MavenProject project, String prefix, String[] excludes, Color rootAggregateColor, File header, File footer,
-                                       boolean showMethods, boolean showFields, boolean diagramWithDependencies,
-                                       String linkPage) {
+    public PlantumlClassDiagramBuilder(MavenProject project, String prefix, String[] excludes,
+            String rootAggregateClassMatcher, Color rootAggregateColor, File header, File footer, boolean showMethods,
+            boolean showFields, boolean diagramWithDependencies, String linkPage) {
         super(project, prefix, excludes, header, footer, diagramWithDependencies, linkPage);
 
         this.showMethods = showMethods;
@@ -70,9 +72,16 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
             protected JavaClazz createJavaClass(Class clazz) {
                 JavaClazz javaClass = super.createJavaClass(clazz);
                 if (rootAggregateColor != null) {
-                    AnnotationUtil.tryFind(clazz, RootAggregate.class).ifPresent(annot ->
+                    if (StringUtils.isNotBlank(rootAggregateClassMatcher)) {
+                        if (clazz.getName().matches(rootAggregateClassMatcher)) {
                             javaClass.setBackgroundColor(rootAggregateColor.getBackground())
-                                    .setBorderColor(rootAggregateColor.getBorder()));
+                                    .setBorderColor(rootAggregateColor.getBorder());
+                        }
+                    } else {
+                        AnnotationUtil.tryFind(clazz, RootAggregate.class)
+                                .ifPresent(annot -> javaClass.setBackgroundColor(rootAggregateColor.getBackground())
+                                        .setBorderColor(rootAggregateColor.getBorder()));
+                    }
                 }
                 return javaClass;
             }
@@ -85,28 +94,18 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
 
         LOG.info("Initial classes size: " + allClasses.size());
 
-        String diagram = classDiagramBuilder
-                .addClasse(allClasses.stream()
-                        // apply filters
-                        .filter(defaultFilter())
-                        .filter(additionalClassPredicate)
-                        .map(classInfo -> {
-                            try {
-                                return classInfo.load();
-                            } catch (Throwable e) {
-                                LOG.warn(e.toString());
-                            }
-                            return null;
-                        })
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList()))
-                .excludes(excludes)
-                .setHeader(readHeader())
-                .setFooter(readFooter())
-                .withNamesMapper(namesMapper)
-                .withLinkMaker(this)
-                .withDependencies(diagramWithDependencies)
-                .build();
+        String diagram = classDiagramBuilder.addClasse(allClasses.stream()
+                // apply filters
+                .filter(defaultFilter()).filter(additionalClassPredicate).map(classInfo -> {
+                    try {
+                        return classInfo.load();
+                    } catch (Throwable e) {
+                        LOG.warn(e.toString());
+                    }
+                    return null;
+                }).filter(Objects::nonNull).collect(Collectors.toList())).excludes(excludes).setHeader(readHeader())
+                .setFooter(readFooter()).withNamesMapper(namesMapper).withLinkMaker(this)
+                .withDependencies(diagramWithDependencies).build();
         return diagram;
     }
 
@@ -123,7 +122,8 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
             return; // nothing to do
         }
         // create class predicate
-        additionalClassPredicate = additionalClassPredicate.and(classInfo -> classInfo.load().isAnnotationPresent(annotation));
+        additionalClassPredicate = additionalClassPredicate
+                .and(classInfo -> classInfo.load().isAnnotationPresent(annotation));
         // add field predicate
         classDiagramBuilder.addFieldPredicate(attribut -> attribut.getField().isAnnotationPresent(annotation));
     }

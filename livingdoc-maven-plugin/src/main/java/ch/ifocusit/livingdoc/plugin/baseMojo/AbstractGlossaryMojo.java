@@ -73,9 +73,6 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
     @Parameter(property = "livingdoc.glossary.sources", defaultValue = "${project.build.sourceDirectory}")
     private List<String> sources = new ArrayList<>();
 
-    @Parameter(property = "livingdoc.glossary.packageRoot", defaultValue = "${project.groupId}.${project.artifactId}.domain")
-    private String packageRoot;
-
     @Parameter
     private String[] excludes = new String[0];
 
