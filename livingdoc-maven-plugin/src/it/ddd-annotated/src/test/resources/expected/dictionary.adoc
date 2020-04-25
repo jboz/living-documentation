@@ -6,28 +6,28 @@
 == [small]#100# - Facture
 
 
-Facture Mensuelle gÃ©nÃ©rÃ©e par le systÃ¨me Ã  la date anniversaire du contrat
+Facture Mensuelle générée par le système à la date anniversaire du contrat
 
 [[glossaryid-101]]
 == [small]#101# - anchor:glossaryid-101[]Bill.Mois de facture
 
 
-Mois concernÃ© par la facture
+Mois concerné par la facture
 
 [[glossaryid-102]]
 == [small]#102# - anchor:glossaryid-102[]Bill.contrat
 
 
-Contrat concernÃ© par la facture
+Contrat concerné par la facture
 
 [[glossaryid-103]]
-== [small]#103# - anchor:glossaryid-103[]Bill.accÃ¨s
+== [small]#103# - anchor:glossaryid-103[]Bill.accès
 
 
-AccÃ¨s aux services
+Accès aux services
 
 [[glossaryid-104]]
-== [small]#104# - anchor:glossaryid-104[]Bill.Ã©tat
+== [small]#104# - anchor:glossaryid-104[]Bill.état
 
 
 Etat du paiement de la facture
@@ -36,13 +36,13 @@ Etat du paiement de la facture
 == [small]#200# - Contrat
 
 
-Contrat de tÃ©lÃ©phonie liant la sociÃ©tÃ© Ã  un client
+Contrat de téléphonie liant la société à un client
 
 [[glossaryid-201]]
 == [small]#201# - anchor:glossaryid-201[]Contract.Identifiant
 
 
-Identifiant du contrat unique dans le systÃ¨me
+Identifiant du contrat unique dans le système
 
 [[glossaryid-202]]
 == [small]#202# - anchor:glossaryid-202[]Contract.client
@@ -54,13 +54,13 @@ Client du contrat
 == [small]#203# - anchor:glossaryid-203[]Contract.Date effet
 
 
-Date Ã  laquelle le contrat prend effet
+Date à laquelle le contrat prend effet
 
 [[glossaryid-300]]
 == [small]#300# - Client
 
 
-Client du service liÃ© par un contrat
+Client du service lié par un contrat
 
 [[glossaryid-301]]
 == [small]#301# - anchor:glossaryid-301[]Customer.Nom
@@ -69,22 +69,22 @@ Client du service liÃ© par un contrat
 Nom d'usage du client
 
 [[glossaryid-400]]
-== [small]#400# - AccÃ¨s
+== [small]#400# - Accès
 
 
-Utilisation du service de tÃ©lÃ©communication
+Utilisation du service de télécommunication
 
 [[glossaryid-401]]
-== [small]#401# - anchor:glossaryid-401[]Access.TÃ©lÃ©phone
+== [small]#401# - anchor:glossaryid-401[]Access.Téléphone
 
 
-NumÃ©ro de tÃ©lÃ©phone utilisÃ©
+Numéro de téléphone utilisé
 
 [[glossaryid-402]]
 == [small]#402# - anchor:glossaryid-402[]Access.Prix
 
 
-Montant de l'accÃ¨s au service
+Montant de l'accès au service
 
 [[glossaryid-403]]
 == [small]#403# - anchor:glossaryid-403[]Access.Horodatage
@@ -93,16 +93,16 @@ Montant de l'accÃ¨s au service
 Timestamp de l'utilisation du service
 
 [[glossaryid-500]]
-== [small]#500# - Appel tÃ©lÃ©phonique
+== [small]#500# - Appel téléphonique
 
 
 
 
 [[glossaryid-501]]
-== [small]#501# - anchor:glossaryid-501[]CallAccess.durÃ©e
+== [small]#501# - anchor:glossaryid-501[]CallAccess.durée
 
 
-DurÃ©e de l'appel tÃ©lÃ©phonique
+Durée de l'appel téléphonique
 
 [[glossaryid-600]]
 == [small]#600# - SMS
@@ -123,9 +123,9 @@ Etat de paiement de la fature
 Le facture est en attente de paiement
 
 [[glossaryid-702]]
-== [small]#702# - anchor:glossaryid-702[]PaymentState.PayÃ©
+== [small]#702# - anchor:glossaryid-702[]PaymentState.Payé
 
 
-La facture Ã  Ã©tÃ© payÃ© par le client
+La facture à été payé par le client
 
 

@@ -47,7 +47,7 @@ Generate by the system at contract birth date.
         |boolean
         |Flag that indicate whenever the bill has been sended to the customer.
         |
-        |&#10;&#10;    &#10;      
+        |&#13;&#10;&#13;&#10;    &#13;&#10;      
     |anchor:glossaryid-200[]200
     |anchor:glossaryid-200[]Contract
     |

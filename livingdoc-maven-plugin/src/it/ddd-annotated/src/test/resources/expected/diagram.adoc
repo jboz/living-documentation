@@ -10,14 +10,14 @@
 
 
 
-abstract class "AccÃ¨s" [[glossary.html#glossaryid-400{AccÃ¨s}]] {
-  TÃ©lÃ©phone : String [[glossary.html#glossaryid-401{TÃ©lÃ©phone}]]
+abstract class "Accès" [[glossary.html#glossaryid-400{Accès}]] {
+  Téléphone : String [[glossary.html#glossaryid-401{Téléphone}]]
   Prix : BigDecimal [[glossary.html#glossaryid-402{Prix}]]
   Horodatage : ZonedDateTime [[glossary.html#glossaryid-403{Horodatage}]]
 }
 
-class "Appel tÃ©lÃ©phonique" [[glossary.html#glossaryid-500{Appel tÃ©lÃ©phonique}]] {
-  durÃ©e : Duration [[glossary.html#glossaryid-501{durÃ©e}]]
+class "Appel téléphonique" [[glossary.html#glossaryid-500{Appel téléphonique}]] {
+  durée : Duration [[glossary.html#glossaryid-501{durée}]]
 }
 
 class "Client" [[glossary.html#glossaryid-300{Client}]] {
@@ -33,23 +33,23 @@ class "Contrat" [[glossary.html#glossaryid-200{Contrat}]] {
 class "Facture" [[glossary.html#glossaryid-100{Facture}]] #wheat {
   Mois de facture : YearMonth [[glossary.html#glossaryid-101{Mois de facture}]]
   contrat : Contract [[glossary.html#glossaryid-102{contrat}]]
-  accÃ¨s : Set<Access> [[glossary.html#glossaryid-103{accÃ¨s}]]
-  Ã©tat : PaymentState [[glossary.html#glossaryid-104{Ã©tat}]]
+  accès : Set<Access> [[glossary.html#glossaryid-103{accès}]]
+  état : PaymentState [[glossary.html#glossaryid-104{état}]]
 }
 
 enum "Paiement" [[glossary.html#glossaryid-700{Paiement}]] {
   En attente [[glossary.html#glossaryid-701{En attente}]]
-  PayÃ© [[glossary.html#glossaryid-702{PayÃ©}]]
+  Payé [[glossary.html#glossaryid-702{Payé}]]
 }
 
 class "SMS" [[glossary.html#glossaryid-600{SMS}]]
 
-"AccÃ¨s" <|-- "Appel tÃ©lÃ©phonique"
-"AccÃ¨s" <|-- "SMS"
+"Accès" <|-- "Appel téléphonique"
+"Accès" <|-- "SMS"
 "Contrat" --> "Client" : client
-"Facture" --> "*" "AccÃ¨s" : accÃ¨s
+"Facture" --> "*" "Accès" : accès
 "Facture" --> "Contrat" : contrat
-"Facture" --> "Paiement" : Ã©tat
+"Facture" --> "Paiement" : état
 
 
 

@@ -10,49 +10,49 @@
     |anchor:glossaryid-100[]Facture
     |
     |
-    |Facture Mensuelle gÃ©nÃ©rÃ©e par le systÃ¨me Ã  la date anniversaire du contrat
+    |Facture Mensuelle générée par le système à la date anniversaire du contrat
     |
     |
         |anchor:glossaryid-101[]101
         |
         |anchor:glossaryid-101[]Mois de facture
         |YearMonth
-        |Mois concernÃ© par la facture
+        |Mois concerné par la facture
         |
         |
         |anchor:glossaryid-102[]102
         |
         |anchor:glossaryid-102[]contrat
         |&lt;&lt;glossaryid-200,Contract&gt;&gt;
-        |Contrat concernÃ© par la facture
+        |Contrat concerné par la facture
         |
         |
         |anchor:glossaryid-103[]103
         |
-        |anchor:glossaryid-103[]accÃ¨s
+        |anchor:glossaryid-103[]accès
         |Set
-        |AccÃ¨s aux services
+        |Accès aux services
         |
         |new HashSet&lt;&gt;()
         |anchor:glossaryid-104[]104
         |
-        |anchor:glossaryid-104[]Ã©tat
+        |anchor:glossaryid-104[]état
         |&lt;&lt;glossaryid-700,PaymentState&gt;&gt;, Enumeration
         |Etat du paiement de la facture
         |
-        |  &#10;      
+        |  &#13;&#10;      
     |anchor:glossaryid-200[]200
     |anchor:glossaryid-200[]Contrat
     |
     |
-    |Contrat de tÃ©lÃ©phonie liant la sociÃ©tÃ© Ã  un client
+    |Contrat de téléphonie liant la société à un client
     |
     |
         |anchor:glossaryid-201[]201
         |
         |anchor:glossaryid-201[]Identifiant
         |String
-        |Identifiant du contrat unique dans le systÃ¨me
+        |Identifiant du contrat unique dans le système
         |
         |
         |anchor:glossaryid-202[]202
@@ -66,14 +66,14 @@
         |
         |anchor:glossaryid-203[]Date effet
         |LocalDate
-        |Date Ã  laquelle le contrat prend effet
+        |Date à laquelle le contrat prend effet
         |
         |
     |anchor:glossaryid-300[]300
     |anchor:glossaryid-300[]Client
     |
     |
-    |Client du service liÃ© par un contrat
+    |Client du service lié par un contrat
     |
     |
         |anchor:glossaryid-301[]301
@@ -84,24 +84,24 @@
         |
         |
     |anchor:glossaryid-400[]400
-    |anchor:glossaryid-400[]AccÃ¨s
+    |anchor:glossaryid-400[]Accès
     |
     |
-    |Utilisation du service de tÃ©lÃ©communication
+    |Utilisation du service de télécommunication
     |
     |
         |anchor:glossaryid-401[]401
         |
-        |anchor:glossaryid-401[]TÃ©lÃ©phone
+        |anchor:glossaryid-401[]Téléphone
         |String
-        |NumÃ©ro de tÃ©lÃ©phone utilisÃ©
+        |Numéro de téléphone utilisé
         |
         |
         |anchor:glossaryid-402[]402
         |
         |anchor:glossaryid-402[]Prix
         |BigDecimal
-        |Montant de l'accÃ¨s au service
+        |Montant de l'accès au service
         |
         |
         |anchor:glossaryid-403[]403
@@ -112,7 +112,7 @@
         |
         |ZonedDateTime.now()
     |anchor:glossaryid-500[]500
-    |anchor:glossaryid-500[]Appel tÃ©lÃ©phonique
+    |anchor:glossaryid-500[]Appel téléphonique
     |
     |
     |
@@ -120,9 +120,9 @@
     |
         |anchor:glossaryid-501[]501
         |
-        |anchor:glossaryid-501[]durÃ©e
+        |anchor:glossaryid-501[]durée
         |Duration
-        |DurÃ©e de l'appel tÃ©lÃ©phonique
+        |Durée de l'appel téléphonique
         |
         |
     |anchor:glossaryid-600[]600
@@ -148,9 +148,9 @@
         |
         |anchor:glossaryid-702[]702
         |
-        |anchor:glossaryid-702[]PayÃ©
+        |anchor:glossaryid-702[]Payé
         |
-        |La facture Ã  Ã©tÃ© payÃ© par le client
+        |La facture à été payé par le client
         |
         |
 |===

@@ -46,7 +46,7 @@
         |anchor:glossaryid-Bill_month[]month
         |YearMonth
         |Which month of the bill.
-        |@NotNull()&#10;&#10;@PastOrPresent()
+        |@NotNull()&#13;&#10;&#13;&#10;@PastOrPresent()
         |
         
         |
@@ -117,7 +117,7 @@ Generate by the system and communicate to client.
         |anchor:glossaryid-Customer_email[]email
         |String
         |Email of the customer.
-        |@Email()&#10;&#10;@NotBlank()
+        |@Email()&#13;&#10;&#13;&#10;@NotBlank()
         |
         
         |
