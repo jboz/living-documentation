@@ -47,21 +47,32 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "master" ]; then
     exit 0
 fi
 
-MAKE_RELEASE='false'
+MAKE_RELEASE_PLUGIN='false'
+./check_changes livingdoc-maven-plugin
+noChangesDetected=$?
 
-if [ ${TRAVIS_COMMIT_MESSAGE} =~ maven\ release ] && [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
-    echo "commit message indicate that a release must be create"
-    MAKE_RELEASE='true'
-
-    # reconnect master to origin
-    git checkout master
+if [ [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ $noChangesDetected = 0 ]; then
+    MAKE_RELEASE_PLUGIN='true'
+    echo "prepare livingdoc-maven-plugin for releasing"
+    setReleaseVersion livingdoc-maven-plugin
 fi
 
-if [ "$MAKE_RELEASE" = 'true' ]; then
+MAKE_RELEASE_ANNOTATION='false'
+./check_changes livingdoc-annotations
+noChangesDetected=$?
+
+if [ [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ $noChangesDetected = 0 ]; then
+    MAKE_RELEASE_ANNOTATION='true'
+    echo "prepare livingdoc-annotations for releasing"
+    setReleaseVersion livingdoc-annotations
+fi
+
+if [ "$MAKE_RELEASE_PLUGIN" = 'true' || "$MAKE_RELEASE_ANNOTATION" = 'true' ]; then
+    # reconnect master to origin
+    git checkout master
+
     # upgrade poms to final release version
     setReleaseVersion .
-    setReleaseVersion livingdoc-annotations
-    setReleaseVersion livingdoc-maven-plugin
 else
     echo "keep snapshot version in pom.xml"
 fi
@@ -70,12 +81,12 @@ echo "reading project version..."
 PROJECT_VERSION=$(mvn -q exec:exec -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive)
 
 if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
-    # deploy release and snapshot
+    # deploy release or snapshot
     deploy livingdoc-annotations
     deploy livingdoc-maven-plugin
 fi
 
-if [ "$MAKE_RELEASE" = 'true' ]; then
+if [ "$MAKE_RELEASE_PLUGIN" = 'true' || "$MAKE_RELEASE_ANNOTATION" = 'true' ]; then
     git config user.name "Travis CI"
     git config user.email "travis-ci@ifocusit.ch"
     git config --global push.followTags true # push commit and tag
@@ -86,8 +97,13 @@ if [ "$MAKE_RELEASE" = 'true' ]; then
 
     echo "preparing next version..."
     setNextDevVersion .
-    setNextDevVersion livingdoc-annotations
-    setNextDevVersion livingdoc-maven-plugin
+
+    if [ "$MAKE_RELEASE_PLUGIN" = 'true' ]; then
+        setNextDevVersion livingdoc-maven-plugin
+    fi
+    if [ "$MAKE_RELEASE_ANNOTATION" = 'true' ]; then
+        setNextDevVersion livingdoc-annotations
+    fi
 
     NEXT_VERSION=$(mvn -q exec:exec -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive)
     echo "next development version will be $NEXT_VERSION"

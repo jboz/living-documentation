@@ -22,12 +22,10 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
-import ch.ifocusit.livingdoc.plugin.diagram.PlantumlClassDiagramBuilder;
-import ch.ifocusit.livingdoc.plugin.domain.Cluster;
-import ch.ifocusit.livingdoc.plugin.domain.Color;
-import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
+import java.io.File;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -36,9 +34,12 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import java.io.File;
-import java.util.List;
-import java.util.stream.Stream;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
+import ch.ifocusit.livingdoc.plugin.diagram.PlantumlClassDiagramBuilder;
+import ch.ifocusit.livingdoc.plugin.domain.Cluster;
+import ch.ifocusit.livingdoc.plugin.domain.Color;
+import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 
 /**
  * @author Julien Boz
@@ -48,22 +49,19 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
 
     private static final Color DEFAULT_ROOT_COLOR = Color.from("wheat", null);
 
-    @Parameter(property = "livingdoc.diagram.packageRoot", defaultValue = "${project.groupId}.${project.artifactId}.domain", required = true)
-    private String packageRoot;
-
     @Parameter
     private String[] excludes = new String[0];
 
     /**
      * Output diagram format
      */
-    @Parameter(property = "livingdoc.diagram.type", defaultValue = "plantuml", required = true)
+    @Parameter(property = "livingdoc.diagram.type", defaultValue = "plantuml")
     private DiagramType diagramType;
 
     /**
      * Output diagram image format
      */
-    @Parameter(property = "livingdoc.diagram.image.format", defaultValue = "png", required = true)
+    @Parameter(property = "livingdoc.diagram.image.format", defaultValue = "png")
     private DiagramImageType diagramImageType;
 
     /**
@@ -79,7 +77,14 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     private String diagramLinkPage;
 
     /**
-     * Class color for @{@link ch.ifocusit.livingdoc.annotations.RootAggregate} class.
+     * Define the root aggregare class.
+     */
+    @Parameter(property = "livingdoc.diagram.rootAggregate.class")
+    private String rootAggregateClassMatcher;
+
+    /**
+     * Class color for @{@link ch.ifocusit.livingdoc.annotations.RootAggregate}
+     * class.
      */
     @Parameter(property = "livingdoc.diagram.rootAggregate.color")
     private Color rootAggregateColor;
@@ -117,7 +122,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     @Parameter(property = "livingdoc.diagram.interactive", defaultValue = "false")
     private boolean interactive;
 
-    @Parameter(property = "livingdoc.diagram.output.filename", defaultValue = "diagram", required = true)
+    @Parameter(property = "livingdoc.diagram.output.filename", defaultValue = "diagram")
     private String diagramOutputFilename;
 
     @Parameter(property = "livingdoc.diagram.title")
@@ -159,7 +164,8 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
 
                 switch (diagramType) {
                     case plantuml:
-                        asciiDocBuilder.textLine(String.format("[plantuml, %s, format=%s, opts=interactive]", getOutputFilename(), diagramImageType));
+                        asciiDocBuilder.textLine(String.format("[plantuml, %s, format=%s, opts=interactive]",
+                                getOutputFilename(), diagramImageType));
                 }
                 asciiDocBuilder.textLine("----");
                 asciiDocBuilder.textLine(diagram);
@@ -179,9 +185,13 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
 
         if (diagramType == DiagramType.plantuml) {
             PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot,
-                    Stream.of(excludes).map(s -> s.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", "")).toArray(String[]::new),
-                    rootAggregateColor == null || rootAggregateColor.isEmpty() ? DEFAULT_ROOT_COLOR : rootAggregateColor, diagramHeader, diagramFooter, diagramShowMethods, diagramShowFields,
-                    diagramWithDependencies, diagramLinkPage);
+                    Stream.of(excludes).map(s -> s.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", ""))
+                            .toArray(String[]::new),
+                    rootAggregateClassMatcher,
+                    rootAggregateColor == null || rootAggregateColor.isEmpty() ? DEFAULT_ROOT_COLOR
+                            : rootAggregateColor,
+                    diagramHeader, diagramFooter, diagramShowMethods, diagramShowFields, diagramWithDependencies,
+                    diagramLinkPage);
             if (onlyAnnotated) {
                 builder.filterOnAnnotation(UbiquitousLanguage.class);
             }
