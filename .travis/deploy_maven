@@ -26,19 +26,17 @@ function deploy() {
     fi
 }
 
-function deployIfCodeChanges() {
-    CHECK_PATH=$1'/'
-    if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
-        # This is PR
-        echo "Checking changes since ${TRAVIS_COMMIT_RANGE} against ${CHECK_PATH}"
-        GITDIFF=$(git diff --name-only ${TRAVIS_COMMIT_RANGE} | grep ${CHECK_PATH} | tr -d '[:space:]')
-        if [ "$GITDIFF" == "" ]; then
-            echo "No code changes, skipped script"
-            exit 1
-        fi
-        echo "$1 code change, deploy version"
-        deploy $1
+hasChange() {
+    local check_path=$1'/'
+
+    echo "Checking changes since ${TRAVIS_COMMIT_RANGE} against ${check_path}"
+    GITDIFF=$(git diff --name-only ${TRAVIS_COMMIT_RANGE} | grep ${check_path} | tr -d '[:space:]')
+    if [ "$GITDIFF" == "" ]; then
+        echo "No code changes, skipped"
+        return 0
     fi
+    echo "Code changes"
+    return 1
 }
 
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify
@@ -48,20 +46,20 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "master" ]; then
 fi
 
 MAKE_RELEASE_PLUGIN='false'
-./check_changes livingdoc-maven-plugin
-noChangesDetected=$?
+hasChange livingdoc-maven-plugin
+changesDetected=$?
 
-if [ [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ $noChangesDetected = 0 ]; then
+if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ $changesDetected != 0 ]; then
     MAKE_RELEASE_PLUGIN='true'
     echo "prepare livingdoc-maven-plugin for releasing"
     setReleaseVersion livingdoc-maven-plugin
 fi
 
 MAKE_RELEASE_ANNOTATION='false'
-./check_changes livingdoc-annotations
-noChangesDetected=$?
+hasChange livingdoc-annotations
+changesDetected=$?
 
-if [ [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ $noChangesDetected = 0 ]; then
+if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ $changesDetected != 0 ]; then
     MAKE_RELEASE_ANNOTATION='true'
     echo "prepare livingdoc-annotations for releasing"
     setReleaseVersion livingdoc-annotations
@@ -80,18 +78,16 @@ fi
 echo "reading project version..."
 PROJECT_VERSION=$(mvn -q exec:exec -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive)
 
-if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ]; then
-    # deploy release or snapshot
-    deploy livingdoc-annotations
-    deploy livingdoc-maven-plugin
-fi
+# deploy release or snapshot, depend on previous tests
+deploy livingdoc-annotations
+deploy livingdoc-maven-plugin
 
 if [ "$MAKE_RELEASE_PLUGIN" = 'true' || "$MAKE_RELEASE_ANNOTATION" = 'true' ]; then
     git config user.name "Travis CI"
     git config user.email "travis-ci@ifocusit.ch"
     git config --global push.followTags true # push commit and tag
 
-    GIT_TAG="release/java-plugin/v$PROJECT_VERSION"
+    GIT_TAG="release/java/v$PROJECT_VERSION"
     echo "create git tag $GIT_TAG"
     git tag "$GIT_TAG" -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
 
@@ -117,3 +113,4 @@ if [ "$MAKE_RELEASE_PLUGIN" = 'true' || "$MAKE_RELEASE_ANNOTATION" = 'true' ]; t
 
     echo "release $PROJECT_VERSION done, tag $GIT_TAG pushed, next development version $NEXT_VERSION setted"
 fi
+
