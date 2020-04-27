@@ -1,5 +1,8 @@
 #!/bin/bash
 
+TRAVIS_PULL_REQUEST="false"
+TRAVIS_BRANCH="master"
+
 echo "running deployment script..."
 
 function setReleaseVersion() {
@@ -18,12 +21,21 @@ function setNextDevVersion() {
     fi
 }
 
+function tag() {
+    project=$1
+    echo "reading $project version..."
+    version=`cd $project && mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | sed -n -e '/^\[.*\]/ !{ /^[0-9]/ { p; q } }'`
+    tag="release/$project/v$version"
+    echo "create git tag $tag"
+    #TODO git tag "$tag" -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
+}
+
 function deploy() {
-    echo "deploying version $PROJECT_VERSION of $1 to maven centrale..."
-    if ! mvn -f $1/pom.xml deploy --settings $GPG_DIR/settings.xml -Prelease -DskipTests=true -B; then
-        echo "maven deploy failed"
-        exit 1
-    fi
+    echo "deploying version $1 to maven centrale..."
+    #TODO if ! mvn -f $1/pom.xml deploy --settings $GPG_DIR/settings.xml -Prelease -DskipTests=true -B; then
+    #TODO     echo "maven deploy failed"
+    #TODO     exit 1
+    #TODO fi
 }
 
 hasChange() {
@@ -51,7 +63,6 @@ changesDetected=$?
 
 if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ $changesDetected != 0 ]; then
     MAKE_RELEASE_PLUGIN='true'
-    echo "prepare livingdoc-maven-plugin for releasing"
     setReleaseVersion livingdoc-maven-plugin
 fi
 
@@ -61,43 +72,28 @@ changesDetected=$?
 
 if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ $changesDetected != 0 ]; then
     MAKE_RELEASE_ANNOTATION='true'
-    echo "prepare livingdoc-annotations for releasing"
     setReleaseVersion livingdoc-annotations
 fi
 
-if [ "$MAKE_RELEASE_PLUGIN" = 'true' || "$MAKE_RELEASE_ANNOTATION" = 'true' ]; then
-    # reconnect master to origin
-    git checkout master
 
-    # upgrade poms to final release version
-    setReleaseVersion .
-else
-    echo "keep snapshot version in pom.xml"
-fi
-
-echo "reading project version..."
-PROJECT_VERSION=$(mvn -q exec:exec -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive)
-
-# deploy release or snapshot, depend on previous tests
+# deploy release or snapshot
 deploy livingdoc-annotations
 deploy livingdoc-maven-plugin
 
-if [ "$MAKE_RELEASE_PLUGIN" = 'true' || "$MAKE_RELEASE_ANNOTATION" = 'true' ]; then
-    git config user.name "Travis CI"
-    git config user.email "travis-ci@ifocusit.ch"
-    git config --global push.followTags true # push commit and tag
+if [ "$MAKE_RELEASE_PLUGIN" = 'true' ] || [ "$MAKE_RELEASE_ANNOTATION" = 'true' ]; then
+    # reconnect master to origin
+    git checkout master
 
-    GIT_TAG="release/java/v$PROJECT_VERSION"
-    echo "create git tag $GIT_TAG"
-    git tag "$GIT_TAG" -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
-
-    echo "preparing next version..."
-    setNextDevVersion .
+    #TODO git config user.name "Travis CI"
+    #TODO git config user.email "travis-ci@ifocusit.ch"
+    #TODO git config --global push.followTags true # push commit and tag
 
     if [ "$MAKE_RELEASE_PLUGIN" = 'true' ]; then
+        tag livingdoc-maven-plugin
         setNextDevVersion livingdoc-maven-plugin
     fi
     if [ "$MAKE_RELEASE_ANNOTATION" = 'true' ]; then
+        tag livingdoc-annotations
         setNextDevVersion livingdoc-annotations
     fi
 
@@ -105,12 +101,11 @@ if [ "$MAKE_RELEASE_PLUGIN" = 'true' || "$MAKE_RELEASE_ANNOTATION" = 'true' ]; t
     echo "next development version will be $NEXT_VERSION"
 
     # Commit the "changes", i.e. the new version.
-    git add -A .
-    git commit -m "set next development version to $NEXT_VERSION"
+    #TODO git add -A .
+    #TODO git commit -m "set next development version to $NEXT_VERSION"
 
     echo "pushing new development version..."
-    git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" --follow-tags
+    #TODO git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" --follow-tags
 
-    echo "release $PROJECT_VERSION done, tag $GIT_TAG pushed, next development version $NEXT_VERSION setted"
+    echo "release done, tag pushed, next development version setted"
 fi
-
