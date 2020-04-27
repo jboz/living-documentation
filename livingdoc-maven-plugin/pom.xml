@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ch.ifocusit.livingdoc</groupId>
@@ -8,7 +9,7 @@
     <packaging>maven-plugin</packaging>
 
     <name>Living Documentation maven plugin</name>
-    <description>Plugin maven to generate a living documentation from Java project</description>
+    <description>Plugin maven to generate a living documentation from your java project.</description>
     <url>https://github.com/jboz/living-documentation</url>
     <inceptionYear>2017</inceptionYear>
 
