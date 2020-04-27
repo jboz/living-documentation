@@ -9,7 +9,7 @@
     <packaging>maven-plugin</packaging>
 
     <name>Living Documentation maven plugin</name>
-    <description>Plugin maven to generate a living documentation from your java project.</description>
+    <description>Plugin maven to generate a living documentation from your java sources.</description>
     <url>https://github.com/jboz/living-documentation</url>
     <inceptionYear>2017</inceptionYear>
 
