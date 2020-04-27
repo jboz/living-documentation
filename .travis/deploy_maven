@@ -27,15 +27,15 @@ function tag() {
     version=`cd $project && mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | sed -n -e '/^\[.*\]/ !{ /^[0-9]/ { p; q } }'`
     tag="release/$project/v$version"
     echo "create git tag $tag"
-    #TODO git tag "$tag" -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
+    git tag "$tag" -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
 }
 
 function deploy() {
     echo "deploying version $1 to maven centrale..."
-    #TODO if ! mvn -f $1/pom.xml deploy --settings $GPG_DIR/settings.xml -Prelease -DskipTests=true -B; then
-    #TODO     echo "maven deploy failed"
-    #TODO     exit 1
-    #TODO fi
+    if ! mvn -f $1/pom.xml deploy --settings $GPG_DIR/settings.xml -Prelease -DskipTests=true -B; then
+        echo "maven deploy failed"
+        exit 1
+    fi
 }
 
 hasChange() {
@@ -84,9 +84,9 @@ if [ "$MAKE_RELEASE_PLUGIN" = 'true' ] || [ "$MAKE_RELEASE_ANNOTATION" = 'true' 
     # reconnect master to origin
     git checkout master
 
-    #TODO git config user.name "Travis CI"
-    #TODO git config user.email "travis-ci@ifocusit.ch"
-    #TODO git config --global push.followTags true # push commit and tag
+    git config user.name "Travis CI"
+    git config user.email "travis-ci@ifocusit.ch"
+    git config --global push.followTags true # push commit and tag
 
     if [ "$MAKE_RELEASE_PLUGIN" = 'true' ]; then
         tag livingdoc-maven-plugin
@@ -101,11 +101,11 @@ if [ "$MAKE_RELEASE_PLUGIN" = 'true' ] || [ "$MAKE_RELEASE_ANNOTATION" = 'true' 
     echo "next development version will be $NEXT_VERSION"
 
     # Commit the "changes", i.e. the new version.
-    #TODO git add -A .
-    #TODO git commit -m "set next development version to $NEXT_VERSION"
+    git add -A .
+    git commit -m "set next development version to $NEXT_VERSION"
 
     echo "pushing new development version..."
-    #TODO git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" --follow-tags
+    git push "https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git" --follow-tags
 
     echo "release done, tag pushed, next development version setted"
 fi
