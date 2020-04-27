@@ -1,8 +1,5 @@
 #!/bin/bash
 
-TRAVIS_PULL_REQUEST="false"
-TRAVIS_BRANCH="master"
-
 echo "running deployment script..."
 
 function setReleaseVersion() {
