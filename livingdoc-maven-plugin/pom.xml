@@ -6,7 +6,7 @@
 
     <groupId>ch.ifocusit.livingdoc</groupId>
     <artifactId>livingdoc-maven-plugin</artifactId>
-    <version>1.19-SNAPSHOT</version>
+    <version>1.20-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>Living Documentation maven plugin</name>
