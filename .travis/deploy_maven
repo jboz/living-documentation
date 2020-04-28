@@ -5,7 +5,7 @@
 # suivant différentes conditions ce sera une version realease ou snapshot
 # du projet livingdoc-annotations et/ou du projet livingdoc-manven-plugin
 
-if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "master" ]; then
+if [ "$TRAVIS_PULL_REQUEST" != "false" ] || [ "$TRAVIS_BRANCH" != "master" ]; then
     echo "no release on PR or non master branch"
     exit 0
 fi
@@ -103,16 +103,20 @@ if [ $MAKE_RELEASE_PLUGIN = 1 ] || [ $MAKE_RELEASE_ANNOTATION = 1 ]; then
     git config user.name "Travis CI"
     git config user.email "travis-ci@ifocusit.ch"
 
+    NEXT_VERSION=''
     if [ $MAKE_RELEASE_PLUGIN = 1 ]; then
         tag livingdoc-maven-plugin
         setNextDevVersion livingdoc-maven-plugin
+        version=`cd livingdoc-maven-plugin && mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | sed -n -e '/^\[.*\]/ !{ /^[0-9]/ { p; q } }'`
+        NEXT_VERSION+=" livingdoc-maven-plugin: $version"
     fi
     if [ $MAKE_RELEASE_ANNOTATION = 1 ]; then
         tag livingdoc-annotations
         setNextDevVersion livingdoc-annotations
+        version=`cd livingdoc-annotations && mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | sed -n -e '/^\[.*\]/ !{ /^[0-9]/ { p; q } }'`
+        NEXT_VERSION+=" livingdoc-annotations: $version"
     fi
 
-    NEXT_VERSION=$(mvn -q exec:exec -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive)
     echo "next development version will be $NEXT_VERSION"
 
     # Commit the "changes", i.e. the new version.

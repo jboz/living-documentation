@@ -1,16 +1,23 @@
 #!/bin/bash
 
+project=$1
+
+if [ "$project" != "livingdoc-maven-plugin" ] || [ "$project" != "livingdoc-annotations" ]; then
+  echo "Bad project name !"
+  exit 1
+fi
+
 if [ "$TRAVIS_TOKEN" = "" ]; then
   echo "no TRAVIS_TOKEN defined !"
   exit 1
 fi
 
-body='{
+body="{
   "request": {
     "branch": "master",
-    "message": "make release by api request"
+    "message": "force release $project"
   }
-}'
+}"
 
 curl -s -X POST \
 -H "Content-Type: application/json" \
