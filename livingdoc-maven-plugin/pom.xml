@@ -83,7 +83,7 @@
         <dependency>
             <groupId>ch.ifocusit.livingdoc</groupId>
             <artifactId>livingdoc-annotations</artifactId>
-            <version>${project.version}</version>
+            <version>1.10</version>
         </dependency>
         <dependency>
             <groupId>org.simpleflatmapper</groupId>

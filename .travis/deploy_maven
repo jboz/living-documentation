@@ -72,7 +72,6 @@ if [ "$TRAVIS_BRANCH" = 'master' ] && [ "$TRAVIS_PULL_REQUEST" = 'false' ] && [ 
     setReleaseVersion livingdoc-annotations
 fi
 
-
 # deploy release or snapshot
 deploy livingdoc-annotations
 deploy livingdoc-maven-plugin
