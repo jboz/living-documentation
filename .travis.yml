@@ -26,6 +26,9 @@ jobs:
         provider: script
         script: deploy_maven
         skip_cleanup: true
+        branches:
+          only:
+            - master
 
     - name: Job livingdoc-typescript-plugin
       language: node_js
