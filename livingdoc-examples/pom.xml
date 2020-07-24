@@ -81,7 +81,7 @@
                 <plugin>
                     <groupId>ch.ifocusit.livingdoc</groupId>
                     <artifactId>livingdoc-maven-plugin</artifactId>
-                    <version>${project.version}</version>
+                    <version>1.19</version>
                 </plugin>
             </plugins>
         </pluginManagement>
