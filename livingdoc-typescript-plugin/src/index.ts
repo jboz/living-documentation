@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import program from 'commander';
+import commander from 'commander';
 import { Diagram } from './diagram.mojo';
 import { exportDocument } from './export';
 import { Glossary } from './glossary.mojo';
@@ -12,8 +12,8 @@ export interface Options {
 program
   .version(require('../package.json').version, '-v, --version', 'output the current version')
   .requiredOption('-i, --input <path>', 'define the path of the typescript file')
-  .option('-o, --output <path>', "define the path of the output file. If not defined, it'll output on the STDOUT")
-  .option('-d, --deep', 'indicate if program must through dependancies content or not', true);
+  .option('-o, --output <path>', 'define the path of the output file. If not defined, it\'ll output on the STDOUT')
+  .option('-d, --deep', 'indicate if program must through dependencies content or not', true);
 
 program
   .command('diagram')

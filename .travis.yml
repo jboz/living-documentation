@@ -40,7 +40,7 @@ jobs:
       install: npm install
       script: npm run test:ci
       after_success:
-        - check_changes src || travis_terminate 0;
+        - check_changes src package.json package-lock.json || travis_terminate 0;
         - chmod +x $GPG_DIR/prepare_npm_deploy
         - prepare_npm_deploy
         - npm run build:ci
