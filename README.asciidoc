@@ -5,9 +5,11 @@ image:https://img.shields.io/badge/PRs-welcome-brightgreen.svg["Make a pull requ
 image:https://img.shields.io/github/license/jboz/living-documentation.svg[License]
 image:https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-maven-plugin/badge.svg?style=flat["Maven Central", link="https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-maven-plugin"]
 
-Read CONTRIBUTING file to contrib and check the the backlog on the trello board : https://trello.com/b/pabtQSZG/living-documentation
+Read CONTRIBUTING file to contrib and check the backlog on the trello board : https://trello.com/b/pabtQSZG/living-documentation
 
 = Living documentation tools
+
+Here is the mono-repository of many tools that will help you to generate a living documentation of your code.
 
 This project is intended to provide some tools to allow a nice Living Documentation.
 
