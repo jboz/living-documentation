@@ -23,6 +23,8 @@ concurrency:
 jobs:
   livingdoc-annotations:
     runs-on: ubuntu-latest
+    env:
+      path: livingdoc-annotations
     steps:
       - uses: actions/checkout@v3
         with:
@@ -30,7 +32,7 @@ jobs:
 
       - name: Check production files changes
         run: |
-          GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- 'livingdoc-annotations' | tr -d '[:space:]')
+          GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- '${{ env.path }}' | tr -d '[:space:]')
           if [ "$GITDIFF" == "" ]; then
             echo ::set-env name=changes::false
             echo "No code changes, skipped"
@@ -54,12 +56,12 @@ jobs:
 
       - name: Create maven release version
         if: ${{ env.changes && github.event_name == 'push' }}
-        run: |
-          cd livingdoc-annotations
-          mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
+        working-directory: ./${{ env.path }}
+        run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
 
       - name: Deploy
         if: ${{ env.changes }}
+        working-directory: ./${{ env.path }}
         run: mvn deploy -P release -DskipTests=true
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
@@ -68,6 +70,7 @@ jobs:
 
       - name: Create and commit next dev version
         if: ${{ env.changes && github.event_name == 'push' }}
+        working-directory: ./${{ env.path }}
         run: |
           mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
 
