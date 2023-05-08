@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2020 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,16 +22,16 @@
  */
 package ch.ifocusit.livingdoc.plugin.publish;
 
+import com.google.common.base.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Options;
-import org.asciidoctor.internal.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -53,7 +53,7 @@ import static java.util.regex.Pattern.DOTALL;
  */
 public class HtmlPostProcessor {
 
-    private static final Pattern CDATA_PATTERN = Pattern.compile("<!\\[CDATA\\[.*?\\]\\]>", DOTALL);
+    private static final Pattern CDATA_PATTERN = Pattern.compile("<!\\[CDATA\\[.*?]]>", DOTALL);
     private static final Pattern ATTACHMENT_PATH_PATTERN = Pattern.compile("<ri:attachment ri:filename=\"(.*?)\"");
     private static final Pattern PAGE_TITLE_PATTERN = Pattern.compile("<ri:page ri:content-title=\"(.*?)\"");
 
@@ -119,6 +119,7 @@ public class HtmlPostProcessor {
         return replacedContent.toString();
     }
 
+    @SafeVarargs
     private String postProcessContent(String initialContent, Function<String, String>... postProcessors) {
         return stream(postProcessors).reduce(initialContent,
                 (accumulator, postProcessor) -> postProcessor.apply(accumulator), unusedCombiner());
@@ -127,8 +128,8 @@ public class HtmlPostProcessor {
     public String getPageTitle(Path path) {
         String pageContent = null;
         try {
-            pageContent = IOUtils.readFull(new FileInputStream(path.toFile()));
-        } catch (FileNotFoundException e) {
+            pageContent = IOUtils.toString(new FileInputStream(path.toFile()), Charsets.UTF_8);
+        } catch (IOException e) {
             throw new IllegalStateException("Unable to read page title !", e);
         }
         try {

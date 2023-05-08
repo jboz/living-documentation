@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2020 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -39,11 +39,13 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import ch.ifocusit.livingdoc.plugin.mapping.GlossaryNamesMapper;
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaAnnotatedElement;
 import com.thoughtworks.qdox.model.JavaAnnotation;
 import com.thoughtworks.qdox.model.JavaClass;
 
+import org.apache.commons.csv.CSVFormat;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
@@ -51,7 +53,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.simpleflatmapper.csv.CsvParser;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.plugin.mapping.DomainObject;
@@ -86,14 +87,13 @@ public abstract class AbstractGlossaryMojo extends AbstractDocsGeneratorMojo imp
      * Main method.
      */
     @Override
-    public void executeMojo() throws MojoExecutionException, MojoFailureException {
+    public void executeMojo() throws MojoExecutionException {
         javaDocBuilder = buildJavaProjectBuilder();
         appendTitle(asciiDocBuilder);
 
         if (glossaryMapping != null) {
             try {
-                mappings = CsvParser.mapTo(DomainObject.class).stream(new FileReader(glossaryMapping))
-                        .collect(Collectors.toList());
+                mappings = new GlossaryNamesMapper<>(glossaryMapping, UbiquitousLanguage.class).getMappings();
             } catch (IOException e) {
                 throw new MojoExecutionException("error reading mappings file", e);
             }

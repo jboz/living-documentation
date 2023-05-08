@@ -6,9 +6,9 @@
 ----
 @startuml
 
+header
 
-
-
+endheader
 
 abstract class "Access" [[glossary.html#glossaryid-Access{Access}]] {
   phoneNumber : String [[glossary.html#glossaryid-Access_phoneNumber{phoneNumber}]]
@@ -54,9 +54,9 @@ class "SmsAccess" [[glossary.html#glossaryid-SmsAccess{SmsAccess}]]
 "Bill" --> "Contract" : contract
 "Bill" --> "PaymentState" : paymentState
 "Contract" "*" <-> "Customer" : customer/contracts
+footer
 
-
-
+endfooter
 
 
 @enduml

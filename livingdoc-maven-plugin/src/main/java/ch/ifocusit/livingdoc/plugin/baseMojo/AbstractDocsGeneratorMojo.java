@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2020 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -138,5 +138,10 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
 
     protected void appendTitle(AsciiDocBuilder asciiDocBuilder, String title) {
         asciiDocBuilder.textLine(title).newLine();
+    }
+
+    public AbstractDocsGeneratorMojo setPackageRoot(String packageRoot) {
+        this.packageRoot = packageRoot;
+        return this;
     }
 }
