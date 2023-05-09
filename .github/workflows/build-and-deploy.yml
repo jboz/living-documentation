@@ -127,7 +127,7 @@ jobs:
 
       - name: Deploy
         working-directory: ./livingdoc-maven-plugin
-        run: mvn deploy -P release -DskipTests=true
+        run: mvn deploy -P release -DskipTests=true -X
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
