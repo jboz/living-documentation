@@ -5,10 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ch.ifocusit.livingdoc.example</groupId>
-    <artifactId>microservice</artifactId>
+    <artifactId>example-java-x</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
+    <name>Living Documentation maven plugin test</name>
     <description>Living Documentation example in a microservice</description>
 
     <organization>
@@ -109,7 +110,7 @@
                             <packageRoot>ch.ifocusit.telecom</packageRoot>
                             <diagramOutputFilename>diagram-adapted</diagramOutputFilename>
                             <format>plantuml</format>
-                            <diagramHeader>${project.basedir}/src/main/livingdoc/diagram-adapted.header</diagramHeader>
+                            <diagramHeader>src/main/livingdoc/diagram-adapted.header</diagramHeader>
                             <diagramWithLink>false</diagramWithLink>
                             <interactive>false</interactive>
                             <rootAggregateColor>
