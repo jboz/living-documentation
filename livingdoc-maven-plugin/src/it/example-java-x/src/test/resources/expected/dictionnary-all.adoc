@@ -1,8 +1,40 @@
 :sectlinks:
 :sectanchors:
+= All classes dictionary
+
 [[glossaryid-AbstractDomain]]
 
 == AbstractDomain
+
+
+
+[[glossaryid-BillRepository]]
+
+== BillRepository
+
+
+
+[[glossaryid-BillingService]]
+
+== BillingService
+
+
+
+[[glossaryid-repository]]
+
+== anchor:glossaryid-BillingService_repository[]BillingService.repository
+
+
+
+[[glossaryid-ListBillRepository]]
+
+== ListBillRepository
+
+Base on file system bill repository.
+
+[[glossaryid-bills]]
+
+== anchor:glossaryid-ListBillRepository_bills[]ListBillRepository.bills
 
 
 

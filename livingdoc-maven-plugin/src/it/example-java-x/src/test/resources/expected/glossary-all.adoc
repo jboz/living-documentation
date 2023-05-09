@@ -1,5 +1,7 @@
 :sectlinks:
 :sectanchors:
+= All classes glossary
+
 [cols="1,2,2,1,4,1,1",options="header"]
 |===
 |Id|Object Name|Attribute name|Type|Description|Constraints|Default Value
@@ -11,6 +13,41 @@
     |
     |
     |
+    
+    |anchor:glossaryid-BillRepository[]BillRepository
+    |
+    |
+    |
+    |
+    |
+    
+    |anchor:glossaryid-BillingService[]BillingService
+    |
+    |
+    |
+    |
+    |
+        
+        |
+        |anchor:glossaryid-BillingService_repository[]repository
+        |&lt;&lt;glossaryid-BillRepository,BillRepository&gt;&gt;
+        |
+        |
+        |
+    
+    |anchor:glossaryid-ListBillRepository[]ListBillRepository
+    |
+    |
+    |Base on file system bill repository.
+    |
+    |
+        
+        |
+        |anchor:glossaryid-ListBillRepository_bills[]bills
+        |List
+        |
+        |
+        |new ArrayList&lt;&gt;()
     |anchor:glossaryid-100[]100
     |anchor:glossaryid-100[]Bill
     |

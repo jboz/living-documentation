@@ -9,17 +9,17 @@
     <version>@project.version@.test</version>
     <packaging>jar</packaging>
 
-    <description>Living Documentation example in a DDD project with annotated javaClasses</description>
+    <description>Living Documentation example in a DDD project with annotated java classes</description>
 
     <organization>
         <name>Focus IT</name>
-        <url>http://ifocusit.ch</url>
+        <url>https://ifocusit.ch</url>
     </organization>
 
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>ch.ifocusit.livingdoc</groupId>
             <artifactId>livingdoc-annotations</artifactId>
-            <version>@project.version@</version>
+            <version>2.0</version>
         </dependency>
     </dependencies>
 
@@ -74,9 +74,7 @@
                     <diagramTitle>= Classes Diagram</diagramTitle>
                     <dictionaryTitle>= Dictionary</dictionaryTitle>
                     <glossaryTitle>= Glossary</glossaryTitle>
-                    <glossaryColumnsName>Id Glossaire|Nom de l'objet|Nom de
-                        l'attribut|Type|Description|Contraintes|Valeur par défaut
-                    </glossaryColumnsName>
+                    <glossaryColumnsName>Id Glossaire|Nom de l'objet|Nom de l'attribut|Type|Description|Contraintes|Valeur par défaut</glossaryColumnsName>
                 </configuration>
             </plugin>
         </plugins>
