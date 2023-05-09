@@ -83,12 +83,11 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
       - uses: actions/upload-artifact@v3
-        working-directory: ./livingdoc-annotations
         with:
           name: livingdoc-annotations-artifact
           path: |
-            target/livingdoc-annotations-*.jar
-            target/livingdoc-annotations-*.pom
+            livingdoc-annotations/target/livingdoc-annotations-*.jar
+            livingdoc-annotations/target/livingdoc-annotations-*.pom
           retention-days: 1
 
       - name: Create and commit next dev version
