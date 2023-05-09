@@ -32,12 +32,6 @@ jobs:
 
       - name: Check production files changes
         run: |
-#          GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- '${{ env.folder }}/pom.xml|${{ env.folder }}/LICENSE|${{ env.folder }}/src' | tr -d '[:space:]')
-#          if [ "$GITDIFF" == "" ]; then
-#            echo ::set-env name=changes::false
-#            echo "No code changes, skipped"
-#            exit 0
-#          fi
           echo ::set-env name=changes::true
           echo "Application will be build and publish"
 
@@ -90,12 +84,6 @@ jobs:
 
       - name: Check production files changes
         run: |
-#          GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- '${{ env.folder }}/pom.xml|${{ env.folder }}/LICENSE|${{ env.folder }}/src' | tr -d '[:space:]')
-#          if [ "$GITDIFF" == "" ]; then
-#            echo ::set-env name=changes::false
-#            echo "No code changes, skipped"
-#            exit 0
-#          fi
           echo ::set-env name=changes::true
           echo "Application will be build and publish"
 
@@ -152,11 +140,6 @@ jobs:
 
       - name: Check production files changes
         run: |
-#          GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- 'livingdoc-maven-plugin/pom.xml|livingdoc-maven-plugin/LICENSE|livingdoc-maven-plugin/src|${{ env.folder }}' | tr -d '[:space:]')
-#          if [ "$GITDIFF" == "" ]; then
-#            echo "No code changes, skipped"
-#            exit 0
-#          fi
           echo ::set-env name=changes::true
           echo "Application will be build and published"
 
