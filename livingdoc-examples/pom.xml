@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
 
     <name>Living Documentation example</name>
-    <description>Examples of a real life projects that use living documentation generation tools</description>
+    <description>Examples of real life projects and how to integrate the living documentation plugin and other tools like asciidotor and confluence wiki</description>
     <url>https://github.com/jboz/living-documentation</url>
     <inceptionYear>2023</inceptionYear>
 

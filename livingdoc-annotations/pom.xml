@@ -9,7 +9,7 @@
     <packaging>jar</packaging>
 
     <name>Living Documentation annotations</name>
-    <description>Annotations to help to generate a nice living documentation</description>
+    <description>Annotations to help the generation of a nice living documentation by mark some part of the source code.</description>
     <url>https://github.com/jboz/living-documentation</url>
     <inceptionYear>2023</inceptionYear>
 
