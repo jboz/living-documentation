@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2020 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,10 +24,12 @@ package ch.ifocusit.telecom.rest;
 
 import ch.ifocusit.telecom.domain.Bill;
 import ch.ifocusit.telecom.repository.BillRepository;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.Setter;
 
 import javax.enterprise.context.RequestScoped;
@@ -42,7 +44,7 @@ import java.util.Optional;
  */
 @RequestScoped
 @Path("/billing")
-@Api(description = "Billing REST Endpoint")
+@OpenAPIDefinition(info = @Info(title = "Billing REST Endpoint",version = "1.0"))
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Setter
@@ -53,18 +55,22 @@ public class BillingService {
 
     @GET
     @Path("/whoami")
-    @ApiOperation(value = "nom du service", response = String.class)
+    @Operation(summary = "Get user by user name", responses = {
+            @ApiResponse(description = "Service description",
+                    content = @Content(schema = @Schema(implementation = String.class)))
+    })
     public String whoami() {
         return "service facturation";
     }
 
     @GET
     @Path("/{month}")
-    @ApiOperation(value = "Facturation d'un mois", response = Bill.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 400, message = "Invalid input"),
-            @ApiResponse(code = 404, message = "Billing not found")}
-    )
+    @Operation(summary = "Facturation d'un mois", responses = {
+            @ApiResponse(description = "Service description",
+                    content = @Content(schema = @Schema(implementation = Bill.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "404", description = "Bill not found")
+    })
     public Response getBill(@PathParam("month") final String month, @Context Request request) {
         Optional<Bill> bill = repository.get(YearMonth.parse(month));
 

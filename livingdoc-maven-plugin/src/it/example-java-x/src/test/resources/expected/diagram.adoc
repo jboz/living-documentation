@@ -1,0 +1,17 @@
+:sectlinks:
+:sectanchors:
+[plantuml, diagram, format=png, opts=interactive]
+----
+@startuml
+
+header
+
+endheader
+
+footer
+
+endfooter
+
+
+@enduml
+----

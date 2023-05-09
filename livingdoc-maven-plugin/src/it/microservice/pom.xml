@@ -1,46 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ch.ifocusit</groupId>
+    <groupId>ch.ifocusit.livingdoc.example</groupId>
+    <artifactId>microservice</artifactId>
     <version>@project.version@.test</version>
-    <artifactId>telecom</artifactId>
     <packaging>jar</packaging>
 
     <description>Living Documentation example in a microservice</description>
 
     <organization>
         <name>Focus IT</name>
-        <url>http://ifocusit.ch</url>
+        <url>https://ifocusit.ch</url>
     </organization>
 
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>19</maven.compiler.source>
+        <maven.compiler.target>19</maven.compiler.target>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.16</version>
+            <version>1.18.26</version>
         </dependency>
 
         <!-- living doc deps -->
         <dependency>
             <groupId>ch.ifocusit.livingdoc</groupId>
             <artifactId>livingdoc-annotations</artifactId>
-            <version>1.10</version>
+            <version>2.0</version>
         </dependency>
     </dependencies>
 

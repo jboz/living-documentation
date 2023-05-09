@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2020 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -27,6 +27,7 @@ import ch.ifocusit.livingdoc.annotations.RootAggregate;
 import ch.ifocusit.telecom.domain.access.Access;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.YearMonth;
 import java.util.HashSet;
@@ -42,6 +43,7 @@ import java.util.Set;
 @RootAggregate
 @UbiquitousLanguage(id = 100)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class Bill extends AbstractDomain {
 
     /**

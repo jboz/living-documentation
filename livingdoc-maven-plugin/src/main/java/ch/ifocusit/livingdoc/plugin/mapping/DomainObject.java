@@ -35,16 +35,18 @@ public class DomainObject implements Comparable<DomainObject> {
         return id;
     }
 
-    public void setId(Integer id) {
+    public DomainObject setId(Integer id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public DomainObject setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getAnnotations() {
@@ -55,8 +57,9 @@ public class DomainObject implements Comparable<DomainObject> {
         return getAnnotations() + (annotations.isEmpty() ? "" : NEWLINE + NEWLINE) + getDescription();
     }
 
-    public void setDescription(final String description) {
+    public DomainObject setDescription(final String description) {
         this.description = description;
+        return this;
     }
 
     public String getDescription() {

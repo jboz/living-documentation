@@ -6,6 +6,6 @@ image:https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/liv
 
 = Living documentation annotations
 
-Annotations used by the https://github.com/jboz/living-documentation/tree/master/livingdoc-maven-plugin[living documentation maven plugin].
+Optionals annotations used by the https://github.com/jboz/living-documentation/tree/master/livingdoc-maven-plugin[living documentation maven plugin].
 
 See *https://github.com/jboz/living-documentation* for more documentation.

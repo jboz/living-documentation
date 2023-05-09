@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2020 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,6 +25,7 @@ package ch.ifocusit.telecom.domain.access;
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -34,6 +35,7 @@ import java.time.ZonedDateTime;
  */
 @UbiquitousLanguage(id = 400)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public abstract class Access extends AbstractDomain {
 
     /**

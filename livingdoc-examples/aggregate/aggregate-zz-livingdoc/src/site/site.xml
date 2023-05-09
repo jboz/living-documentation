@@ -5,7 +5,7 @@
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
     <bannerLeft>
         <name>Aggregate many domains into one living documentation</name>
-        <!--<src>http://ifocusit.ch/img/focusit.png</src>-->
+        <!--<src>https://ifocusit.ch/img/focusit.png</src>-->
         <href>https://github.com/jboz/living-documentation/tree/master/livingdoc-examples/aggregate</href>
     </bannerLeft>
 

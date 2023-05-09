@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ch.ifocusit.livingdoc</groupId>
     <artifactId>livingdoc-maven-plugin</artifactId>
-    <version>1.20-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>Living Documentation maven plugin</name>
-    <description>Plugin maven to generate a living documentation from your java sources.</description>
+    <description>Maven plugin to generate a living documentation from your java sources. Many goal: plantuml diagram, gherkin files integration, business glossary, ect...</description>
     <url>https://github.com/jboz/living-documentation</url>
-    <inceptionYear>2017</inceptionYear>
+    <inceptionYear>2023</inceptionYear>
 
     <organization>
         <name>Focus IT</name>
-        <url>http://www.ifocusit.ch</url>
+        <url>https://www.ifocusit.ch</url>
     </organization>
 
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -42,10 +42,9 @@
     </developers>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.release>11</maven.compiler.release>
     </properties>
 
     <dependencies>
@@ -53,7 +52,8 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>3.3.9</version>
+            <version>3.9.1</version>
+            <scope>provided</scope>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-lang3</artifactId>
@@ -64,13 +64,13 @@
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
-            <version>3.5</version>
+            <version>3.8.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
-            <version>3.3.9</version>
+            <version>3.9.1</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -84,17 +84,17 @@
         <dependency>
             <groupId>ch.ifocusit.livingdoc</groupId>
             <artifactId>livingdoc-annotations</artifactId>
-            <version>1.10</version>
+            <version>2.0</version>
         </dependency>
         <dependency>
-            <groupId>org.simpleflatmapper</groupId>
-            <artifactId>sfm-csv</artifactId>
-            <version>3.11.6</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.10.0</version>
         </dependency>
         <dependency>
             <groupId>ch.ifocusit</groupId>
             <artifactId>plantuml-builder</artifactId>
-            <version>1.4</version>
+            <version>2.4</version>
         </dependency>
         <dependency>
             <groupId>com.thoughtworks.qdox</groupId>
@@ -116,12 +116,12 @@
         <dependency>
             <groupId>org.asciidoctor</groupId>
             <artifactId>asciidoctorj</artifactId>
-            <version>1.5.5</version>
+            <version>2.5.8</version>
         </dependency>
         <dependency>
             <groupId>org.asciidoctor</groupId>
             <artifactId>asciidoctorj-diagram</artifactId>
-            <version>1.5.0</version>
+            <version>2.2.7</version>
         </dependency>
         <dependency>
             <groupId>com.github.domgold.doctools.asciidoctor</groupId>
@@ -133,53 +133,62 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
+            <version>2.11.0</version>
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <version>1.10</version>
+            <version>1.15</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version>
         </dependency>
 
         <!-- confluence tools -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>4.3.18.RELEASE</version>
+            <version>6.0.8</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.2</version>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.2.1</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
-            <version>4.5.2</version>
+            <version>4.5.14</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.10.4</version>
+            <version>2.15.0</version>
+            <optional>true</optional>
         </dependency>
 
         <!-- test -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.9.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>2.7.17</version>
+            <version>5.3.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-assert</artifactId>
-            <version>1.4</version>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.24.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -200,10 +209,15 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+            </plugin>
+            <plugin>
                 <!-- taken from http://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.8.2</version>
                 <executions>
                     <execution>
                         <id>mojo-helpers</id>
@@ -222,16 +236,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.5.1</version>
                 <configuration>
                     <showVersion>true</showVersion>
                     <streamLogs>false</streamLogs>
                     <noLog>true</noLog>
                     <showErrors>true</showErrors>
                     <postBuildHookScript>verify</postBuildHookScript>
-                    <!--<localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>-->
-                    <!--<settingsFile>src/it/settings.xml</settingsFile>-->
-                    <!--<mavenOpts>-Xdebug -Xnoagent -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9001</mavenOpts>-->
+                    <environmentVariables>
+                        <JAVA_VERSION>${java.version}</JAVA_VERSION>
+                    </environmentVariables>
                 </configuration>
                 <executions>
                     <execution>
@@ -243,8 +257,59 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.0</version>
+            </plugin>
         </plugins>
     </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.4.3</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependencies</report>
+                            <report>dependency-info</report>
+                            <report>issue-tracking</report>
+                            <report>license</report>
+                            <report>mailing-list</report>
+                            <report>project-team</report>
+                            <report>scm</report>
+                            <report>summary</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.4.1</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <showSuccess>
+                        true
+                    </showSuccess>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
     <distributionManagement>
         <snapshotRepository>
@@ -261,12 +326,9 @@
         <profile>
             <id>release</id>
             <properties>
-                <gpg.executable>gpg</gpg.executable>
+                <gpg.executable>gpg2</gpg.executable>
                 <gpg.keyname>${env.GPG_KEYNAME}</gpg.keyname>
                 <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
-                <gpg.defaultKeyring>false</gpg.defaultKeyring>
-                <gpg.publicKeyring>${env.GPG_DIR}/pubring.gpg</gpg.publicKeyring>
-                <gpg.secretKeyring>${env.GPG_DIR}/secring.gpg</gpg.secretKeyring>
             </properties>
             <build>
                 <plugins>
@@ -288,7 +350,7 @@
                         <!-- create javadoc artifact -->
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>2.10.4</version>
+                        <version>3.5.0</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -302,7 +364,7 @@
                         <!-- Sign artifact -->
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>3.0.1</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -316,7 +378,7 @@
                     <plugin>
                         <!-- create project artifact -->
                         <artifactId>maven-release-plugin</artifactId>
-                        <version>2.5.1</version>
+                        <version>3.0.0</version>
                         <configuration>
                             <tagNameFormat>v@{project.version}</tagNameFormat>
                             <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
@@ -326,13 +388,13 @@
                             <dependency>
                                 <groupId>org.apache.maven.scm</groupId>
                                 <artifactId>maven-scm-provider-gitexe</artifactId>
-                                <version>1.9</version>
+                                <version>1.13.0</version>
                             </dependency>
                         </dependencies>
                     </plugin>
                     <plugin>
                         <artifactId>maven-deploy-plugin</artifactId>
-                        <version>2.8.2</version>
+                        <version>3.1.1</version>
                         <configuration>
                             <updateReleaseInfo>true</updateReleaseInfo>
                         </configuration>
@@ -341,7 +403,7 @@
                         <!-- Release dist files to maven central -->
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.8</version>
+                        <version>1.6.13</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>

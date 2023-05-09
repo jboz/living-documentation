@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2020 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -209,5 +209,15 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
 
     public enum DiagramImageType {
         png, svg, txt;
+    }
+
+    public DiagramMojo setDiagramTitle(String diagramTitle) {
+        this.diagramTitle = diagramTitle;
+        return this;
+    }
+
+    public DiagramMojo setDiagramType(DiagramType diagramType) {
+        this.diagramType = diagramType;
+        return this;
     }
 }

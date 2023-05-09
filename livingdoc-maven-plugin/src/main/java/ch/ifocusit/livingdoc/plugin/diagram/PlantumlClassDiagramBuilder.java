@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2020 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -69,7 +69,7 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
         // override creation to change root aggregate class color
         classDiagramBuilder = new ClassDiagramBuilder() {
             @Override
-            protected JavaClazz createJavaClass(Class clazz) {
+            public JavaClazz createJavaClass(Class clazz) {
                 JavaClazz javaClass = super.createJavaClass(clazz);
                 if (rootAggregateColor != null) {
                     if (StringUtils.isNotBlank(rootAggregateClassMatcher)) {
@@ -94,7 +94,7 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
 
         LOG.info("Initial classes size: " + allClasses.size());
 
-        String diagram = classDiagramBuilder.addClasse(allClasses.stream()
+        String diagram = classDiagramBuilder.addClasses(allClasses.stream()
                 // apply filters
                 .filter(defaultFilter()).filter(additionalClassPredicate).map(classInfo -> {
                     try {
@@ -103,8 +103,12 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
                         LOG.warn(e.toString());
                     }
                     return null;
-                }).filter(Objects::nonNull).collect(Collectors.toList())).excludes(excludes).setHeader(readHeader())
-                .setFooter(readFooter()).withNamesMapper(namesMapper).withLinkMaker(this)
+                }).filter(Objects::nonNull).collect(Collectors.toList()))
+                .withNamesMapper(namesMapper)
+                .excludes(excludes)
+                .setHeader(readHeader())
+                .setFooter(readFooter())
+                .withLinkMaker(this)
                 .withDependencies(diagramWithDependencies).build();
         return diagram;
     }
