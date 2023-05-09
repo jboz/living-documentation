@@ -25,6 +25,7 @@ package ch.ifocusit.telecom.domain;
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 import java.time.MonthDay;
@@ -34,6 +35,7 @@ import java.time.MonthDay;
  */
 @UbiquitousLanguage(id = 200)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class Contract extends AbstractDomain {
 
     /**

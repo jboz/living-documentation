@@ -6,16 +6,16 @@ _Micro service around the Bill aggregate_
 
 == Conception
 
-include::{generated}/diagram.adoc[]
+include::diagram.adoc[]
 
 == Exposed services
 
-plantuml::{generated}/diagram-services.plantuml[]
+plantuml::diagram-services.plantuml[]
 
 == Glossary
 
-include::{generated}/glossary.adoc[]
+include::glossary.adoc[]
 
 == Business Behavior
 
-include::{generated}/gherkin.adoc[]
+include::gherkin.adoc[]

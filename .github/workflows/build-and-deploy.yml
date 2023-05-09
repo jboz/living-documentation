@@ -21,8 +21,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  publish:
+  livingdoc-annotations:
     runs-on: ubuntu-latest
+    env:
+      folder: livingdoc-annotations
     steps:
       - uses: actions/checkout@v3
         with:
@@ -30,7 +32,74 @@ jobs:
 
       - name: Check production files changes
         run: |
-          GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- 'livingdoc-annotations' | tr -d '[:space:]')
+          GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- '${{ env.folder }}/pom.xml|${{ env.folder }}/LICENSE|${{ env.folder }}/src' | tr -d '[:space:]')
+          if [ "$GITDIFF" == "" ]; then
+            echo ::set-env name=changes::false
+            echo "No code changes, skipped"
+            exit 0
+          fi
+          echo ::set-env name=changes::true
+          echo "Application will be build and publish"
+
+      - name: Check plugin production files changes
+        run: |
+          GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- '${{ env.folder }}/pom.xml|${{ env.folder }}/LICENSE|${{ env.folder }}/src' | tr -d '[:space:]')
+          if [ "$GITDIFF" == "" ]; then
+            echo ::set-env name=changes-plugin::false
+            echo "No code changes, skipped"
+            exit 0
+          fi
+          echo ::set-env name=changes-plugin::true
+          echo "Application will be build and publish"
+
+      - name: Set up java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 19
+          distribution: adopt
+          cache: maven
+          server-id: ossrh
+          server-username: OSS_SONATYPE_USERNAME
+          server-password: OSS_SONATYPE_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Create maven release version
+        if: ${{ env.changes && github.event_name == 'push' && !env.changes-plugin }}
+        working-directory: ./${{ env.folder }}
+        run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
+
+      - name: Deploy
+        if: ${{ env.changes }}
+        working-directory: ./${{ env.folder }}
+        run: mvn deploy -P release -DskipTests=true
+        env:
+          OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
+          OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: Create and commit next dev version
+        if: ${{ env.changes && github.event_name == 'push' }}
+        working-directory: ./${{ env.folder }}
+        run: |
+          mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: New release
+
+  livingdoc-maven-plugin:
+    runs-on: ubuntu-latest
+    env:
+      folder: livingdoc-maven-plugin
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Check production files changes
+        run: |
+          GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- '${{ env.folder }}/pom.xml|${{ env.folder }}/LICENSE|${{ env.folder }}/src' | tr -d '[:space:]')
           if [ "$GITDIFF" == "" ]; then
             echo ::set-env name=changes::false
             echo "No code changes, skipped"
@@ -53,12 +122,12 @@ jobs:
 
       - name: Create maven release version
         if: ${{ env.changes && github.event_name == 'push' }}
-        working-directory: ./livingdoc-annotations
+        working-directory: ./${{ env.folder }}
         run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
 
       - name: Deploy
         if: ${{ env.changes }}
-        working-directory: ./livingdoc-annotations
+        working-directory: ./${{ env.folder }}
         run: mvn deploy -P release -DskipTests=true
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
@@ -67,9 +136,55 @@ jobs:
 
       - name: Create and commit next dev version
         if: ${{ env.changes && github.event_name == 'push' }}
-        working-directory: ./livingdoc-annotations
+        working-directory: ./${{ env.folder }}
+        run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: New release
+
+  tests_examples:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [11, 15, 17, 19]
+    env:
+      folder: livingdoc-examples
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: Check production files changes
         run: |
-          mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
+          GITDIFF=$(git diff --name-only HEAD^ HEAD | grep -E -- 'livingdoc-maven-plugin/pom.xml|livingdoc-maven-plugin/LICENSE|livingdoc-maven-plugin/src|${{ env.folder }}' | tr -d '[:space:]')
+          if [ "$GITDIFF" == "" ]; then
+            echo "No code changes, skipped"
+            exit 0
+          fi
+          echo ::set-env name=changes::true
+          echo "Application will be build and published"
+
+      - name: Set up java
+        if: ${{ env.changes }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.version }}
+          distribution: adopt
+          cache: maven
+
+      - name: Test ${{ matrix.version }}
+        if: ${{ env.changes }}
+        working-directory: ./${{ env.folder }}
+        run: mvn clean package
+        env:
+          JAVA_VERSION: ${{ matrix.version }}
+
+      - name: Create and commit next dev version
+        if: ${{ env.changes && github.event_name == 'push' }}
+        working-directory: ./${{ env.folder }}
+        run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:

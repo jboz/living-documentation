@@ -24,6 +24,7 @@ package ch.ifocusit.telecom.domain.access;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.Duration;
 
@@ -32,6 +33,7 @@ import java.time.Duration;
  */
 @UbiquitousLanguage(id = 500)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class CallAccess extends Access {
 
     /**

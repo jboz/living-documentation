@@ -3,20 +3,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>ch.ifocusit.livingdoc</groupId>
-        <artifactId>living-documentation</artifactId>
-        <version>2.0-SNAPSHOT</version>
-    </parent>
-
     <groupId>ch.ifocusit.livingdoc.example</groupId>
     <artifactId>examples-parent</artifactId>
+    <version>2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Living Documentation example</name>
     <description>Examples of a real life projects that use living documentation generation tools</description>
     <url>https://github.com/jboz/living-documentation</url>
-    <inceptionYear>2017</inceptionYear>
+    <inceptionYear>2023</inceptionYear>
 
     <organization>
         <name>Focus IT</name>
@@ -56,8 +51,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>19</maven.compiler.source>
-        <maven.compiler.target>19</maven.compiler.target>
+        <maven.compiler.source>${env.JAVA_VERSION}</maven.compiler.source>
+        <maven.compiler.target>${env.JAVA_VERSION}</maven.compiler.target>
     </properties>
 
     <build>
