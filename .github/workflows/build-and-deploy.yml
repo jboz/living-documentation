@@ -5,7 +5,6 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 env:
@@ -16,24 +15,47 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: 'build-deploy'
-  cancel-in-progress: true
-
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      annotations-status: ${{ steps.check.outputs.annotations-status }}
+      plugin-status: ${{ steps.check.outputs.plugin-status }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            annotations:
+              - 'livingdoc-annotations/src/**'
+              - 'livingdoc-annotations/pom.xml'
+            plugin:
+              - 'livingdoc-maven-plugin/src/**'
+              - 'livingdoc-maven-plugin/pom.xml'
+      - id: check
+        name: Check production files changes
+        run: |
+          status="skip"
+          if [ "${{ steps.changes.outputs.annotations }}" == "true" ]; then
+            status="deploy"
+          fi
+          echo "annotations-status=$status" >> $GITHUB_OUTPUT
+          status="skip"
+          if [ "${{ steps.changes.outputs.plugin }}" == "true" ]; then
+            status="deploy"
+          fi
+          echo "plugin-status=$status" >> $GITHUB_OUTPUT
+
   livingdoc-annotations:
     runs-on: ubuntu-latest
-    env:
-      folder: livingdoc-annotations
+    needs: check
+    if: "needs.check.outputs.annotations-status == 'deploy' && !contains(github.event.head_commit.message, 'ci skip')"
     steps:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
-
-      - name: Check production files changes
-        run: |
-          echo ::set-env name=changes::true
-          echo "Application will be build and publish"
+          ssh-key: ${{ secrets.ACTION_BOT_SECRET_KEY }}
 
       - name: Set up java
         uses: actions/setup-java@v3
@@ -48,131 +70,138 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Create maven release version
-        if: ${{ env.changes && github.event_name == 'push' }}
-        working-directory: ./${{ env.folder }}
-        run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
-
-      - name: Deploy
-        if: ${{ env.changes }}
-        working-directory: ./${{ env.folder }}
-        run: mvn deploy -P release -DskipTests=true
-        env:
-          OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
-          OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-
-      - name: Create and commit next dev version
-        if: ${{ env.changes && github.event_name == 'push' }}
-        working-directory: ./${{ env.folder }}
-        run: |
-          mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
-
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: New release
-
-  livingdoc-maven-plugin:
-    runs-on: ubuntu-latest
-    needs:
-      - livingdoc-annotations
-    env:
-      folder: livingdoc-maven-plugin
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.head_ref }}
-
-      - name: Check production files changes
-        run: |
-          echo ::set-env name=changes::true
-          echo "Application will be build and publish"
-
-      - name: Set up java
-        uses: actions/setup-java@v3
-        with:
-          java-version: 19
-          distribution: adopt
-          cache: maven
-          server-id: ossrh
-          server-username: OSS_SONATYPE_USERNAME
-          server-password: OSS_SONATYPE_PASSWORD
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
-
-      - name: Create maven release version
-        if: ${{ env.changes && github.event_name == 'push' }}
-        working-directory: ./${{ env.folder }}
-        run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
-
-      - name: Deploy
-        if: ${{ env.changes }}
-        working-directory: ./${{ env.folder }}
-        run: mvn deploy -P release -DskipTests=true
-        env:
-          OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
-          OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-
-      - name: Create and commit next dev version
-        if: ${{ env.changes && github.event_name == 'push' }}
-        working-directory: ./${{ env.folder }}
-        run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
-
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: New release
-
-  tests_examples:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    needs:
-      - livingdoc-maven-plugin
-      - livingdoc-annotations
-    strategy:
-      matrix:
-        version: [11, 15, 17, 19]
-    env:
-      folder: livingdoc-examples
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 2
-
-      - name: Check production files changes
-        run: |
-          echo ::set-env name=changes::true
-          echo "Application will be build and published"
-
-      - name: Set up java
-        if: ${{ env.changes }}
-        uses: actions/setup-java@v3
-        with:
-          java-version: ${{ matrix.version }}
-          distribution: adopt
-          cache: maven
-
-      - name: Install livingdoc-annotations
-        if: ${{ env.changes }}
+        if: ${{ github.event_name == 'push' }}
         working-directory: ./livingdoc-annotations
-        run: mvn install -DskipTests=true
+        run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
 
-      - name: Install livingdoc-maven-plugins
-        if: ${{ env.changes }}
-        working-directory: ./livingdoc-maven-plugin
-        run: mvn install -DskipTests=true
-
-      - name: Test ${{ matrix.version }}
-        if: ${{ env.changes }}
-        working-directory: ./${{ env.folder }}
-        run: mvn clean package
+      - name: Deploy
+        working-directory: ./livingdoc-annotations
+        run: mvn deploy -P release -DskipTests=true
         env:
-          JAVA_VERSION: ${{ matrix.version }}
+          OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
+          OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - uses: actions/upload-artifact@v3
+        working-directory: ./livingdoc-annotations
+        with:
+          name: livingdoc-annotations-artifact
+          path: |
+            target/livingdoc-annotations-*.jar
+            target/livingdoc-annotations-*.pom
+          retention-days: 1
 
       - name: Create and commit next dev version
-        if: ${{ env.changes && github.event_name == 'push' }}
-        working-directory: ./${{ env.folder }}
+        if: ${{ github.event_name == 'push' }}
+        working-directory: ./livingdoc-annotations
         run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: New release
+          commit_message: New release - livingdoc-annotations - ci skip
+
+#  livingdoc-maven-plugin:
+#    runs-on: ubuntu-latest
+#    needs: check
+#    if: "needs.check.outputs.plugin-status == 'deploy' && !contains(github.event.head_commit.message, 'ci skip')"
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          ssh-key: ${{ secrets.ACTION_BOT_SECRET_KEY }}
+#
+#      - name: Set up java
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: 19
+#          distribution: adopt
+#          cache: maven
+#          server-id: ossrh
+#          server-username: OSS_SONATYPE_USERNAME
+#          server-password: OSS_SONATYPE_PASSWORD
+#          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+#          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+#
+#      - name: Create maven release version
+#        if: ${{ github.event_name == 'push' }}
+#        working-directory: ./livingdoc-maven-plugin
+#        run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
+#
+#      - name: Deploy
+#        working-directory: ./livingdoc-maven-plugin
+#        run: mvn deploy -P release -DskipTests=true
+#        env:
+#          OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
+#          OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
+#          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+#
+#      - uses: actions/upload-artifact@v3
+#        working-directory: ./livingdoc-maven-plugin
+#        with:
+#          name: livingdoc-maven-plugin-artifact
+#          path: |
+#            target/livingdoc-maven-plugin-*.jar
+#            target/livingdoc-maven-plugin-*.pom
+#          retention-days: 1
+#
+#      - name: Create and commit next dev version
+#        if: ${{ github.event_name == 'push' }}
+#        working-directory: ./livingdoc-maven-plugin
+#        run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
+#
+#      - uses: stefanzweifel/git-auto-commit-action@v4
+#        with:
+#          commit_message: New release - livingdoc-maven-plugin - ci skip
+#
+#  tests_java_plugin:
+#    runs-on: ubuntu-latest
+#    needs:
+#      - livingdoc-maven-plugin
+#      - livingdoc-annotations
+#      - check
+#    if: "(needs.check.outputs.plugin-status == 'deploy' || needs.check.outputs.annotations-status == 'deploy') && github.event_name == 'pull_request'"
+#    strategy:
+#      matrix:
+#        version: [11, 15, 17]
+#    env:
+#      folder: livingdoc-examples
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Set up java
+#        uses: actions/setup-java@v3
+#        with:
+#          java-version: ${{ matrix.version }}
+#          distribution: adopt
+#          cache: maven
+#
+#      - name: Prepare to install livingdoc-annotations artifact locally
+#        working-directory: ./livingdoc-annotations
+#        run: |
+#          ARTIFACT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+#          ARTIFACT_PATH=~/.m2/repository/ch/ifocusit/livingdoc/livingdoc-annotations/$ARTIFACT_VERSION/
+#          echo ::set-env name=ARTIFACT_PATH::$ARTIFACT_PATH
+#
+#      - name: Install livingdoc-annotations artifact locally
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: livingdoc-annotations-artifact
+#          path: ${{ env.ARTIFACT_PATH }}
+#
+#      - name: Prepare to install livingdoc-maven-plugin artifact locally
+#        working-directory: ./livingdoc-maven-plugin
+#        run: |
+#          ARTIFACT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+#          ARTIFACT_PATH=~/.m2/repository/ch/ifocusit/livingdoc/livingdoc-maven-plugin/$ARTIFACT_VERSION/
+#          echo ::set-env name=ARTIFACT_PATH::$ARTIFACT_PATH
+#
+#      - name: Install livingdoc-maven-plugin artifact locally
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: livingdoc-maven-plugin-artifact
+#          path: ${{ env.ARTIFACT_PATH }}
+#
+#      - name: Test ${{ matrix.version }}
+#        working-directory: ./livingdoc-maven-plugin/src/it/example-java-x
+#        run: mvn clean install
+#        env:
+#          JAVA_VERSION: ${{ matrix.version }}

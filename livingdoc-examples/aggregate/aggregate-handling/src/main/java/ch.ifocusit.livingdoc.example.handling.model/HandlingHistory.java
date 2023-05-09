@@ -1,3 +1,5 @@
+package ch.ifocusit.livingdoc.example.handling.model;
+
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.example.shared.ValueObject;
 import org.apache.commons.lang.Validate;

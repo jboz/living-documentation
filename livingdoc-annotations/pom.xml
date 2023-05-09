@@ -15,13 +15,13 @@
 
     <organization>
         <name>Focus IT</name>
-        <url>http://www.ifocusit.ch</url>
+        <url>https://www.ifocusit.ch</url>
     </organization>
 
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -43,6 +43,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.release>11</maven.compiler.release>
     </properties>
 
     <build>
@@ -61,9 +62,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
-                <configuration>
-                    <release>19</release>
-                </configuration>
             </plugin>
         </plugins>
     </build>

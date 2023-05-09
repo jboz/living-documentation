@@ -2,11 +2,11 @@
 
 ## Monorepo
 
-Dans ce repository se trouve plusieurs projet de la shère living documentation.
+Dans ce repository se trouve plusieurs projets de la sphère living documentation.
 
 ### livingdoc-annotations
 
-Le projet [livingdoc-annotations](livingdoc-annotations) contient des annotation java pour faciliter/préciser la génération de la documentation.
+Le projet [livingdoc-annotations](livingdoc-annotations) contient des annotations java pour faciliter/préciser la génération de la documentation.
 
 ### livingdoc-maven-plugin
 
@@ -23,7 +23,3 @@ Le projet [livingdoc-typescript-plugin](livingdoc-typescript-plugin) librairie p
 ## CI/CD
 
 PR obligatoire.
-
-Tout merge sur le master va entrainer un déploiement des artefacts maven sur le repository central.
-
-Pour créer une version final, il faut ajouter le message 'maven release' au message de commit du merge sur le master.
