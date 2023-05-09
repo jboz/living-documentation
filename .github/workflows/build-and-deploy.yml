@@ -161,7 +161,7 @@ jobs:
     if: "needs.check.outputs.plugin-status == 'deploy' && github.event_name == 'pull_request'"
     strategy:
       matrix:
-        version: [11, 15, 17]
+        version: [15, 17]
     env:
       folder: livingdoc-examples
     steps:
