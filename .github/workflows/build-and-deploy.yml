@@ -19,8 +19,8 @@ jobs:
   check:
     runs-on: ubuntu-latest
     outputs:
-      annotations-status: ${{ steps.check.outputs.annotations-status }}
-      plugin-status: ${{ steps.check.outputs.plugin-status }}
+      annotations-status: ${{ steps.annotations-check.outputs.annotations-status }}
+      plugin-status: ${{ steps.plugin-check.outputs.plugin-status }}
     steps:
       - uses: actions/checkout@v3
       - id: changes
@@ -33,14 +33,17 @@ jobs:
             plugin:
               - 'livingdoc-maven-plugin/src/**'
               - 'livingdoc-maven-plugin/pom.xml'
-      - id: check
-        name: Check production files changes
+      - id: annotations-check
+        name: Check annotations project production files changes
         run: |
           status="skip"
           if [ "${{ steps.changes.outputs.annotations }}" == "true" ]; then
             status="deploy"
           fi
           echo "annotations-status=$status" >> $GITHUB_OUTPUT
+      - id: plugin-check
+        name: Check plugin project production files changes
+        run: |
           status="skip"
           if [ "${{ steps.changes.outputs.plugin }}" == "true" ]; then
             status="deploy"
@@ -127,7 +130,7 @@ jobs:
 
       - name: Deploy
         working-directory: ./livingdoc-maven-plugin
-        run: mvn deploy -P release -DskipTests=true -X
+        run: mvn --batch-mode --update-snapshots deploy -P release -X
         env:
           OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
@@ -154,9 +157,8 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - livingdoc-maven-plugin
-      - livingdoc-annotations
       - check
-    if: "(needs.check.outputs.plugin-status == 'deploy' || needs.check.outputs.annotations-status == 'deploy') && github.event_name == 'pull_request'"
+    if: "needs.check.outputs.plugin-status == 'deploy' && github.event_name == 'pull_request'"
     strategy:
       matrix:
         version: [11, 15, 17]
@@ -199,7 +201,7 @@ jobs:
           path: ${{ env.ARTIFACT_PATH }}
 
       - name: Test ${{ matrix.version }}
-        working-directory: ./livingdoc-maven-plugin/src/it/example-java-x
-        run: mvn clean install
+        working-directory: ./livingdoc-maven-plugin/src/nonreg/example-java-x
+        run: mvn --batch-mode --update-snapshots verify
         env:
           JAVA_VERSION: ${{ matrix.version }}
