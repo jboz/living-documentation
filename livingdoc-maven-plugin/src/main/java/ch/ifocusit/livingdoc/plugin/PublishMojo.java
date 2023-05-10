@@ -36,11 +36,13 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @author Julien Boz
@@ -56,10 +58,7 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
         extractTemplatesFromJar();
         try {
             PublishProvider provider;
-            switch (publish.getProvider()) {
-                default:
-                    provider = new ConfluenceProvider(publish.getEndpoint(), publish.getUsername(), publish.getPassword());
-            }
+            provider = new ConfluenceProvider(publish.getEndpoint(), publish.getUsername(), publish.getPassword());
 
             List<Page> pages = readHtmlPages();
             publish(provider, pages);
@@ -75,8 +74,8 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
 
         List<Page> pages = new ArrayList<>();
 
-        Files.walk(Paths.get(generatedDocsDirectory.getAbsolutePath()))
-                .filter(path -> FilenameUtils.isExtension(path.getFileName().toString(), new String[]{Format.adoc.name(), Format.asciidoc.name(), Format.html.name()}))
+        try (Stream<Path> paths = Files.walk(Paths.get(generatedDocsDirectory.getAbsolutePath()))) {
+            paths.filter(path -> FilenameUtils.isExtension(path.getFileName().toString(), Format.adoc.name(), Format.asciidoc.name(), Format.html.name()))
                 .forEach(path -> {
                     try {
                         Map<String, String> attachmentCollector = new HashMap<>();
@@ -98,6 +97,7 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
                         throw new IllegalArgumentException("error reading file", e);
                     }
                 });
+        }
 
         return pages;
     }

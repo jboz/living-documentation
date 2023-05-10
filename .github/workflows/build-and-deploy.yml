@@ -23,7 +23,8 @@ jobs:
       plugin-status: ${{ steps.plugin-check.outputs.plugin-status }}
     steps:
       - uses: actions/checkout@v3
-      - id: changes
+      - name: Detect production files changes
+        id: changes
         uses: dorny/paths-filter@v2
         with:
           filters: |
@@ -33,16 +34,16 @@ jobs:
             plugin:
               - 'livingdoc-maven-plugin/src/**'
               - 'livingdoc-maven-plugin/pom.xml'
-      - id: annotations-check
-        name: Check annotations project production files changes
+      - name: Save annotations project production files changes status
+        id: annotations-check
         run: |
           status="skip"
           if [ "${{ steps.changes.outputs.annotations }}" == "true" ]; then
             status="deploy"
           fi
           echo "annotations-status=$status" >> $GITHUB_OUTPUT
-      - id: plugin-check
-        name: Check plugin project production files changes
+      - name: Save plugin project production files changes status
+        id: plugin-check
         run: |
           status="skip"
           if [ "${{ steps.changes.outputs.plugin }}" == "true" ]; then
@@ -57,7 +58,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.head_ref }}
           ssh-key: ${{ secrets.ACTION_BOT_SECRET_KEY }}
 
       - name: Set up java
@@ -85,7 +85,8 @@ jobs:
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
-      - uses: actions/upload-artifact@v3
+      - name: Save artefacts for next jobs
+        uses: actions/upload-artifact@v3
         with:
           name: livingdoc-annotations-artifact
           path: |
@@ -125,8 +126,9 @@ jobs:
 
       - name: Create maven release version
         if: ${{ github.event_name == 'push' }}
-        working-directory: ./livingdoc-maven-plugin
-        run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
+        run: |
+          mvn -f livingdoc-maven-plugin/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
+          mvn -f livingdoc-examples/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
 
       - name: Deploy
         working-directory: ./livingdoc-maven-plugin
@@ -136,7 +138,8 @@ jobs:
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
-      - uses: actions/upload-artifact@v3
+      - name: Save artefacts for next jobs
+        uses: actions/upload-artifact@v3
         with:
           name: livingdoc-maven-plugin-artifact
           path: |
@@ -144,10 +147,11 @@ jobs:
             livingdoc-maven-plugin/target/livingdoc-maven-plugin-*.pom
           retention-days: 1
 
-      - name: Create and commit next dev version
+      - name: Create next dev version
         if: ${{ github.event_name == 'push' }}
-        working-directory: ./livingdoc-maven-plugin
-        run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
+        run: |
+          mvn -f livingdoc-maven-plugin/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
+          mvn -f livingdoc-examples/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:

@@ -4,7 +4,7 @@
 
     <parent>
         <groupId>ch.ifocusit.livingdoc.example</groupId>
-        <artifactId>examples-parent</artifactId>
+        <artifactId>livingdoc-examples</artifactId>
         <version>2.0-SNAPSHOT</version>
     </parent>
     <artifactId>microservice</artifactId>
