@@ -43,7 +43,6 @@ Annotations dependency :
 <dependency>
     <groupId>ch.ifocusit.livingdoc</groupId>
     <artifactId>livingdoc-annotations</artifactId>
-    <version>1.10</version>
 </dependency>
 ----
 

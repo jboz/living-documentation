@@ -19,11 +19,12 @@ jobs:
   check:
     runs-on: ubuntu-latest
     outputs:
-      annotations-status: ${{ steps.check.outputs.annotations-status }}
-      plugin-status: ${{ steps.check.outputs.plugin-status }}
+      annotations-status: ${{ steps.annotations-check.outputs.annotations-status }}
+      plugin-status: ${{ steps.plugin-check.outputs.plugin-status }}
     steps:
       - uses: actions/checkout@v3
-      - id: changes
+      - name: Detect production files changes
+        id: changes
         uses: dorny/paths-filter@v2
         with:
           filters: |
@@ -33,14 +34,17 @@ jobs:
             plugin:
               - 'livingdoc-maven-plugin/src/**'
               - 'livingdoc-maven-plugin/pom.xml'
-      - id: check
-        name: Check production files changes
+      - name: Save annotations project production files changes status
+        id: annotations-check
         run: |
           status="skip"
           if [ "${{ steps.changes.outputs.annotations }}" == "true" ]; then
             status="deploy"
           fi
           echo "annotations-status=$status" >> $GITHUB_OUTPUT
+      - name: Save plugin project production files changes status
+        id: plugin-check
+        run: |
           status="skip"
           if [ "${{ steps.changes.outputs.plugin }}" == "true" ]; then
             status="deploy"
@@ -54,7 +58,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.head_ref }}
           ssh-key: ${{ secrets.ACTION_BOT_SECRET_KEY }}
 
       - name: Set up java
@@ -82,7 +85,8 @@ jobs:
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
-      - uses: actions/upload-artifact@v3
+      - name: Save artefacts for next jobs
+        uses: actions/upload-artifact@v3
         with:
           name: livingdoc-annotations-artifact
           path: |
@@ -98,3 +102,110 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: New release - livingdoc-annotations - ci skip
+
+  livingdoc-maven-plugin:
+    runs-on: ubuntu-latest
+    needs: check
+    if: "needs.check.outputs.plugin-status == 'deploy' && !contains(github.event.head_commit.message, 'ci skip')"
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ssh-key: ${{ secrets.ACTION_BOT_SECRET_KEY }}
+
+      - name: Set up java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 19
+          distribution: adopt
+          cache: maven
+          server-id: ossrh
+          server-username: OSS_SONATYPE_USERNAME
+          server-password: OSS_SONATYPE_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Create maven release version
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          mvn -f livingdoc-maven-plugin/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
+          mvn -f livingdoc-examples/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
+
+      - name: Deploy
+        working-directory: ./livingdoc-maven-plugin
+        run: mvn --batch-mode --update-snapshots deploy -P release -X
+        env:
+          OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
+          OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: Save artefacts for next jobs
+        uses: actions/upload-artifact@v3
+        with:
+          name: livingdoc-maven-plugin-artifact
+          path: |
+            livingdoc-maven-plugin/target/livingdoc-maven-plugin-*.jar
+            livingdoc-maven-plugin/target/livingdoc-maven-plugin-*.pom
+          retention-days: 1
+
+      - name: Create next dev version
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          mvn -f livingdoc-maven-plugin/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
+          mvn -f livingdoc-examples/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: New release - livingdoc-maven-plugin - ci skip
+
+  tests_java_plugin:
+    runs-on: ubuntu-latest
+    needs:
+      - livingdoc-maven-plugin
+      - check
+    if: "needs.check.outputs.plugin-status == 'deploy' && github.event_name == 'pull_request'"
+    strategy:
+      matrix:
+        version: [11, 15, 17]
+    env:
+      folder: livingdoc-examples
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up java
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.version }}
+          distribution: adopt
+          cache: maven
+
+      - name: Prepare to install livingdoc-annotations artifact locally
+        working-directory: ./livingdoc-annotations
+        run: |
+          ARTIFACT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          ARTIFACT_PATH=~/.m2/repository/ch/ifocusit/livingdoc/livingdoc-annotations/$ARTIFACT_VERSION/
+          echo ::set-env name=ARTIFACT_PATH::$ARTIFACT_PATH
+
+      - name: Install livingdoc-annotations artifact locally
+        uses: actions/download-artifact@v3
+        with:
+          name: livingdoc-annotations-artifact
+          path: ${{ env.ARTIFACT_PATH }}
+
+      - name: Prepare to install livingdoc-maven-plugin artifact locally
+        working-directory: ./livingdoc-maven-plugin
+        run: |
+          ARTIFACT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          ARTIFACT_PATH=~/.m2/repository/ch/ifocusit/livingdoc/livingdoc-maven-plugin/$ARTIFACT_VERSION/
+          echo ::set-env name=ARTIFACT_PATH::$ARTIFACT_PATH
+
+      - name: Install livingdoc-maven-plugin artifact locally
+        uses: actions/download-artifact@v3
+        with:
+          name: livingdoc-maven-plugin-artifact
+          path: ${{ env.ARTIFACT_PATH }}
+
+      - name: Test ${{ matrix.version }}
+        working-directory: ./livingdoc-maven-plugin/src/nonreg/example-java-x
+        run: mvn --batch-mode --update-snapshots verify
+        env:
+          JAVA_VERSION: ${{ matrix.version }}
