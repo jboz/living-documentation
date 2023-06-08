@@ -89,14 +89,14 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
         return gherkinTitle;
     }
 
-    private List<AsciiDocBuilder> docBuilders = new ArrayList<>();
-    private AtomicInteger pageCount = new AtomicInteger(0);
+    private final List<AsciiDocBuilder> docBuilders = new ArrayList<>();
+    private final AtomicInteger pageCount = new AtomicInteger(0);
 
     @Override
-    public void executeMojo() throws MojoExecutionException {
+    public void executeMojo() {
 
         if (!gerkinSeparateFeature) {
-            appendTitle(get(pageCount.get()));
+            appendTitle(getDocBuilder(pageCount.get()));
         }
 
         readFeatures().forEach(path -> {
@@ -106,13 +106,13 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
                 try {
                     Map<String, Object> parsed = MapFormatter.parse(readFileToString(FileUtils.getFile(path), defaultCharset()));
                     String title = StringUtils.defaultString(getTitle(), EMPTY) + parsed.get("name");
-                    appendTitle(get(pageCount.get()), title);
+                    appendTitle(getDocBuilder(pageCount.get()), title);
                 } catch (IOException e) {
                     throw new IllegalStateException("Error reading " + path, e);
                 }
             }
-            get(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
-            get(pageCount.get()).textLine(EMPTY);
+            getDocBuilder(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
+            getDocBuilder(pageCount.get()).textLine(EMPTY);
             somethingWasGenerated = true;
 
             if (gerkinSeparateFeature) {
@@ -125,10 +125,16 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
             return;
         }
 
-        write(docBuilders.get(0));
+        for (int i = 0; i < docBuilders.size(); i++) {
+            try {
+                write(docBuilders.get(i), getOutputFilename() + (docBuilders.size() > 1 ? "_" + i : ""));
+            } catch (MojoExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
-    private AsciiDocBuilder get(int index) {
+    private AsciiDocBuilder getDocBuilder(int index) {
         if (docBuilders.size() <= index) {
             docBuilders.add(createAsciiDocBuilder());
         }
