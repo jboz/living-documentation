@@ -180,6 +180,7 @@ jobs:
 
       - name: Prepare to install livingdoc-annotations artifact locally
         working-directory: ./livingdoc-annotations
+        if: needs.check.outputs.annotations-status == 'deploy'
         run: |
           ARTIFACT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           ARTIFACT_PATH=~/.m2/repository/ch/ifocusit/livingdoc/livingdoc-annotations/$ARTIFACT_VERSION/
@@ -187,6 +188,7 @@ jobs:
 
       - name: Install livingdoc-annotations artifact locally
         uses: actions/download-artifact@v3
+        if: needs.check.outputs.annotations-status == 'deploy'
         with:
           name: livingdoc-annotations-artifact
           path: ${{ env.ARTIFACT_PATH }}
