@@ -73,7 +73,7 @@
             <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
-                <version>{env.LIVINGDOC-MAVEN-PLUGIN_VERSION}</version>
+                <version>${env.LIVINGDOC-MAVEN-PLUGIN_VERSION}</version>
                 <executions>
                     <execution>
                         <id>default</id>
