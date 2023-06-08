@@ -175,7 +175,7 @@ jobs:
           ARTIFACT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           ARTIFACT_PATH=~/.m2/repository/ch/ifocusit/livingdoc/livingdoc-maven-plugin/$ARTIFACT_VERSION/
           echo ::set-env name=ARTIFACT_PATH::$ARTIFACT_PATH
-          echo ::set-env name=LIVINGDOC-MAVEN-PLUGIN_VERSION::ARTIFACT_VERSION
+          echo ::set-env name=LIVINGDOC-MAVEN-PLUGIN_VERSION::$ARTIFACT_VERSION
 
       - name: Install livingdoc-maven-plugin artifact locally
         uses: actions/download-artifact@v3
