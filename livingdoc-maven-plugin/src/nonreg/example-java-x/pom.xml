@@ -29,6 +29,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${env.JAVA_VERSION}</maven.compiler.source>
         <maven.compiler.target>${env.JAVA_VERSION}</maven.compiler.target>
+        <livingdoc-maven-plugin.version>${env.LIVINGDOC-MAVEN-PLUGIN_VERSION}</livingdoc-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -73,7 +74,7 @@
             <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
-                <version>${env.LIVINGDOC-MAVEN-PLUGIN_VERSION}</version>
+                <version>${livingdoc-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>default</id>
