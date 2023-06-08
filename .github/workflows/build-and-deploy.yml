@@ -185,7 +185,9 @@ jobs:
 
       - name: Test ${{ matrix.version }}
         working-directory: ./livingdoc-maven-plugin/src/nonreg/example-java-x
-        run: mvn --batch-mode --update-snapshots verify
+        run: |
+          sed -i -e "s/\$\{env.LIVINGDOC-MAVEN-PLUGIN_VERSION\}/${{ env.LIVINGDOC-MAVEN-PLUGIN_VERSION }}/g" pom.xml
+          mvn --batch-mode --update-snapshots verify
         env:
           JAVA_VERSION: ${{ matrix.version }}
           LIVINGDOC-MAVEN-PLUGIN_VERSION: ${{ env.LIVINGDOC-MAVEN-PLUGIN_VERSION }}
