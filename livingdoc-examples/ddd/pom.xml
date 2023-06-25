@@ -54,6 +54,8 @@
                             <goal>diagram</goal>
                             <goal>glossary</goal>
                             <goal>dictionary</goal>
+                            <goal>gherkin</goal>
+                            <goal>publish</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -67,6 +69,17 @@
                     <diagramTitle>= Classes Diagram</diagramTitle>
                     <dictionaryTitle>= Dictionary</dictionaryTitle>
                     <glossaryTitle>= Glossary</glossaryTitle>
+                    <gherkinTitle>= Use Case - Invoice management - </gherkinTitle><!-- will be used as a prefix for the confluence page name -->
+                    <gerkinSeparateFeature>true</gerkinSeparateFeature><!-- set false to merge all feature into one page, default is true -->
+                    <format>adoc</format><!-- adoc output format is mandatory for confluence publisher because it doesn't allow to publish full html page -->
+                    <publish>
+                        <provider>confluence</provider>
+                        <endpoint>${CONFLUENCE_URL}</endpoint>
+                        <spaceKey>DOCPROD</spaceKey>
+                        <ancestorId>98392</ancestorId>
+                        <username>livingdoc</username>
+                        <password>livingdoc</password>
+                    </publish>
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->

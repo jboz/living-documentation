@@ -23,6 +23,7 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
+import ch.ifocusit.livingdoc.plugin.gherkin.GherkinToAsciidocTransformer;
 import com.github.domgold.doctools.asciidoctor.gherkin.MapFormatter;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.io.FileUtils;
@@ -74,8 +75,14 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     /**
      * Flag to indicate if feature must be in separate files
      */
-    @Parameter(property = "livingdoc.gherkin.separate", defaultValue = "false")
+    @Parameter(property = "livingdoc.gherkin.separate", defaultValue = "true")
     private boolean gerkinSeparateFeature;
+
+    /**
+     * Flag to indicate if generated asciidoc file must use the gherkin plugin
+     */
+    @Parameter(property = "livingdoc.gherkin.gherkinAsciidocPlugin", defaultValue = "false")
+    private boolean gherkinAsciidocPlugin;
 
     protected boolean somethingWasGenerated = false;
 
@@ -101,17 +108,27 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
 
         readFeatures().forEach(path -> {
 
+            getLog().info("Gherkin goal - read " + path);
+
             if (gerkinSeparateFeature) {
                 // read feature title
                 try {
                     Map<String, Object> parsed = MapFormatter.parse(readFileToString(FileUtils.getFile(path), defaultCharset()));
-                    String title = StringUtils.defaultString(getTitle(), EMPTY) + parsed.get("name");
+                    String title = StringUtils.defaultString(getTitle(), EMPTY) + " " + parsed.get("name");
                     appendTitle(getDocBuilder(pageCount.get()), title);
                 } catch (IOException e) {
                     throw new IllegalStateException("Error reading " + path, e);
                 }
             }
-            getDocBuilder(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
+            if (gherkinAsciidocPlugin) {
+                getDocBuilder(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
+            } else {
+                try {
+                    getDocBuilder(pageCount.get()).textLine(new GherkinToAsciidocTransformer().transform(readFileToString(FileUtils.getFile(path), defaultCharset())));
+                } catch (IOException e) {
+                    throw new IllegalStateException("Error reading " + path, e);
+                }
+            }
             getDocBuilder(pageCount.get()).textLine(EMPTY);
             somethingWasGenerated = true;
 
