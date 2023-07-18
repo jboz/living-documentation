@@ -69,6 +69,9 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     @Parameter(property = "livingdoc.gherkin.output.filename", defaultValue = "gherkin", required = true)
     private String gherkinOutputFilename;
 
+    /**
+     * Page title or page title prefix when use in combinaison with {@link #gerkinSeparateFeature} option to true
+     */
     @Parameter(property = "livingdoc.gherkin.title")
     private String gherkinTitle;
 
@@ -110,7 +113,7 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
 
             getLog().info("Gherkin goal - read " + path);
 
-            if (gerkinSeparateFeature) {
+            if (gerkinSeparateFeature && StringUtils.isNotBlank(getTitle())) {
                 // read feature title
                 try {
                     Map<String, Object> parsed = MapFormatter.parse(readFileToString(FileUtils.getFile(path), defaultCharset()));

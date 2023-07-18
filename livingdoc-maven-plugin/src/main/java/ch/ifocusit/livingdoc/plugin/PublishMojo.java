@@ -77,6 +77,7 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
             paths.filter(path -> FilenameUtils.isExtension(path.getFileName().toString(), Format.adoc.name(), Format.asciidoc.name(), Format.html.name()))
                     .forEach(path -> {
                         try {
+                            getLog().info("Publish goal - process " + path);
                             Map<String, String> attachmentCollector = new HashMap<>();
 
                             HtmlPostProcessor htmlProcessor = getPostProcessor();

@@ -43,7 +43,6 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.getTitle;
 import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.isAdoc;
 import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.DOTALL;
@@ -134,9 +133,7 @@ public class HtmlPostProcessor {
         }
         try {
             if (isAdoc(path)) {
-                return getTitle(asciidoctor, pageContent)
-                        .orElseThrow(() -> new IllegalStateException("top-level heading or title meta information must be set"));
-
+                return asciidoctor.load(pageContent, options).getStructuredDoctitle().getMain();
             }
             // try to read h1 tag
             return tagText(pageContent, "h1");
