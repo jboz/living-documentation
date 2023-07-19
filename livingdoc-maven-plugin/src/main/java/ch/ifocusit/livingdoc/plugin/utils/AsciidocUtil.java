@@ -24,11 +24,8 @@ package ch.ifocusit.livingdoc.plugin.utils;
 
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractAsciidoctorMojo.Format;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.asciidoctor.Asciidoctor;
 
 import java.nio.file.Path;
-import java.util.Optional;
 
 /**
  * @author Julien Boz
@@ -42,11 +39,6 @@ public class AsciidocUtil {
     }
 
     public static boolean isAdoc(String filename) {
-        return FilenameUtils.isExtension(filename, new String[]{Format.adoc.name(), Format.asciidoc.name()});
-    }
-
-    public static Optional<String> getTitle(Asciidoctor asciidoctor, String pageContent) {
-        return Optional.ofNullable(asciidoctor.readDocumentHeader(pageContent).getDocumentTitle())
-                .map(title -> StringEscapeUtils.unescapeHtml4(title.getMain()));
+        return FilenameUtils.isExtension(filename, Format.adoc.name(), Format.asciidoc.name());
     }
 }

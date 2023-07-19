@@ -34,6 +34,8 @@ like this example : https://github.com/jboz/living-documentation/tree/master/liv
 == Add gherkin description :
 You can also integrate gherkin files like this example : link:livingdoc-examples/microservice/images/example_microservice_index.html.png[Microservice example generated index file]
 
+If you want to separate gherkins files and upload to confluence for example, look at this example: link:livingdoc-examples/ddd/pom.xml[Domain Driven Design]
+
 == Also allow to publish generated docs to confluence :
 Publish specific HTML version to Altassian Conlluence Server.
 

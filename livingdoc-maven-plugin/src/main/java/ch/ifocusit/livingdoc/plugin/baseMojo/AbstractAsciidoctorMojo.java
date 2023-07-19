@@ -31,16 +31,15 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.asciidoctor.Asciidoctor;
+import org.asciidoctor.Attributes;
 import org.asciidoctor.Options;
-import org.asciidoctor.OptionsBuilder;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 import static org.asciidoctor.SafeMode.UNSAFE;
@@ -48,6 +47,7 @@ import static org.asciidoctor.SafeMode.UNSAFE;
 /**
  * @author Julien Boz
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
 
     protected static final String TEMPLATES_OUTPUT = "${project.build.directory}/asciidoc-templates";
@@ -120,17 +120,16 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
 
         String imagesOutputDirectory = generatedDocsDirectory.getAbsolutePath();
 
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("imagesoutdir", imagesOutputDirectory);
-        attributes.put("outdir", imagesOutputDirectory);
-
-        return OptionsBuilder.options()
+        return Options.builder()
                 .backend("html5")
                 .safe(UNSAFE)
                 .baseDir(generatedDocsDirectory)
                 .templateDirs(asciidocTemplates)
-                .attributes(attributes)
-                .get();
+                .attributes(Attributes.builder()
+                        .attribute("imagesoutdir", imagesOutputDirectory)
+                        .attribute("outdir", imagesOutputDirectory)
+                        .build())
+                .build();
     }
 
     protected void extractTemplatesFromJar() {
@@ -139,7 +138,8 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
             Arrays.asList(new PathMatchingResourcePatternResolver().getResources(TEMPLATES_CLASSPATH_PATTERN))
                     .forEach(templateResource -> {
                         try {
-                            copyInputStreamToFile(templateResource.getInputStream(), new File(this.asciidocTemplates, templateResource.getFilename()));
+                            copyInputStreamToFile(templateResource.getInputStream(), new File(this.asciidocTemplates,
+                                    Objects.requireNonNull(templateResource.getFilename())));
                         } catch (IOException e) {
                             throw new RuntimeException("Could not write template to target file", e);
                         }

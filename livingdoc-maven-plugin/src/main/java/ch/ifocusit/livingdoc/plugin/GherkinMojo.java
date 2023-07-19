@@ -23,6 +23,7 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
+import ch.ifocusit.livingdoc.plugin.gherkin.GherkinToAsciidocTransformer;
 import com.github.domgold.doctools.asciidoctor.gherkin.MapFormatter;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.io.FileUtils;
@@ -68,14 +69,23 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     @Parameter(property = "livingdoc.gherkin.output.filename", defaultValue = "gherkin", required = true)
     private String gherkinOutputFilename;
 
+    /**
+     * Page title or page title prefix when use in combinaison with {@link #gerkinSeparateFeature} option to true
+     */
     @Parameter(property = "livingdoc.gherkin.title")
     private String gherkinTitle;
 
     /**
      * Flag to indicate if feature must be in separate files
      */
-    @Parameter(property = "livingdoc.gherkin.separate", defaultValue = "false")
+    @Parameter(property = "livingdoc.gherkin.separate", defaultValue = "true")
     private boolean gerkinSeparateFeature;
+
+    /**
+     * Flag to indicate if generated asciidoc file must use the gherkin plugin
+     */
+    @Parameter(property = "livingdoc.gherkin.gherkinAsciidocPlugin", defaultValue = "false")
+    private boolean gherkinAsciidocPlugin;
 
     protected boolean somethingWasGenerated = false;
 
@@ -89,30 +99,40 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
         return gherkinTitle;
     }
 
-    private List<AsciiDocBuilder> docBuilders = new ArrayList<>();
-    private AtomicInteger pageCount = new AtomicInteger(0);
+    private final List<AsciiDocBuilder> docBuilders = new ArrayList<>();
+    private final AtomicInteger pageCount = new AtomicInteger(0);
 
     @Override
-    public void executeMojo() throws MojoExecutionException {
+    public void executeMojo() {
 
         if (!gerkinSeparateFeature) {
-            appendTitle(get(pageCount.get()));
+            appendTitle(getDocBuilder(pageCount.get()));
         }
 
         readFeatures().forEach(path -> {
 
-            if (gerkinSeparateFeature) {
+            getLog().info("Gherkin goal - read " + path);
+
+            if (gerkinSeparateFeature && StringUtils.isNotBlank(getTitle())) {
                 // read feature title
                 try {
                     Map<String, Object> parsed = MapFormatter.parse(readFileToString(FileUtils.getFile(path), defaultCharset()));
-                    String title = StringUtils.defaultString(getTitle(), EMPTY) + parsed.get("name");
-                    appendTitle(get(pageCount.get()), title);
+                    String title = StringUtils.defaultString(getTitle(), EMPTY) + " " + parsed.get("name");
+                    appendTitle(getDocBuilder(pageCount.get()), title);
                 } catch (IOException e) {
                     throw new IllegalStateException("Error reading " + path, e);
                 }
             }
-            get(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
-            get(pageCount.get()).textLine(EMPTY);
+            if (gherkinAsciidocPlugin) {
+                getDocBuilder(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
+            } else {
+                try {
+                    getDocBuilder(pageCount.get()).textLine(new GherkinToAsciidocTransformer().transform(readFileToString(FileUtils.getFile(path), defaultCharset())));
+                } catch (IOException e) {
+                    throw new IllegalStateException("Error reading " + path, e);
+                }
+            }
+            getDocBuilder(pageCount.get()).textLine(EMPTY);
             somethingWasGenerated = true;
 
             if (gerkinSeparateFeature) {
@@ -125,10 +145,16 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
             return;
         }
 
-        write(docBuilders.get(0));
+        for (int i = 0; i < docBuilders.size(); i++) {
+            try {
+                write(docBuilders.get(i), getOutputFilename() + (docBuilders.size() > 1 ? "_" + i : ""));
+            } catch (MojoExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
-    private AsciiDocBuilder get(int index) {
+    private AsciiDocBuilder getDocBuilder(int index) {
         if (docBuilders.size() <= index) {
             docBuilders.add(createAsciiDocBuilder());
         }

@@ -85,15 +85,6 @@ jobs:
           OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
-      - name: Save artefacts for next jobs
-        uses: actions/upload-artifact@v3
-        with:
-          name: livingdoc-annotations-artifact
-          path: |
-            livingdoc-annotations/target/livingdoc-annotations-*.jar
-            livingdoc-annotations/target/livingdoc-annotations-*.pom
-          retention-days: 1
-
       - name: Create and commit next dev version
         if: ${{ github.event_name == 'push' }}
         working-directory: ./livingdoc-annotations
@@ -160,8 +151,8 @@ jobs:
   tests_java_plugin:
     runs-on: ubuntu-latest
     needs:
-      - livingdoc-maven-plugin
       - check
+      - livingdoc-maven-plugin
     if: "needs.check.outputs.plugin-status == 'deploy' && github.event_name == 'pull_request'"
     strategy:
       matrix:
@@ -178,25 +169,13 @@ jobs:
           distribution: adopt
           cache: maven
 
-      - name: Prepare to install livingdoc-annotations artifact locally
-        working-directory: ./livingdoc-annotations
-        run: |
-          ARTIFACT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          ARTIFACT_PATH=~/.m2/repository/ch/ifocusit/livingdoc/livingdoc-annotations/$ARTIFACT_VERSION/
-          echo ::set-env name=ARTIFACT_PATH::$ARTIFACT_PATH
-
-      - name: Install livingdoc-annotations artifact locally
-        uses: actions/download-artifact@v3
-        with:
-          name: livingdoc-annotations-artifact
-          path: ${{ env.ARTIFACT_PATH }}
-
       - name: Prepare to install livingdoc-maven-plugin artifact locally
         working-directory: ./livingdoc-maven-plugin
         run: |
           ARTIFACT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           ARTIFACT_PATH=~/.m2/repository/ch/ifocusit/livingdoc/livingdoc-maven-plugin/$ARTIFACT_VERSION/
           echo ::set-env name=ARTIFACT_PATH::$ARTIFACT_PATH
+          echo ::set-env name=LIVINGDOC-MAVEN-PLUGIN_VERSION::$ARTIFACT_VERSION
 
       - name: Install livingdoc-maven-plugin artifact locally
         uses: actions/download-artifact@v3
@@ -206,6 +185,10 @@ jobs:
 
       - name: Test ${{ matrix.version }}
         working-directory: ./livingdoc-maven-plugin/src/nonreg/example-java-x
-        run: mvn --batch-mode --update-snapshots verify
+        run: |
+          
+          sed -i -e "s/\${env.LIVINGDOC-MAVEN-PLUGIN_VERSION}/${{ env.LIVINGDOC-MAVEN-PLUGIN_VERSION }}/g" pom.xml
+          mvn --batch-mode --update-snapshots verify
         env:
           JAVA_VERSION: ${{ matrix.version }}
+          LIVINGDOC-MAVEN-PLUGIN_VERSION: ${{ env.LIVINGDOC-MAVEN-PLUGIN_VERSION }}
