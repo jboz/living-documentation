@@ -50,6 +50,7 @@ import ch.ifocusit.plantuml.classdiagram.model.clazz.JavaClazz;
  * @author Julien Boz
  */
 public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
+    private static final String PRAGMA_LAYOUT_SMETANA = "!pragma layout smetana";
 
     Logger LOG = LoggerFactory.getLogger(PlantumlClassDiagramBuilder.class);
 
@@ -57,6 +58,7 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
     private Predicate<ClassInfo> additionalClassPredicate = a -> true; // default predicate always true
     private boolean showMethods;
     private boolean showFields;
+    private boolean useExternalGraphviz = false;
 
     public PlantumlClassDiagramBuilder(MavenProject project, String prefix, String[] excludes,
             String rootAggregateClassMatcher, Color rootAggregateColor, File header, File footer, boolean showMethods,
@@ -106,10 +108,12 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
                 }).filter(Objects::nonNull).collect(Collectors.toList()))
                 .withNamesMapper(namesMapper)
                 .excludes(excludes)
+                .setAfterStartTag(!useExternalGraphviz ? PRAGMA_LAYOUT_SMETANA : null)
                 .setHeader(readHeader())
                 .setFooter(readFooter())
                 .withLinkMaker(this)
-                .withDependencies(diagramWithDependencies).build();
+                .withDependencies(diagramWithDependencies)
+                .build();
         return diagram;
     }
 
@@ -130,5 +134,9 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
                 .and(classInfo -> classInfo.load().isAnnotationPresent(annotation));
         // add field predicate
         classDiagramBuilder.addFieldPredicate(attribut -> attribut.getField().isAnnotationPresent(annotation));
+    }
+
+    public void setUseExternalGraphiz(boolean useExternalGraphviz) {
+        this.useExternalGraphviz = useExternalGraphviz;
     }
 }

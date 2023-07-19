@@ -2,9 +2,9 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
   pull_request:
-    branches: [master]
+    branches: [ master ]
   workflow_dispatch:
 
 env:
@@ -92,7 +92,7 @@ jobs:
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: New release - livingdoc-annotations - ci skip
+          commit_message: Post release - livingdoc-annotations - ci skip
 
   livingdoc-maven-plugin:
     runs-on: ubuntu-latest
@@ -146,7 +146,7 @@ jobs:
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: New release - livingdoc-maven-plugin - ci skip
+          commit_message: Post release - livingdoc-maven-plugin - ci skip
 
   tests_java_plugin:
     runs-on: ubuntu-latest
@@ -156,7 +156,7 @@ jobs:
     if: "needs.check.outputs.plugin-status == 'deploy' && github.event_name == 'pull_request'"
     strategy:
       matrix:
-        version: [11, 15, 17]
+        version: [ 11, 15, 17 ]
     env:
       folder: livingdoc-examples
     steps:
@@ -186,7 +186,6 @@ jobs:
       - name: Test ${{ matrix.version }}
         working-directory: ./livingdoc-maven-plugin/src/nonreg/example-java-x
         run: |
-          
           sed -i -e "s/\${env.LIVINGDOC-MAVEN-PLUGIN_VERSION}/${{ env.LIVINGDOC-MAVEN-PLUGIN_VERSION }}/g" pom.xml
           mvn --batch-mode --update-snapshots verify
         env:

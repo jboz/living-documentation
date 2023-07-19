@@ -22,10 +22,12 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import java.io.File;
-import java.util.List;
-import java.util.stream.Stream;
-
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
+import ch.ifocusit.livingdoc.plugin.diagram.PlantumlClassDiagramBuilder;
+import ch.ifocusit.livingdoc.plugin.domain.Cluster;
+import ch.ifocusit.livingdoc.plugin.domain.Color;
+import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -34,12 +36,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
-import ch.ifocusit.livingdoc.plugin.diagram.PlantumlClassDiagramBuilder;
-import ch.ifocusit.livingdoc.plugin.domain.Cluster;
-import ch.ifocusit.livingdoc.plugin.domain.Color;
-import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
+import java.io.File;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author Julien Boz
@@ -131,6 +130,13 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     @Parameter(property = "livingdoc.diagram.withDeps", defaultValue = "false")
     private boolean diagramWithDependencies;
 
+    /**
+     * The graphviz java implementation image processor will be use by default.
+     * Set this option to true to use external graphviz image processor.
+     */
+    @Parameter(property = "livingdoc.diagram.useExternalGraphviz", defaultValue = "false")
+    private boolean diagramUseExternalGraphviz;
+
     @Override
     protected String getOutputFilename() {
         return diagramOutputFilename;
@@ -198,6 +204,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
             if (diagramWithLink && !DiagramImageType.png.equals(diagramImageType)) {
                 builder.mapNames(glossaryMapping);
             }
+            builder.setUseExternalGraphiz(diagramUseExternalGraphviz);
             return builder.generate();
         }
         throw new NotImplementedException(String.format("format %s is not implemented yet", diagramType));

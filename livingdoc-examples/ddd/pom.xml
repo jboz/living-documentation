@@ -76,7 +76,7 @@
                         <provider>confluence</provider>
                         <endpoint>${CONFLUENCE_URL}</endpoint>
                         <spaceKey>DOCPROD</spaceKey>
-                        <ancestorId>98392</ancestorId>
+                        <ancestorId>98369</ancestorId>
                         <username>livingdoc</username>
                         <password>livingdoc</password>
                     </publish>

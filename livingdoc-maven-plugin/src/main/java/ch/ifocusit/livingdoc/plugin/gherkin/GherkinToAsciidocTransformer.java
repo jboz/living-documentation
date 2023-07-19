@@ -6,9 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Map;
 
+import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.NEWLINE;
+
 @SuppressWarnings("unchecked")
 public class GherkinToAsciidocTransformer {
-    public static final String NEWLINE = System.getProperty("line.separator");
 
     private final StringBuilder builder = new StringBuilder();
 

@@ -3,6 +3,7 @@
 [plantuml, diagram, format=png, opts=interactive]
 ----
 @startuml
+!pragma layout smetana
 
 header
 
