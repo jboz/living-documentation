@@ -5,6 +5,7 @@
 [plantuml, diagram-all, format=png, opts=interactive]
 ----
 @startuml
+!pragma layout smetana
 
 
 
