@@ -38,6 +38,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
@@ -66,7 +67,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     /**
      * Add link into diagram to glossary
      */
-    @Parameter(property = "livingdoc.diagram.link.activate", defaultValue = "true")
+    @Parameter(property = "livingdoc.diagram.link.activate", defaultValue = "false")
     private boolean diagramWithLink = true;
 
     /**
@@ -109,14 +110,26 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     /**
      * Header of the diagram
      */
-    @Parameter(defaultValue = "${project.basedir}/src/main/livingdoc/diagram.header")
-    private File diagramHeader;
+    @Parameter(property = "livingdoc.diagram.start-options", defaultValue = "${project.basedir}/src/main/livingdoc/diagram-start.options")
+    private File diagramStartOptions;
 
     /**
      * Footer of the diagram
      */
-    @Parameter(defaultValue = "${project.basedir}/src/main/livingdoc/diagram.footer")
-    private File diagramFooter;
+    @Parameter(property = "livingdoc.diagram.end-options", defaultValue = "${project.basedir}/src/main/livingdoc/diagram-end.options")
+    private File diagramEndOptions;
+
+    /**
+     * Header of the diagram
+     */
+    @Parameter(property = "livingdoc.diagram.header")
+    private String diagramHeader;
+
+    /**
+     * Footer of the diagram
+     */
+    @Parameter(property = "livingdoc.diagram.footer")
+    private String diagramFooter;
 
     @Parameter(property = "livingdoc.diagram.interactive", defaultValue = "false")
     private boolean interactive;
@@ -153,6 +166,9 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
             diagramWithLink = true;
             diagramImageType = DiagramImageType.svg;
         }
+        if (StringUtils.isNotBlank(diagramLinkPage)) {
+            diagramWithLink = true;
+        }
         // generate diagram
         String diagram = generateDiagram();
 
@@ -168,10 +184,8 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
                 AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
                 appendTitle(asciiDocBuilder);
 
-                switch (diagramType) {
-                    case plantuml:
-                        asciiDocBuilder.textLine(String.format("[plantuml, %s, format=%s, opts=interactive]",
-                                getOutputFilename(), diagramImageType));
+                if (Objects.requireNonNull(diagramType) == DiagramType.plantuml) {
+                    asciiDocBuilder.textLine(String.format("[plantuml, %s, format=%s" + (interactive ? ", opts=interactive" : "") + "]", getOutputFilename(), diagramImageType));
                 }
                 asciiDocBuilder.textLine("----");
                 asciiDocBuilder.textLine(diagram);
@@ -190,14 +204,23 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
         getLog().info("generate diagram with packageRoot=" + packageRoot);
 
         if (diagramType == DiagramType.plantuml) {
-            PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder(project, packageRoot,
-                    Stream.of(excludes).map(s -> s.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", ""))
-                            .toArray(String[]::new),
-                    rootAggregateClassMatcher,
-                    rootAggregateColor == null || rootAggregateColor.isEmpty() ? DEFAULT_ROOT_COLOR
-                            : rootAggregateColor,
-                    diagramHeader, diagramFooter, diagramShowMethods, diagramShowFields, diagramWithDependencies,
-                    diagramLinkPage);
+            PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder();
+            builder.setProject(project);
+            builder.setPrefix(packageRoot);
+            builder.setDiagramWithLink(diagramWithLink);
+            builder.setExcludes(Stream.of(excludes)
+                    .map(s -> s.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", ""))
+                    .toArray(String[]::new));
+            builder.setRootAggregateClassMatcher(rootAggregateClassMatcher);
+            builder.setRootAggregateColor(rootAggregateColor == null || rootAggregateColor.isEmpty() ? DEFAULT_ROOT_COLOR : rootAggregateColor);
+            builder.setHeader(diagramHeader);
+            builder.setFooter(diagramFooter);
+            builder.setShowMethods(diagramShowMethods);
+            builder.setShowFields(diagramShowFields);
+            builder.setDiagramWithDependencies(diagramWithDependencies);
+            builder.setLinkPage(diagramLinkPage);
+            builder.setDiagramTitle(diagramTitle);
+
             if (onlyAnnotated) {
                 builder.filterOnAnnotation(UbiquitousLanguage.class);
             }
@@ -205,7 +228,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
                 builder.mapNames(glossaryMapping);
             }
             builder.setUseExternalGraphiz(diagramUseExternalGraphviz);
-            return builder.generate();
+            return builder.build();
         }
         throw new NotImplementedException(String.format("format %s is not implemented yet", diagramType));
     }

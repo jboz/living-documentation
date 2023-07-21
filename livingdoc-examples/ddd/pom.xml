@@ -67,6 +67,7 @@
                         <exclude>.*domain.common.*</exclude>
                     </excludes>
                     <diagramTitle>= Classes Diagram</diagramTitle>
+                    <diagramLinkPage>Glossary</diagramLinkPage>
                     <dictionaryTitle>= Dictionary</dictionaryTitle>
                     <glossaryTitle>= Glossary</glossaryTitle>
                     <gherkinTitle>= Use Case - Invoice management - </gherkinTitle><!-- will be used as a prefix for the confluence page name -->
