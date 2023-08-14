@@ -111,7 +111,8 @@
                             <packageRoot>ch.ifocusit.telecom</packageRoot>
                             <diagramOutputFilename>diagram-adapted</diagramOutputFilename>
                             <format>plantuml</format>
-                            <diagramHeader>src/main/livingdoc/diagram-adapted.header</diagramHeader>
+                            <diagramEndOptions>src/main/livingdoc/diagram-adapted.footer</diagramEndOptions>
+                            <diagramHeader>Microservice classes diagram</diagramHeader>
                             <diagramWithLink>false</diagramWithLink>
                             <interactive>false</interactive>
                             <rootAggregateColor>

@@ -1,21 +1,22 @@
 @startuml
 !pragma layout smetana
 
+
 header
-hide BillingService fields
+Microservice classes diagram
 endheader
 
-abstract class "Access" [[glossary.html#glossaryid-400{Access}]] {
-  phoneNumber : String [[glossary.html#glossaryid-401{phoneNumber}]]
-  price : BigDecimal [[glossary.html#glossaryid-402{price}]]
-  dateTime : ZonedDateTime [[glossary.html#glossaryid-403{dateTime}]]
+abstract class "Access" [[glossary.html#glossaryid-400{400}]] {
+  phoneNumber : String [[[glossary.html#glossaryid-401{401}]]]
+  price : BigDecimal [[[glossary.html#glossaryid-402{402}]]]
+  dateTime : ZonedDateTime [[[glossary.html#glossaryid-403{403}]]]
 }
 
-class "Bill" [[glossary.html#glossaryid-100{Bill}]] #pink {
-  month : YearMonth [[glossary.html#glossaryid-101{month}]]
-  contract : Contract [[glossary.html#glossaryid-102{contract}]]
-  accesses : Set<Access> [[glossary.html#glossaryid-103{accesses}]]
-  customerInformed : boolean [[glossary.html#glossaryid-Bill_customerInformed{customerInformed}]]
+class "Bill" [[glossary.html#glossaryid-100{100}]] #pink {
+  month : YearMonth [[[glossary.html#glossaryid-101{101}]]]
+  contract : Contract [[[glossary.html#glossaryid-102{102}]]]
+  accesses : Set<Access> [[[glossary.html#glossaryid-103{103}]]]
+  customerInformed : boolean [[[glossary.html#glossaryid-Bill_customerInformed{Bill.customerInformed}]]]
 }
 
 interface "BillRepository" [[glossary.html#glossaryid-BillRepository{BillRepository}]] {
@@ -26,28 +27,28 @@ interface "BillRepository" [[glossary.html#glossaryid-BillRepository{BillReposit
 }
 
 class "BillingService" [[glossary.html#glossaryid-BillingService{BillingService}]] {
-  repository : BillRepository [[glossary.html#glossaryid-BillingService_repository{repository}]]
+  repository : BillRepository [[[glossary.html#glossaryid-BillingService_repository{BillingService.repository}]]]
   getBill(String) : Optional<Bill>
 }
 
-class "CallAccess" [[glossary.html#glossaryid-500{CallAccess}]] {
-  duration : Duration [[glossary.html#glossaryid-501{duration}]]
+class "CallAccess" [[glossary.html#glossaryid-500{500}]] {
+  duration : Duration [[[glossary.html#glossaryid-501{501}]]]
 }
 
-class "Contract" [[glossary.html#glossaryid-200{Contract}]] {
-  id : String [[glossary.html#glossaryid-201{id}]]
-  customer : Customer [[glossary.html#glossaryid-202{customer}]]
-  effectDate : LocalDate [[glossary.html#glossaryid-203{effectDate}]]
+class "Contract" [[glossary.html#glossaryid-200{200}]] {
+  id : String [[[glossary.html#glossaryid-201{201}]]]
+  customer : Customer [[[glossary.html#glossaryid-202{202}]]]
+  effectDate : LocalDate [[[glossary.html#glossaryid-203{203}]]]
 }
 
-class "Customer" [[glossary.html#glossaryid-300{Customer}]] {
-  name : String [[glossary.html#glossaryid-301{name}]]
-  contracts : Set<Contract> [[glossary.html#glossaryid-Customer_contracts{contracts}]]
+class "Customer" [[glossary.html#glossaryid-300{300}]] {
+  name : String [[[glossary.html#glossaryid-301{301}]]]
+  contracts : Set<Contract> [[[glossary.html#glossaryid-Customer_contracts{Customer.contracts}]]]
 }
 
 class "ListBillRepository" [[glossary.html#glossaryid-ListBillRepository{ListBillRepository}]]
 
-class "SmsAccess" [[glossary.html#glossaryid-600{SmsAccess}]]
+class "SmsAccess" [[glossary.html#glossaryid-600{600}]]
 
 "Access" <|-- "CallAccess"
 "Access" <|-- "SmsAccess"
@@ -58,9 +59,6 @@ class "SmsAccess" [[glossary.html#glossaryid-600{SmsAccess}]]
 "BillingService" --> "Bill" : use
 "BillingService" --> "BillRepository" : repository
 "Contract" "*" <-> "Customer" : customer/contracts
-footer
 
-endfooter
-
-
+hide BillingService fields
 @enduml

@@ -214,6 +214,8 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
             builder.setRootAggregateClassMatcher(rootAggregateClassMatcher);
             builder.setRootAggregateColor(rootAggregateColor == null || rootAggregateColor.isEmpty() ? DEFAULT_ROOT_COLOR : rootAggregateColor);
             builder.setHeader(diagramHeader);
+            builder.setStartOptions(diagramStartOptions);
+            builder.setEndOptions(diagramEndOptions);
             builder.setFooter(diagramFooter);
             builder.setShowMethods(diagramShowMethods);
             builder.setShowFields(diagramShowFields);
