@@ -1,0 +1,52 @@
+@startuml
+!pragma layout smetana
+
+
+title = Classes Diagram
+
+abstract class "Access" [[Glossary#glossaryid-Access{Access}]] {
+  phoneNumber : String [[[Glossary#glossaryid-Access_phoneNumber{Access.phoneNumber}]]]
+  price : BigDecimal [[[Glossary#glossaryid-Access_price{Access.price}]]]
+  dateTime : ZonedDateTime [[[Glossary#glossaryid-Access_dateTime{Access.dateTime}]]]
+}
+
+class "Bill" [[Glossary#glossaryid-Bill{Bill}]] {
+  month : YearMonth [[[Glossary#glossaryid-Bill_month{Bill.month}]]]
+  contract : Contract [[[Glossary#glossaryid-Bill_contract{Bill.contract}]]]
+  accesses : Set<Access> [[[Glossary#glossaryid-Bill_accesses{Bill.accesses}]]]
+  paymentState : PaymentState [[[Glossary#glossaryid-Bill_paymentState{Bill.paymentState}]]]
+  addAccess(Access) : boolean
+  removeAccess(Access) : boolean
+}
+
+class "CallAccess" [[Glossary#glossaryid-CallAccess{CallAccess}]] {
+  duration : Duration [[[Glossary#glossaryid-CallAccess_duration{CallAccess.duration}]]]
+}
+
+class "Contract" [[Glossary#glossaryid-Contract{Contract}]] {
+  id : Long [[[Glossary#glossaryid-Contract_id{Contract.id}]]]
+  customer : Customer [[[Glossary#glossaryid-Contract_customer{Contract.customer}]]]
+}
+
+class "Customer" [[Glossary#glossaryid-Customer{Customer}]] {
+  email : String [[[Glossary#glossaryid-Customer_email{Customer.email}]]]
+  contracts : Set<Contract> [[[Glossary#glossaryid-Customer_contracts{Customer.contracts}]]]
+  addContract(Contract) : boolean
+  removeContract(Contract) : boolean
+}
+
+enum "PaymentState" [[Glossary#glossaryid-PaymentState{PaymentState}]] {
+  WAITING [[[Glossary#glossaryid-PaymentState_WAITING{PaymentState.WAITING}]]]
+  DONE [[[Glossary#glossaryid-PaymentState_DONE{PaymentState.DONE}]]]
+}
+
+class "SmsAccess" [[Glossary#glossaryid-SmsAccess{SmsAccess}]]
+
+"Access" <|-- "CallAccess"
+"Access" <|-- "SmsAccess"
+"Bill" --> "*" "Access" : accesses
+"Bill" --> "Contract" : contract
+"Bill" --> "PaymentState" : paymentState
+"Contract" "*" <-> "Customer" : customer/contracts
+
+@enduml

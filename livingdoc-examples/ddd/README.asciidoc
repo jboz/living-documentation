@@ -5,13 +5,12 @@
 This is a simple DDD (Domain Driven Design) project around the telecom aggregate.
 See pom.xml for full example.
 
-include::pom.xml[tag=livingdoc]
+All is publish to confluence.
 
-The maven plugin is use to generate dynamically the domain class diagram :
-
-image::diagram.png[]
-image::glossary.png[]
-image::dictionary.png[]
+image::../output/final/class_diagram.png[]
+image::../output/final/glossary.png[]
+image::../output/final/complex_feature.png[]
+image::../output/final/simple_feature.png[]
 
 == Maven configuration :
 [source,xml]
@@ -27,19 +26,33 @@ image::dictionary.png[]
                 <goal>diagram</goal>
                 <goal>glossary</goal>
                 <goal>dictionary</goal>
+                <goal>gherkin</goal>
+                <goal>publish</goal>
             </goals>
         </execution>
     </executions>
     <configuration>
         <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
         <interactive>true</interactive>
-        <generatedDocsDirectory>${project.build.directory}</generatedDocsDirectory>
         <excludes>
             <exclude>.*domain.common.*</exclude>
         </excludes>
         <diagramTitle>= Classes Diagram</diagramTitle>
+        <diagramLinkPage>Glossary</diagramLinkPage>
+        <diagramAsPlantumlMacro>true</diagramAsPlantumlMacro><!-- this will result as the use of the plantuml macro in confluence: https://marketplace.atlassian.com/apps/41025/plantuml-for-confluence -->
         <dictionaryTitle>= Dictionary</dictionaryTitle>
         <glossaryTitle>= Glossary</glossaryTitle>
+        <gherkinTitle>= Use Case - Invoice management - </gherkinTitle><!-- will be used as a prefix for the confluence page name -->
+        <gerkinSeparateFeature>true</gerkinSeparateFeature><!-- set false to merge all feature into one page, default is true -->
+        <format>adoc</format><!-- adoc output format is mandatory for confluence publisher because it doesn't allow to publish full html page -->
+        <publish>
+            <provider>confluence</provider>
+            <endpoint>${CONFLUENCE_URL}</endpoint>
+            <spaceKey>DOCPROD</spaceKey>
+            <ancestorId>98369</ancestorId>
+            <username>livingdoc</username>
+            <password>livingdoc</password>
+        </publish>
     </configuration>
 </plugin>
 ----

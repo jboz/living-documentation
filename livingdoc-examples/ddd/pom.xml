@@ -74,10 +74,10 @@
                     <gerkinSeparateFeature>true</gerkinSeparateFeature><!-- set false to merge all feature into one page, default is true -->
                     <format>adoc</format><!-- adoc output format is mandatory for confluence publisher because it doesn't allow to publish full html page -->
                     <publish>
-                        <provider>confluence</provider>
+                        <provider>confluence</provider><!-- actually only confluence is supported -->
                         <endpoint>${CONFLUENCE_URL}</endpoint>
                         <spaceKey>DOCPROD</spaceKey>
-                        <ancestorId>98369</ancestorId>
+                        <ancestorId>98369</ancestorId><!-- parent pageId -->
                         <username>livingdoc</username>
                         <password>livingdoc</password>
                     </publish>

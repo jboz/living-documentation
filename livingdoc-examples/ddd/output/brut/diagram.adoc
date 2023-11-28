@@ -1,0 +1,5 @@
+:sectlinks:
+:sectanchors:
+= Classes Diagram
+
+plantuml::diagram.plantuml[]
