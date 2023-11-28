@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -92,23 +93,34 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
 
         final ClassPath classPath = initClassPath();
         final Set<ClassInfo> allClasses = classPath.getTopLevelClassesRecursive(prefix);
+        //noinspection rawtypes
+        List<Class> classes = allClasses.stream()
+                // apply filters
+                .filter(defaultFilter()).filter(additionalClassPredicate).map(classInfo -> {
+                    try {
+                        return classInfo.load();
+                    } catch (Throwable e) {
+                        LOG.warn(e.toString());
+                    }
+                    return null;
+                }).filter(Objects::nonNull).collect(Collectors.toList());
 
-        LOG.info("Initial classes size: " + allClasses.size());
+        if (StringUtils.isNotBlank(singleClass)) {
+            try {
+                classes.add(getClassLoader().loadClass(singleClass));
+            } catch (ClassNotFoundException e) {
+                LOG.error("Class '" + singleClass + "' not found! Will be ignored.");
+            }
+        }
+
+        LOG.info("Initial classes size: " + classes.size());
 
         String[] startOptions = readStartOptions();
         if (!useExternalGraphviz) {
             startOptions = ArrayUtils.add(startOptions, PRAGMA_LAYOUT_SMETANA + NEWLINE);
         }
-        return classDiagramBuilder.addClasses(allClasses.stream()
-                        // apply filters
-                        .filter(defaultFilter()).filter(additionalClassPredicate).map(classInfo -> {
-                            try {
-                                return classInfo.load();
-                            } catch (Throwable e) {
-                                LOG.warn(e.toString());
-                            }
-                            return null;
-                        }).filter(Objects::nonNull).collect(Collectors.toList()))
+
+        return classDiagramBuilder.addClasses(classes)
                 .withNamesMapper(namesMapper)
                 .excludes(excludes)
                 .setStartOptions(startOptions)

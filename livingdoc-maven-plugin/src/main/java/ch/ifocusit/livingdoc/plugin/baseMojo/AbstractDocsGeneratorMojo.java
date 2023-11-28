@@ -62,7 +62,7 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
     @Parameter(property = "livingdoc.glossary.mapping")
     protected File glossaryMapping;
 
-    // TODO active header/footer capabilities
+    // TODO active header/footer capabilities for all mojo
 //    /**
 //     * Header of the generated asciidoc file
 //     */
@@ -96,10 +96,10 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
      *
      * @param newContent : file content
      * @param output     : destination file
-     * @throws MojoExecutionException
      */
     protected void write(final String newContent, final File output) throws MojoExecutionException {
         try {
+            //noinspection ResultOfMethodCallIgnored
             output.getParentFile().mkdirs();
             IOUtils.write(newContent, new FileOutputStream(output), Charset.defaultCharset());
         } catch (IOException e) {
@@ -111,7 +111,6 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
      * Write asciidoc to defined output in defined format
      *
      * @param asciiDocBuilder : asciidoc content
-     * @throws MojoExecutionException
      */
     protected void write(AsciiDocBuilder asciiDocBuilder) throws MojoExecutionException {
         write(asciiDocBuilder, getOutputFilename());
@@ -138,10 +137,5 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
 
     protected void appendTitle(AsciiDocBuilder asciiDocBuilder, String title) {
         asciiDocBuilder.textLine(title).newLine();
-    }
-
-    public AbstractDocsGeneratorMojo setPackageRoot(String packageRoot) {
-        this.packageRoot = packageRoot;
-        return this;
     }
 }

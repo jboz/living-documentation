@@ -48,8 +48,8 @@
                 <artifactId>livingdoc-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>class-diagram</id>
-                        <phase>package</phase>
+                        <id>all</id>
+                        <phase>package</phase><!-- default phase -->
                         <goals>
                             <goal>diagram</goal>
                             <goal>glossary</goal>
