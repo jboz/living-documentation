@@ -1,0 +1,19 @@
+_Micro service around the Bill aggregate_
+
+= Telecom micro service
+
+== Conception
+
+include::diagram.adoc[]
+
+== Exposed services
+
+plantuml::diagram-services.plantuml[]
+
+== Glossary
+
+include::glossary.adoc[]
+
+== Business Behavior
+
+include::gherkin.adoc[]

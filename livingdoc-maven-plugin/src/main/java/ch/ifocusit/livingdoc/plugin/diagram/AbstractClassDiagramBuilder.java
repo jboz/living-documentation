@@ -59,6 +59,7 @@ public abstract class AbstractClassDiagramBuilder implements LinkMaker, NamesMap
 
     protected MavenProject project;
     protected String prefix;
+    protected String singleClass;
     protected String[] excludes;
     protected String header;
     protected String footer;
@@ -94,10 +95,14 @@ public abstract class AbstractClassDiagramBuilder implements LinkMaker, NamesMap
 
     protected ClassPath initClassPath() throws MojoExecutionException {
         try {
-            return ClassPath.from(ClassLoaderUtil.getRuntimeClassLoader(project));
+            return ClassPath.from(getClassLoader());
         } catch (IOException e) {
             throw new MojoExecutionException("Unable to initialize classPath !", e);
         }
+    }
+
+    protected ClassLoader getClassLoader() throws MojoExecutionException {
+        return ClassLoaderUtil.getRuntimeClassLoader(project);
     }
 
     public void mapNames(File mappings) throws MojoExecutionException {
