@@ -146,8 +146,8 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     @Parameter(property = "livingdoc.diagram.title")
     private String diagramTitle;
 
-    @Parameter(property = "livingdoc.diagram.withDeps", defaultValue = "false")
-    private boolean diagramWithDependencies;
+    @Parameter(property = "livingdoc.diagram.withDeps")
+    private Boolean diagramWithDependencies;
 
     /**
      * The graphviz java implementation image processor will be use by default.
@@ -155,6 +155,12 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
      */
     @Parameter(property = "livingdoc.diagram.useExternalGraphviz", defaultValue = "false")
     private boolean diagramUseExternalGraphviz;
+
+    /**
+     * Generate a diagram based on a single class (full name) and all his dependencies.
+     */
+    @Parameter(property = "livingdoc.diagram.singleClassAndDependencies")
+    protected String singleClassAndDependencies;
 
     @Override
     protected String getOutputFilename() {
@@ -218,7 +224,8 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
         if (diagramType == DiagramType.plantuml) {
             PlantumlClassDiagramBuilder builder = new PlantumlClassDiagramBuilder();
             builder.setProject(project);
-            builder.setPrefix(packageRoot);
+            builder.setPrefix(StringUtils.isNotBlank(singleClassAndDependencies) ? "" : packageRoot);
+            builder.setSingleClass(singleClassAndDependencies);
             builder.setDiagramWithLink(diagramWithLink);
             builder.setExcludes(Stream.of(excludes)
                     .map(s -> s.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", ""))
@@ -231,7 +238,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
             builder.setFooter(diagramFooter);
             builder.setShowMethods(diagramShowMethods);
             builder.setShowFields(diagramShowFields);
-            builder.setDiagramWithDependencies(diagramWithDependencies);
+            builder.setDiagramWithDependencies(diagramWithDependencies == null ? StringUtils.isNotBlank(singleClassAndDependencies) : diagramWithDependencies);
             builder.setLinkPage(diagramLinkPage);
             builder.setDiagramTitle(diagramTitle);
 

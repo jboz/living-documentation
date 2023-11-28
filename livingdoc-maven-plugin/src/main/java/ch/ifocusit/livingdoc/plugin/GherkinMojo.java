@@ -124,6 +124,7 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
                 }
             }
             if (gherkinAsciidocPlugin) {
+                // TODO ne fonctionne pas ? si oui supprimer ? si oui comment customiser autrement ?
                 getDocBuilder(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
             } else {
                 try {

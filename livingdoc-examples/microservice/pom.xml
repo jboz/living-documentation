@@ -34,7 +34,7 @@
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
+            <version>8.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.15.0</version>
+            <version>2.15.2</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -84,7 +84,12 @@
                             <goal>gherkin</goal>
                         </goals>
                         <configuration>
-                            <diagramHeader>src/docs/asciidoc/diagram-conception.header</diagramHeader>
+                            <diagramStartOptions>src/main/livingdoc/diagram-conception.header</diagramStartOptions>
+                            <diagramEndOptions>src/main/livingdoc/diagram-conception.footer</diagramEndOptions>
+                            <excludes>
+                                <exclude>.*\.domain.common\..*</exclude>
+                                <exclude>.*JAXRSConfiguration</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                     <execution>
@@ -96,28 +101,18 @@
                         <configuration>
                             <diagramOutputFilename>diagram-services</diagramOutputFilename>
                             <format>plantuml</format>
-                            <interactive>false</interactive>
-                            <excludes>
-                                <exclude>.*\.domain\.(?!Bill$).*</exclude>
-                                <exclude>.*JAXRSConfiguration</exclude>
-                                <exclude>.*ListBillRepository</exclude>
-                            </excludes>
+                            <singleClassAndDependencies>ch.ifocusit.telecom.boundary.BillingService</singleClassAndDependencies>
                             <onlyAnnotated>false</onlyAnnotated>
+                            <interactive>false</interactive>
                         </configuration>
                     </execution>
                 </executions>
                 <configuration>
-                    <generatedDocsDirectory>${livingdoc.output}</generatedDocsDirectory>
-                    <packageRoot>ch.ifocusit.telecom</packageRoot>
+                    <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
                     <format>adoc</format> <!-- the next plugin will generate a HTML index file -->
-                    <excludes>
-                        <exclude>.*\.domain.common\..*</exclude>
-                        <exclude>.*JAXRSConfiguration</exclude>
-                    </excludes>
                     <onlyAnnotated>true</onlyAnnotated>
                     <interactive>true</interactive> <!-- allow links in diagram, see -->
                     <diagramLinkPage>index.html</diagramLinkPage> <!-- all sections will be in index file -->
-                    <gherkinOptions>{templates}/gherkin_template.erb</gherkinOptions>
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->
@@ -136,7 +131,7 @@
                             <outputDirectory>${livingdoc.output}</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/src/docs/asciidoc</directory>
+                                    <directory>${project.basedir}/src/main/livingdoc</directory>
                                     <includes>
                                         <include>*.adoc</include>
                                     </includes>
@@ -189,7 +184,7 @@
                         <hardbreaks />
                         <sectlinks />
                         <sectanchors>true</sectanchors>
-                        <templates>${project.basedir}/src/docs/livingdoc</templates>
+                        <templates>${project.basedir}/src/main/livingdoc</templates>
                     </attributes>
                 </configuration>
                 <executions>
