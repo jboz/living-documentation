@@ -23,3 +23,14 @@ Le projet [livingdoc-typescript-plugin](livingdoc-typescript-plugin) librairie p
 ## CI/CD
 
 PR obligatoire.
+
+## Tips
+
+### generate image from html
+
+copy svg content into generated html
+```bash
+yay -S wkhtmltox-bin
+cd sources/living-documentation/livingdoc-examples/microservice
+wkhtmltoimage --format png http://localhost:63342/living-documentation/livingdoc-examples/microservice/target/docs/index.html images/example_microservice_index.html.png 
+```

@@ -68,7 +68,7 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
      * Add link into diagram to glossary
      */
     @Parameter(property = "livingdoc.diagram.link.activate", defaultValue = "false")
-    private boolean diagramWithLink = true;
+    private boolean diagramWithLink;
 
     /**
      * Link template to use in diagram.
@@ -177,9 +177,6 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
         if (interactive) {
             diagramWithLink = true;
             diagramImageType = DiagramImageType.svg;
-        }
-        if (StringUtils.isNotBlank(diagramLinkPage)) {
-            diagramWithLink = true;
         }
         // generate diagram
         String diagram = generateDiagram();
