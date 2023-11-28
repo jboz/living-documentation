@@ -1,0 +1,157 @@
+:sectlinks:
+:sectanchors:
+= Glossary
+
+[cols="2,2,1,4,1,1",options="header"]
+|===
+|Object Name|Attribute name|Type|Description|Constraints|Default Value
+
+    
+    |anchor:glossaryid-Access[]Access
+    |
+    |
+    |Use of telecom service.
+    |
+    |
+        
+        |
+        |anchor:glossaryid-Access_phoneNumber[]phoneNumber
+        |String
+        |Phone number used.
+        |
+        |
+        
+        |
+        |anchor:glossaryid-Access_price[]price
+        |BigDecimal
+        |Price of use of the service.
+        |
+        |
+        
+        |
+        |anchor:glossaryid-Access_dateTime[]dateTime
+        |ZonedDateTime
+        |Timestamp of use.
+        |
+        |ZonedDateTime.now()
+    
+    |anchor:glossaryid-Bill[]Bill
+    |
+    |
+    |Monthly bill.
+    |
+    |
+        
+        |
+        |anchor:glossaryid-Bill_month[]month
+        |YearMonth
+        |Which month of the bill.
+        |@NotNull()&#13;&#10;&#13;&#10;@PastOrPresent()
+        |
+        
+        |
+        |anchor:glossaryid-Bill_contract[]contract
+        |&lt;&lt;glossaryid-Contract,Contract&gt;&gt;
+        |Contract concerned by the bill.
+        |@NotNull()
+        |
+        
+        |
+        |anchor:glossaryid-Bill_accesses[]accesses
+        |Set
+        |Bill contents.
+        |
+        |new HashSet&lt;&gt;()
+        
+        |
+        |anchor:glossaryid-Bill_paymentState[]paymentState
+        |&lt;&lt;glossaryid-PaymentState,PaymentState&gt;&gt;, Enumeration
+        |Bill payment state
+        |@NotNull()
+        |PaymentState.WAITING
+    
+    |anchor:glossaryid-CallAccess[]CallAccess
+    |
+    |
+    |Phone call type access.
+    |
+    |
+        
+        |
+        |anchor:glossaryid-CallAccess_duration[]duration
+        |Duration
+        |Phone call duration
+        |
+        |
+    
+    |anchor:glossaryid-Contract[]Contract
+    |
+    |
+    |Telecom contract
+    |
+    |
+        
+        |
+        |anchor:glossaryid-Contract_id[]id
+        |Long
+        |Contract identifier.
+Generate by the system and communicate to client.
+        |
+        |
+        
+        |
+        |anchor:glossaryid-Contract_customer[]customer
+        |&lt;&lt;glossaryid-Customer,Customer&gt;&gt;
+        |Contract customer.
+        |
+        |
+    
+    |anchor:glossaryid-Customer[]Customer
+    |
+    |
+    |Customer of the telecom service
+    |
+    |
+        
+        |
+        |anchor:glossaryid-Customer_email[]email
+        |String
+        |Email of the customer.
+        |@Email()&#13;&#10;&#13;&#10;@NotBlank()
+        |
+        
+        |
+        |anchor:glossaryid-Customer_contracts[]contracts
+        |Set
+        |Customer's contracts.
+        |
+        |new HashSet&lt;&gt;()
+    
+    |anchor:glossaryid-PaymentState[]PaymentState
+    |
+    |Enumeration
+    |Bill payment state values.
+    |
+    |
+        
+        |
+        |anchor:glossaryid-PaymentState_WAITING[]WAITING
+        |
+        |Wainting payment by the client.
+        |
+        |
+        
+        |
+        |anchor:glossaryid-PaymentState_DONE[]DONE
+        |
+        |Client has payed.
+        |
+        |
+    
+    |anchor:glossaryid-SmsAccess[]SmsAccess
+    |
+    |
+    |SMS type access.
+    |
+    |
+|===

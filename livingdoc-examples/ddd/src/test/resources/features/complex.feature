@@ -39,11 +39,11 @@ Feature: A complex feature
 
   [NOTE]
   ====
-  You can add nice comments
-  ====
+  You can add nice description, with https://github.com/jboz/living-documentation[links]
 
   - dash list in scenario description
   - the second list item
+  ====
 
     Given a simple step
     When I have a step with a *table*
@@ -62,5 +62,6 @@ Feature: A complex feature
       | actorHeight    | 30              | B                        |
 
   Scenario: 2nd scenario title
+  TIP: Look for the warp zone under the bridge.
     Given a short scenario
     Then it's really short.

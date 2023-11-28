@@ -29,9 +29,9 @@ import ch.ifocusit.livingdoc.plugin.publish.model.Page;
  */
 public interface PublishProvider {
 
-    public boolean exists(Page page);
+    boolean exists(Page page);
 
-    public void update(Page page);
+    void update(Page page);
 
-    public void insert(Page page);
+    void insert(Page page);
 }

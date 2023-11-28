@@ -5,16 +5,6 @@
 This is a simple Domain Driven Design project around the telecom aggregate.
 In this example the *business model will be translate* during the living documentation generation phase.
 A simple mapping file is used to *translate the ubiquitous language* from technical names to business names.
-Hera are the living documentation content :
-
-== Generated diagram :
-image::diagram.png[]
-
-== Generated glossary :
-image::glossary.png[]
-
-== Generated dictionary :
-image::dictionary.png[]
 
 == Domain object decoration with some annotation
 
@@ -47,6 +37,7 @@ Annotations dependency :
 ----
 
 == Maven plugin configuration
+
 [source,xml]
 ----
 <plugin>
@@ -80,3 +71,18 @@ Annotations dependency :
     </configuration>
 </plugin>
 ----
+
+Here are the living documentation content :
+
+== Generated diagram :
+
+image::diagram.png[]
+
+== Generated glossary :
+
+image::glossary.png[]
+
+== Generated dictionary :
+
+image::dictionary.png[]
+

@@ -42,7 +42,7 @@
 
     <build>
         <plugins>
-            <!-- tag::plugin-livingdoc[] -->
+            <!-- tag::livingdoc[] -->
             <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
@@ -62,27 +62,28 @@
                 <configuration>
                     <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
                     <interactive>true</interactive>
-                    <generatedDocsDirectory>${project.build.directory}</generatedDocsDirectory>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>
                     <diagramTitle>= Classes Diagram</diagramTitle>
+                    <diagramLinkPage>Glossary</diagramLinkPage>
+                    <diagramAsPlantumlMacro>true</diagramAsPlantumlMacro><!-- this will result as the use of the plantuml macro in confluence: https://marketplace.atlassian.com/apps/41025/plantuml-for-confluence -->
                     <dictionaryTitle>= Dictionary</dictionaryTitle>
                     <glossaryTitle>= Glossary</glossaryTitle>
                     <gherkinTitle>= Use Case - Invoice management - </gherkinTitle><!-- will be used as a prefix for the confluence page name -->
                     <gerkinSeparateFeature>true</gerkinSeparateFeature><!-- set false to merge all feature into one page, default is true -->
                     <format>adoc</format><!-- adoc output format is mandatory for confluence publisher because it doesn't allow to publish full html page -->
                     <publish>
-                        <provider>confluence</provider>
+                        <provider>confluence</provider><!-- actually only confluence is supported -->
                         <endpoint>${CONFLUENCE_URL}</endpoint>
                         <spaceKey>DOCPROD</spaceKey>
-                        <ancestorId>98369</ancestorId>
+                        <ancestorId>98369</ancestorId><!-- parent pageId -->
                         <username>livingdoc</username>
                         <password>livingdoc</password>
                     </publish>
                 </configuration>
             </plugin>
-            <!-- end::plugin-livingdoc[] -->
+            <!-- end::livingdoc[] -->
         </plugins>
     </build>
 </project>
