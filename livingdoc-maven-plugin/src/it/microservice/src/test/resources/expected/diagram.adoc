@@ -1,6 +1,6 @@
 :sectlinks:
 :sectanchors:
-[plantuml, diagram, format=png, opts=interactive]
+[plantuml, target=diagram, format=png, opts=interactive]
 ----
 @startuml
 !pragma layout smetana

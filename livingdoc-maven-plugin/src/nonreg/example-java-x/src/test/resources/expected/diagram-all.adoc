@@ -2,7 +2,7 @@
 :sectanchors:
 = All classes diagram
 
-[plantuml, diagram-all, format=png]
+[plantuml, target=diagram-all, format=png]
 ----
 @startuml
 !pragma layout smetana

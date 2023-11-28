@@ -2,7 +2,10 @@
 
 = Living documentation in minimally DDD project
 
-This is a simple DDD project around the telecom aggregate
+This is a simple DDD (Domain Driven Design) project around the telecom aggregate.
+See pom.xml for full example.
+
+include::pom.xml[tag=livingdoc]
 
 The maven plugin is use to generate dynamically the domain class diagram :
 

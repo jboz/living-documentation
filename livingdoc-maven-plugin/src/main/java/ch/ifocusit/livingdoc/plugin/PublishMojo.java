@@ -29,6 +29,7 @@ import ch.ifocusit.livingdoc.plugin.publish.PublishProvider;
 import ch.ifocusit.livingdoc.plugin.publish.confluence.ConfluenceProvider;
 import ch.ifocusit.livingdoc.plugin.publish.model.Page;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -55,11 +56,14 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
 
     @Override
     public void executeMojo() throws MojoExecutionException {
+        if (!Publish.Provider.confluence.equals(publish.getProvider())) {
+            throw new NotImplementedException("This publisher '" + publish.getProvider() + "' is not yet supported!");
+        }
         extractTemplatesFromJar();
         try {
             PublishProvider provider = new ConfluenceProvider(publish.getEndpoint(), publish.getUsername(), publish.getPassword());
 
-            List<Page> pages = readHtmlPages();
+            List<Page> pages = createHtmlPage();
             publish(provider, pages);
         } catch (Exception e) {
             throw new MojoExecutionException("Unexpected error", e);
@@ -69,33 +73,34 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
     /**
      * @return html pages
      */
-    private List<Page> readHtmlPages() throws IOException {
+    private List<Page> createHtmlPage() throws IOException {
 
         List<Page> pages = new ArrayList<>();
 
         try (Stream<Path> paths = Files.walk(Paths.get(generatedDocsDirectory.getAbsolutePath()))) {
-            paths.filter(path -> FilenameUtils.isExtension(path.getFileName().toString(), Format.adoc.name(), Format.asciidoc.name(), Format.html.name()))
+            paths.filter(path -> FilenameUtils.isExtension(path.getFileName().toString(),
+                            Format.adoc.name(), Format.asciidoc.name(), Format.html.name()))
                     .forEach(path -> {
+                        getLog().info("Publish goal - process " + path);
+                        Map<String, String> attachmentCollector = new HashMap<>();
+
+                        HtmlPostProcessor htmlProcessor = getPostProcessor();
+
+                        Page page = new Page();
+                        page.setSpaceKey(publish.getSpaceKey());
+                        page.setParentId(publish.getAncestorId());
+                        page.setTitle(htmlProcessor.getPageTitle(path));
+                        page.setFile(path);
                         try {
-                            getLog().info("Publish goal - process " + path);
-                            Map<String, String> attachmentCollector = new HashMap<>();
-
-                            HtmlPostProcessor htmlProcessor = getPostProcessor();
-
-                            Page page = new Page();
-                            page.setSpaceKey(publish.getSpaceKey());
-                            page.setParentId(publish.getAncestorId());
-                            page.setTitle(htmlProcessor.getPageTitle(path));
-                            page.setFile(path);
                             String content = htmlProcessor.process(path, attachmentCollector);
                             page.setContent(content);
-
-                            attachmentCollector.forEach(page::addAttachment);
-
-                            pages.add(page);
                         } catch (IOException e) {
-                            throw new IllegalArgumentException("error reading file", e);
+                            throw new IllegalArgumentException("error in html processing of file", e);
                         }
+
+                        attachmentCollector.forEach(page::addAttachment);
+
+                        pages.add(page);
                     });
         }
 

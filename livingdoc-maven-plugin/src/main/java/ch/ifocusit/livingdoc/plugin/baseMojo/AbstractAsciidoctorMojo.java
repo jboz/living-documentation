@@ -22,6 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin.baseMojo;
 
+import ch.ifocusit.livingdoc.plugin.publish.confluence.PlantumlMacroBlockProcessor;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +34,7 @@ import org.apache.maven.project.MavenProject;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Attributes;
 import org.asciidoctor.Options;
+import org.asciidoctor.extension.JavaExtensionRegistry;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.File;
@@ -52,6 +54,8 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
 
     protected static final String TEMPLATES_OUTPUT = "${project.build.directory}/asciidoc-templates";
     private static final String TEMPLATES_CLASSPATH_PATTERN = "templates/*";
+
+    protected static final String PLANTUML_MACRO_NAME = "plantuml";
 
     public enum Format {
         asciidoc, adoc, html, plantuml
@@ -109,9 +113,12 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
         return new File(generatedDocsDirectory, filename);
     }
 
-    protected Asciidoctor createAsciidoctor() {
+    public Asciidoctor createAsciidoctor() {
         Asciidoctor asciidoctor = Asciidoctor.Factory.create();
         asciidoctor.requireLibrary("asciidoctor-diagram");
+        JavaExtensionRegistry extensionRegistry = asciidoctor.javaExtensionRegistry();
+        // override plantuml macro
+        extensionRegistry.blockMacro(PLANTUML_MACRO_NAME, PlantumlMacroBlockProcessor.class);
         return asciidoctor;
     }
 

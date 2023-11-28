@@ -1,0 +1,7 @@
+:sectlinks:
+:sectanchors:
+= Classes Diagram
+
+NOTE: this include plantuml diagram will be convert to  confluence plantuml macro
+
+plantuml::diagram.plantuml[]

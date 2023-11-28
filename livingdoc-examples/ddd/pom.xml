@@ -42,7 +42,7 @@
 
     <build>
         <plugins>
-            <!-- tag::plugin-livingdoc[] -->
+            <!-- tag::livingdoc[] -->
             <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
@@ -62,12 +62,12 @@
                 <configuration>
                     <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
                     <interactive>true</interactive>
-                    <generatedDocsDirectory>${project.build.directory}</generatedDocsDirectory>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>
                     <diagramTitle>= Classes Diagram</diagramTitle>
                     <diagramLinkPage>Glossary</diagramLinkPage>
+                    <diagramAsPlantumlMacro>true</diagramAsPlantumlMacro><!-- this will result as the use of the plantuml macro in confluence: https://marketplace.atlassian.com/apps/41025/plantuml-for-confluence -->
                     <dictionaryTitle>= Dictionary</dictionaryTitle>
                     <glossaryTitle>= Glossary</glossaryTitle>
                     <gherkinTitle>= Use Case - Invoice management - </gherkinTitle><!-- will be used as a prefix for the confluence page name -->
@@ -83,7 +83,7 @@
                     </publish>
                 </configuration>
             </plugin>
-            <!-- end::plugin-livingdoc[] -->
+            <!-- end::livingdoc[] -->
         </plugins>
     </build>
 </project>

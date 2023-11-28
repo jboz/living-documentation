@@ -26,7 +26,7 @@ import com.google.common.base.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Options;
 
@@ -70,16 +70,14 @@ public class HtmlPostProcessor {
      * @return a clean html with attachement derived
      */
     public String process(Path path, Map<String, String> attachmentCollector) throws IOException {
-
         // read input
-        String content = FileUtils.readFileToString(path.toFile(), Charset.defaultCharset());
-
+        String initialContent = FileUtils.readFileToString(path.toFile(), Charset.defaultCharset());
+        String processedContent = initialContent;
         if (isAdoc(path)) {
             // convert adoc to html
-            content = asciidoctor.convert(content, options);
+            processedContent = asciidoctor.convert(initialContent, options);
         }
-
-        return postProcessContent(content,
+        return postProcessContent(processedContent,
                 replaceCrossReferenceTargets(path),
                 collectAndReplaceAttachmentFileNames(attachmentCollector),
                 unescapeCdataHtmlContent()
@@ -106,7 +104,7 @@ public class HtmlPostProcessor {
     }
 
     private String replaceAll(String content, Pattern pattern, Function<MatchResult, String> replacer) {
-        StringBuffer replacedContent = new StringBuffer();
+        StringBuilder replacedContent = new StringBuilder();
         Matcher matcher = pattern.matcher(content);
 
         while (matcher.find()) {
@@ -125,7 +123,7 @@ public class HtmlPostProcessor {
     }
 
     public String getPageTitle(Path path) {
-        String pageContent = null;
+        String pageContent;
         try {
             pageContent = IOUtils.toString(new FileInputStream(path.toFile()), Charsets.UTF_8);
         } catch (IOException e) {
@@ -161,7 +159,7 @@ public class HtmlPostProcessor {
         return (content) -> replaceAll(content, PAGE_TITLE_PATTERN, (matchResult) -> {
             String htmlTarget = matchResult.group(1);
             String referencedPageTitle = htmlTarget;
-            if (htmlTarget.indexOf(".") > -1) {
+            if (htmlTarget.contains(".")) {
                 Path referencedPagePath = pagePath.getParent().resolve(
                         Paths.get(htmlTarget.substring(0, htmlTarget.lastIndexOf('.')) + ".adoc"));
                 referencedPageTitle = getPageTitle(referencedPagePath);

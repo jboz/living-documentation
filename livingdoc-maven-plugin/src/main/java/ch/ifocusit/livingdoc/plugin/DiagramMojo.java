@@ -134,6 +134,12 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     @Parameter(property = "livingdoc.diagram.interactive", defaultValue = "false")
     private boolean interactive;
 
+    @Parameter(property = "livingdoc.diagram.as-include-file", defaultValue = "false")
+    private boolean asIncludeFile;
+
+    @Parameter(property = "livingdoc.diagram.as-plantuml-macro", defaultValue = "false")
+    private boolean diagramAsPlantumlMacro;
+
     @Parameter(property = "livingdoc.diagram.output.filename", defaultValue = "diagram")
     private String diagramOutputFilename;
 
@@ -183,13 +189,22 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
             case asciidoc:
                 AsciiDocBuilder asciiDocBuilder = this.createAsciiDocBuilder();
                 appendTitle(asciiDocBuilder);
-
-                if (Objects.requireNonNull(diagramType) == DiagramType.plantuml) {
-                    asciiDocBuilder.textLine(String.format("[plantuml, %s, format=%s" + (interactive ? ", opts=interactive" : "") + "]", getOutputFilename(), diagramImageType));
+                if (diagramAsPlantumlMacro) {
+                    write(diagram, getOutput(getOutputFilename(), Format.plantuml));
+                    asciiDocBuilder.textLine(PLANTUML_MACRO_NAME + "::" + getOutputFilename() + ".plantuml[]");
+                } else {
+                    if (Objects.requireNonNull(diagramType) == DiagramType.plantuml) {
+                        asciiDocBuilder.textLine(String.format("[plantuml, target=%s, format=%s" + (interactive ? ", opts=interactive" : "") + "]", getOutputFilename(), diagramImageType));
+                    }
+                    asciiDocBuilder.textLine("----");
+                    if (asIncludeFile) {
+                        write(diagram, getOutput(getOutputFilename(), Format.plantuml));
+                        asciiDocBuilder.textLine("include::" + getOutputFilename() + ".plantuml[]");
+                    } else {
+                        asciiDocBuilder.textLine(diagram);
+                    }
+                    asciiDocBuilder.textLine("----");
                 }
-                asciiDocBuilder.textLine("----");
-                asciiDocBuilder.textLine(diagram);
-                asciiDocBuilder.textLine("----");
                 // write to file
                 write(asciiDocBuilder);
                 break;
