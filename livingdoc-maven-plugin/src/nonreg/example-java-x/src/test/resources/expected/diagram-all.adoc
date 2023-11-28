@@ -10,57 +10,57 @@
 
 title All classes diagram
 
-abstract class "AbstractDomain" [[glossary.html#glossaryid-AbstractDomain{AbstractDomain}]]
+abstract class "AbstractDomain"
 
-abstract class "Access" [[glossary.html#glossaryid-400{400}]] {
-  phoneNumber : String [[[glossary.html#glossaryid-401{401}]]]
-  price : BigDecimal [[[glossary.html#glossaryid-402{402}]]]
-  dateTime : ZonedDateTime [[[glossary.html#glossaryid-403{403}]]]
+abstract class "Access" {
+  phoneNumber : String
+  price : BigDecimal
+  dateTime : ZonedDateTime
 }
 
-class "Bill" [[glossary.html#glossaryid-100{100}]] #wheat {
-  month : YearMonth [[[glossary.html#glossaryid-101{101}]]]
-  contract : Contract [[[glossary.html#glossaryid-102{102}]]]
-  accesses : Set<Access> [[[glossary.html#glossaryid-103{103}]]]
-  customerInformed : boolean [[[glossary.html#glossaryid-Bill_customerInformed{Bill.customerInformed}]]]
+class "Bill" #wheat {
+  month : YearMonth
+  contract : Contract
+  accesses : Set<Access>
+  customerInformed : boolean
 }
 
-interface "BillRepository" [[glossary.html#glossaryid-BillRepository{BillRepository}]] {
+interface "BillRepository" {
   add(Bill) : Bill
   clear()
   get(YearMonth) : Optional<Bill>
   retreiveLastBill() : Optional<Bill>
 }
 
-class "BillingService" [[glossary.html#glossaryid-BillingService{BillingService}]] {
-  repository : BillRepository [[[glossary.html#glossaryid-BillingService_repository{BillingService.repository}]]]
+class "BillingService" {
+  repository : BillRepository
   getBill(String) : Optional<Bill>
 }
 
-class "CallAccess" [[glossary.html#glossaryid-500{500}]] {
-  duration : Duration [[[glossary.html#glossaryid-501{501}]]]
+class "CallAccess" {
+  duration : Duration
 }
 
-class "Contract" [[glossary.html#glossaryid-200{200}]] {
-  id : String [[[glossary.html#glossaryid-201{201}]]]
-  customer : Customer [[[glossary.html#glossaryid-202{202}]]]
-  effectDate : LocalDate [[[glossary.html#glossaryid-203{203}]]]
+class "Contract" {
+  id : String
+  customer : Customer
+  effectDate : LocalDate
 }
 
-class "Customer" [[glossary.html#glossaryid-300{300}]] {
-  name : String [[[glossary.html#glossaryid-301{301}]]]
-  contracts : Set<Contract> [[[glossary.html#glossaryid-Customer_contracts{Customer.contracts}]]]
+class "Customer" {
+  name : String
+  contracts : Set<Contract>
 }
 
-class "ListBillRepository" [[glossary.html#glossaryid-ListBillRepository{ListBillRepository}]] {
-  bills : List<Bill> [[[glossary.html#glossaryid-ListBillRepository_bills{ListBillRepository.bills}]]]
+class "ListBillRepository" {
+  bills : List<Bill>
   add(Bill) : Bill
   clear()
   get(YearMonth) : Optional<Bill>
   retreiveLastBill() : Optional<Bill>
 }
 
-class "SmsAccess" [[glossary.html#glossaryid-600{600}]]
+class "SmsAccess"
 
 "AbstractDomain" <|-- "Access"
 "AbstractDomain" <|-- "Bill"
