@@ -1,5 +1,5 @@
 # language: en
-Feature: A complex feature
+Feature: A full feature that doesn't limit
   This is the feature description.
 
   In the feature's description, you can use asciidoctor markup as it pleases you.

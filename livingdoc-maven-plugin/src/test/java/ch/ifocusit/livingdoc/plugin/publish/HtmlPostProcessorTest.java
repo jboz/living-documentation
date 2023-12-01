@@ -1,11 +1,9 @@
 package ch.ifocusit.livingdoc.plugin.publish;
 
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractAsciidoctorMojo;
-import ch.ifocusit.livingdoc.plugin.publish.confluence.PlantumlMacroBlockProcessor;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Attributes;
 import org.asciidoctor.Options;
-import org.asciidoctor.extension.JavaExtensionRegistry;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
