@@ -35,6 +35,7 @@ import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Attributes;
 import org.asciidoctor.Options;
 import org.asciidoctor.extension.JavaExtensionRegistry;
+import org.asciidoctor.extension.RubyExtensionRegistry;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.File;
@@ -97,7 +98,7 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
         generatedDocsDirectory.mkdirs();
         File output = getOutput(outputFilename, Format.adoc);
         try {
-            // write adco file
+            // write adoc file
             asciiDocBuilder.writeToFile(generatedDocsDirectory.getAbsolutePath(), FilenameUtils.removeExtension(outputFilename), StandardCharsets.UTF_8);
             if (Format.html.equals(format)) {
                 // convert adoc to html
@@ -119,6 +120,11 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
         JavaExtensionRegistry extensionRegistry = asciidoctor.javaExtensionRegistry();
         // override plantuml macro
         extensionRegistry.blockMacro(PLANTUML_MACRO_NAME, PlantumlMacroBlockProcessor.class);
+        // install gherkin macro
+        RubyExtensionRegistry rubyExtensionRegistry = asciidoctor.rubyExtensionRegistry();
+        rubyExtensionRegistry
+                .loadClass(this.getClass().getResourceAsStream("/com/github/domgold/doctools/asciidoctor/gherkin/gherkinblockmacro.rb"))
+                .blockMacro("gherkin", "GherkinBlockMacroProcessor");
         return asciidoctor;
     }
 
