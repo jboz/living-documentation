@@ -130,11 +130,14 @@ public class HtmlPostProcessor {
             throw new IllegalStateException("Unable to read page title !", e);
         }
         try {
+            String title = "";
             if (isAdoc(path)) {
-                return asciidoctor.load(pageContent, options).getStructuredDoctitle().getMain();
+                title = asciidoctor.load(pageContent, options).getStructuredDoctitle().getMain();
+            } else {
+                // try to read h1 tag
+                title = tagText(pageContent, "h1");
             }
-            // try to read h1 tag
-            return tagText(pageContent, "h1");
+            return StringEscapeUtils.unescapeHtml4(title);
         } catch (IllegalStateException e) {
             return FilenameUtils.removeExtension(path.getFileName().toString());
         }
