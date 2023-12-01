@@ -15,8 +15,6 @@ Feature: A full feature that doesn't limit
 
   WARNING: admonition.
 
-  include::included_doc.adoc[]
-
   .A table with title
   |====
   | A | B
@@ -62,6 +60,5 @@ Feature: A full feature that doesn't limit
       | actorHeight    | 30              | B                        |
 
   Scenario: 2nd scenario title
-  TIP: Look for the warp zone under the bridge.
     Given a short scenario
     Then it's really short.

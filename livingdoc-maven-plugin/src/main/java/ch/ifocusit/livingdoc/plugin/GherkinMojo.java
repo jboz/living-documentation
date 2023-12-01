@@ -84,7 +84,7 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     /**
      * Flag to indicate if generated asciidoc file must use the gherkin plugin
      */
-    @Parameter(property = "livingdoc.gherkin.gherkinAsciidocPlugin", defaultValue = "false")
+    @Parameter(property = "livingdoc.gherkin.gherkinAsciidocPlugin", defaultValue = "true")
     private boolean gherkinAsciidocPlugin;
 
     protected boolean somethingWasGenerated = false;
@@ -124,7 +124,6 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
                 }
             }
             if (gherkinAsciidocPlugin) {
-                // TODO ne fonctionne pas ? si oui supprimer ? si oui comment customiser autrement ?
                 getDocBuilder(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
             } else {
                 try {

@@ -113,6 +113,7 @@
                     <onlyAnnotated>true</onlyAnnotated>
                     <interactive>true</interactive> <!-- allow links in diagram, see -->
                     <diagramLinkPage>index.html</diagramLinkPage> <!-- all sections will be in index file -->
+                    <gherkinAsciidocPlugin>false</gherkinAsciidocPlugin>
                 </configuration>
             </plugin>
             <!-- end::plugin-livingdoc[] -->
