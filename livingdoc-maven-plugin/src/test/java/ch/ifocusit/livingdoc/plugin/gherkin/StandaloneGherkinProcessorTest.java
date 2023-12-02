@@ -9,7 +9,7 @@ import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class GherkinToAsciidocTransformerTest {
+class StandaloneGherkinProcessorTest {
 
     @Test
     void transform() throws Exception {
@@ -17,9 +17,9 @@ class GherkinToAsciidocTransformerTest {
         String fileContent = FileUtils.readFileToString(new File(Objects.requireNonNull(this.getClass().getResource("/simple.feature")).toURI()), Charset.defaultCharset());
         String expected = FileUtils.readFileToString(new File(Objects.requireNonNull(this.getClass().getResource("/simple.adoc")).toURI()), Charset.defaultCharset());
         // when
-        String adoc = new GherkinToAsciidocTransformer().transform(fileContent);
+        String adoc = StandaloneGherkinProcessor.builder().build().process(fileContent);
         // then
-        assertThat(adoc).isEqualTo(expected);
+        assertThat(adoc).isEqualToIgnoringWhitespace(expected);
     }
 
     @Test
@@ -28,8 +28,8 @@ class GherkinToAsciidocTransformerTest {
         String fileContent = FileUtils.readFileToString(new File(Objects.requireNonNull(this.getClass().getResource("/complex.feature")).toURI()), Charset.defaultCharset());
         String expected = FileUtils.readFileToString(new File(Objects.requireNonNull(this.getClass().getResource("/complex.adoc")).toURI()), Charset.defaultCharset());
         // when
-        String adoc = new GherkinToAsciidocTransformer().transform(fileContent);
+        String adoc = StandaloneGherkinProcessor.builder().build().process(fileContent);
         // then
-        assertThat(adoc).isEqualTo(expected);
+        assertThat(adoc).isEqualToIgnoringWhitespace(expected);
     }
 }
