@@ -1,5 +1,5 @@
 # language: en
-Feature: A complex feature
+Feature: A full feature that doesn't limit
   This is the feature description.
 
   In the feature's description, you can use asciidoctor markup as it pleases you.
@@ -14,8 +14,6 @@ Feature: A complex feature
   ** nested list content.
 
   WARNING: admonition.
-
-  include::included_doc.adoc[]
 
   .A table with title
   |====
@@ -39,11 +37,11 @@ Feature: A complex feature
 
   [NOTE]
   ====
-  You can add nice comments
-  ====
+  You can add nice description, with https://github.com/jboz/living-documentation[links]
 
   - dash list in scenario description
   - the second list item
+  ====
 
     Given a simple step
     When I have a step with a *table*

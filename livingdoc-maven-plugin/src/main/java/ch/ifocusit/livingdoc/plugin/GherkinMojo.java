@@ -23,7 +23,7 @@
 package ch.ifocusit.livingdoc.plugin;
 
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
-import ch.ifocusit.livingdoc.plugin.gherkin.GherkinToAsciidocTransformer;
+import ch.ifocusit.livingdoc.plugin.gherkin.StandaloneGherkinProcessor;
 import com.github.domgold.doctools.asciidoctor.gherkin.MapFormatter;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.io.FileUtils;
@@ -34,6 +34,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -82,10 +83,16 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     private boolean gerkinSeparateFeature;
 
     /**
-     * Flag to indicate if generated asciidoc file must use the gherkin plugin
+     * Flag to indicate if generated asciidoc file must use the asciidoc gherkin macro (like include macro)
      */
-    @Parameter(property = "livingdoc.gherkin.gherkinAsciidocPlugin", defaultValue = "true")
-    private boolean gherkinAsciidocPlugin;
+    @Parameter(property = "livingdoc.gherkin.gherkinAsciidocMacro", defaultValue = "false")
+    private boolean gherkinAsciidocMacro;
+
+    /**
+     * Replace gherkin processor default template. Must be used with gherkinAsciidocPlugin option to false
+     */
+    @Parameter(property = "livingdoc.gherkin.gherkinAsciidocTemplate")
+    private File gherkinAsciidocTemplate;
 
     protected boolean somethingWasGenerated = false;
 
@@ -123,11 +130,14 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
                     throw new IllegalStateException("Error reading " + path, e);
                 }
             }
-            if (gherkinAsciidocPlugin) {
+            if (gherkinAsciidocMacro) {
                 getDocBuilder(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
             } else {
                 try {
-                    getDocBuilder(pageCount.get()).textLine(new GherkinToAsciidocTransformer().transform(readFileToString(FileUtils.getFile(path), defaultCharset())));
+                    getDocBuilder(pageCount.get()).textLine(StandaloneGherkinProcessor.builder()
+                            .gherkinTemplate(gherkinAsciidocTemplate)
+                            .build()
+                            .process(readFileToString(FileUtils.getFile(path), defaultCharset())));
                 } catch (IOException e) {
                     throw new IllegalStateException("Error reading " + path, e);
                 }
@@ -166,6 +176,7 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
                 .filter(path -> Files.exists(Paths.get(path)))
                 .flatMap(path -> {
                     try {
+                        //noinspection resource
                         return Files.walk(Paths.get(path)).filter(p -> p.toString().endsWith(".feature"));
                     } catch (IOException e) {
                         throw new IllegalStateException(String.format("Error browsing %s", path), e);
