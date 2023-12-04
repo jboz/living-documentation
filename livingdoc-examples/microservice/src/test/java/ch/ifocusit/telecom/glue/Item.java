@@ -20,41 +20,50 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.access;
-
-import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.telecom.domain.common.AbstractDomain;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+package ch.ifocusit.telecom.glue;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 
 /**
- * Use of telecom service.
+ * @author Julien Boz
  */
-@UbiquitousLanguage(id = 400)
-@Data
-@EqualsAndHashCode(callSuper = true)
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
-public abstract class Access extends AbstractDomain {
+public class Item {
 
-    /**
-     * Phone number used.
-     */
-    @UbiquitousLanguage(id = 401)
+    public static enum ItemType {
+        SMS, CALL
+    }
+
+    private ItemType type;
     private String phoneNumber;
-
-    /**
-     * Price of use of the service.
-     */
-    @UbiquitousLanguage(id = 402)
+    private String dateTime;
     private BigDecimal price;
+    private String duration;
 
-    /**
-     * Timestamp of use.
-     */
-    @UbiquitousLanguage(id = 403)
-    private ZonedDateTime dateTime = ZonedDateTime.now();
+    public Item(ItemType type, String phoneNumber, String dateTime, BigDecimal price, String duration) {
+        this.type = type;
+        this.phoneNumber = phoneNumber;
+        this.dateTime = dateTime;
+        this.price = price;
+        this.duration = duration;
+    }
+
+    public ItemType getType() {
+        return type;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
 }

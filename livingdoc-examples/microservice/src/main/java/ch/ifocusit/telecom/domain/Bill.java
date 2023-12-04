@@ -25,11 +25,16 @@ package ch.ifocusit.telecom.domain;
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.livingdoc.annotations.RootAggregate;
 import ch.ifocusit.telecom.domain.access.Access;
+import ch.ifocusit.telecom.domain.access.CallAccess;
+import ch.ifocusit.telecom.domain.access.SmsAccess;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.YearMonth;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -69,4 +74,33 @@ public class Bill extends AbstractDomain {
      */
     private boolean customerInformed;
 
-}
+    public Set<Access> getAccesses() {
+        return Collections.unmodifiableSet(accesses);
+    }
+
+    public boolean addAccess(final Access access) {
+        return this.accesses.add(access);
+    }
+
+    public boolean removeAccess(final Access access) {
+        return this.accesses.remove(access);
+    }
+
+    public BigDecimal getBillAmount() {
+        return accesses.stream().map(access -> access.getPrice()).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    // tag::calculateCallsDuration[]
+    public Duration getTotalCallsDuration() {
+        return accesses.stream().filter(CallAccess.class::isInstance).map(CallAccess.class::cast)
+                .map(callAccess -> callAccess.getDuration()).reduce(Duration.ZERO, Duration::plus);
+    }
+    // end::calculateCallsDuration[]
+
+    public long getNbCalls() {
+        return accesses.stream().filter(CallAccess.class::isInstance).count();
+    }
+
+    public long getNbSms() {
+        return accesses.stream().filter(SmsAccess.class::isInstance).count();
+    }}

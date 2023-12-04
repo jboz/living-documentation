@@ -37,4 +37,6 @@ public interface BillRepository {
     Optional<Bill> getLastBill();
 
     Optional<Bill> get(YearMonth parse);
+
+    void clear();
 }

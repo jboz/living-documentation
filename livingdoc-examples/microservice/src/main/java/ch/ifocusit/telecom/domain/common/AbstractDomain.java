@@ -22,5 +22,10 @@
  */
 package ch.ifocusit.telecom.domain.common;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@EqualsAndHashCode
+@ToString
 public abstract class AbstractDomain {
 }

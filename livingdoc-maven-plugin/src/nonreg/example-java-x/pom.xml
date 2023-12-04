@@ -29,7 +29,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>${env.JAVA_VERSION}</maven.compiler.source>
         <maven.compiler.target>${env.JAVA_VERSION}</maven.compiler.target>
-        <livingdoc-maven-plugin.version>${env.LIVINGDOC-MAVEN-PLUGIN_VERSION}</livingdoc-maven-plugin.version>
+        <livingdoc-maven-plugin.version>2.7-SNAPSHOT</livingdoc-maven-plugin.version>
     </properties>
 
     <dependencies>

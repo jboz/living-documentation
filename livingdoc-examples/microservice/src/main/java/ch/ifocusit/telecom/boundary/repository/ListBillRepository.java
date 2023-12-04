@@ -52,4 +52,9 @@ public class ListBillRepository implements BillRepository {
     public Optional<Bill> get(YearMonth month) {
         return bills.stream().filter(bill -> Objects.equals(bill.getMonth(), month)).findFirst();
     }
+
+    @Override
+    public void clear() {
+        bills.clear();
+    }
 }

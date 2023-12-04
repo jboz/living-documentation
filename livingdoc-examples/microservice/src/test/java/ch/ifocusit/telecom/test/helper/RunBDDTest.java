@@ -20,25 +20,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package ch.ifocusit.telecom.domain.access;
+package ch.ifocusit.telecom.test.helper;
 
-import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-
-import java.time.Duration;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+import org.junit.runner.RunWith;
 
 /**
- * Phone call type access.
+ * @author Julien Boz
  */
-@UbiquitousLanguage(id = 500)
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class CallAccess extends Access {
-
-    /**
-     * Phone call duration
-     */
-    @UbiquitousLanguage(id = 501)
-    private Duration duration;
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        features = {"classpath:features/"},
+        glue = {"ch.ifocusit.telecom.glue"},
+        plugin = {"json:target/cucumber/result.json"})
+public class RunBDDTest {
 }

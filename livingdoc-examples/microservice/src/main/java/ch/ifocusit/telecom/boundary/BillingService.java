@@ -51,6 +51,7 @@ import java.util.Optional;
 public class BillingService {
 
     @Inject
+    @Setter
     private BillRepository repository;
 
     @GET
