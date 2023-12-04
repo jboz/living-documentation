@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -24,8 +24,8 @@ package ch.ifocusit.telecom.domain;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 import java.time.MonthDay;
@@ -34,8 +34,8 @@ import java.time.MonthDay;
  * Telecom contract
  */
 @UbiquitousLanguage(id = 200)
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class Contract extends AbstractDomain {
 
     /**

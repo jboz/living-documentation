@@ -1,0 +1,7 @@
+
+This is an included paragraph.
+
+[source,java]
+----
+String test = "Hello";
+----

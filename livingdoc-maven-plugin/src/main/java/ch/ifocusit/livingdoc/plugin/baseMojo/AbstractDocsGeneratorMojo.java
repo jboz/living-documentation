@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,8 +22,11 @@
  */
 package ch.ifocusit.livingdoc.plugin.baseMojo;
 
-import io.github.robwin.markup.builder.asciidoc.AsciiDoc;
-import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -31,10 +34,8 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.repository.RepositorySystem;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
+import io.github.robwin.markup.builder.asciidoc.AsciiDoc;
+import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 
 /**
  * @author Julien Boz
@@ -46,19 +47,22 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
     @Component
     protected RepositorySystem repositorySystem;
 
+    @Parameter(property = "livingdoc.packageRoot", defaultValue = "${project.groupId}.${project.artifactId}.domain")
+    protected String packageRoot;
+
     /**
      * Output format of the glossary (default html, others : adoc)
      */
-    @Parameter(property = "livingdoc.diagram.output.format", defaultValue = "html")
+    @Parameter(property = "livingdoc.output.format", defaultValue = "html")
     protected Format format;
 
     /**
      * File to use for UbiquitousLanguage mapping.
      */
-    @Parameter(property = "livingdoc.diagram.glossary.mapping")
+    @Parameter(property = "livingdoc.glossary.mapping")
     protected File glossaryMapping;
 
-    // TODO active header/footer capabilities
+    // TODO active header/footer capabilities for all mojo
 //    /**
 //     * Header of the generated asciidoc file
 //     */
@@ -74,7 +78,7 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
     /**
      * Indicate that only annotated classes/fields will be used.
      */
-    @Parameter(property = "livingdoc.diagram.onlyAnnotated", defaultValue = "false")
+    @Parameter(property = "livingdoc.onlyAnnotated", defaultValue = "false")
     protected boolean onlyAnnotated;
 
     /**
@@ -92,10 +96,10 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
      *
      * @param newContent : file content
      * @param output     : destination file
-     * @throws MojoExecutionException
      */
     protected void write(final String newContent, final File output) throws MojoExecutionException {
         try {
+            //noinspection ResultOfMethodCallIgnored
             output.getParentFile().mkdirs();
             IOUtils.write(newContent, new FileOutputStream(output), Charset.defaultCharset());
         } catch (IOException e) {
@@ -107,7 +111,6 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
      * Write asciidoc to defined output in defined format
      *
      * @param asciiDocBuilder : asciidoc content
-     * @throws MojoExecutionException
      */
     protected void write(AsciiDocBuilder asciiDocBuilder) throws MojoExecutionException {
         write(asciiDocBuilder, getOutputFilename());

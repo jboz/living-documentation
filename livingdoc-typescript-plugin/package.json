@@ -1,0 +1,77 @@
+{
+  "name": "livingdoc-typescript-plugin",
+  "version": "0.7.0",
+  "description": "Generate a nice living documentation for your typescript projects.",
+  "author": "Julien Boz",
+  "contributors": [
+    "Julien Boz <julienboz@gmailcom> (https://ifocusit.ch)"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/jboz/living-documentation/tree/master/livingdoc-typescript-plugin",
+  "bugs": {
+    "url": "https://github.com/jboz/living-documentation/issues"
+  },
+  "keywords": [
+    "living documentation",
+    "livingdoc",
+    "class diagram",
+    "uml diagram",
+    "plantuml",
+    "typescript",
+    "uml",
+    "cli"
+  ],
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "livingdoc-typescript-plugin": "dist/index.js"
+  },
+  "scripts": {
+    "build:ci": "rm -rf dist && tsc",
+    "build:dev": "rm -rf dist && tsc --sourceMap -w",
+    "test": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest",
+    "lint": "tslint -p .",
+    "lint:fix": "tslint -p . --fix",
+    "doc": "npm run doc:diagram && npm run doc:diagram-svg && npm run doc:glossary",
+    "predoc": "npm run build:ci",
+    "doc:diagram": "node dist/index.js diagram -l -i test/resources/telecom/**/*.ts -o docs/diagram.puml",
+    "doc:diagram-svg": "node dist/index.js diagram -l -i test/resources/telecom/**/*.ts -o docs/diagram.svg",
+    "doc:glossary": "node dist/index.js glossary -i test/resources/telecom/**/*.ts -o docs/glossary.md"
+  },
+  "dependencies": {
+    "commander": "^4.1.1",
+    "glob": "^7.1.6",
+    "lodash": "^4.17.19",
+    "plantuml-encoder": "^1.4.0",
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.1.1",
+    "@types/jest": "^25.1.2",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^13.7.1",
+    "jest": "^25.1.0",
+    "pre-commit": "^1.2.2",
+    "ts-jest": "^25.2.0",
+    "ts-node": "^8.6.2",
+    "tslint": "^6.0.0",
+    "tslint-microsoft-contrib": "^6.2.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "coverageDirectory": "dist/coverage",
+    "coverageReporters": [
+      "html"
+    ]
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ]
+}

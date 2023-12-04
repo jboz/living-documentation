@@ -1,0 +1,23 @@
+- [x] install typescript/jest
+- [x] service class that use a repository as dep and an aggregate class
+- [x] aggregate defined with interfaces
+- [x] command line
+- [x] input with wildcard/file/directory
+- [x] npm publish
+  - [x] still mono repo ? => +1
+  - [ ] readme
+  - [ ] licence
+  - [ ] source header ?
+  - [ ] how-to contribute ?
+  - [ ] test report, test coverage
+  - [ ] travis or equivalent
+  - [ ] board
+  - [ ] issue ?
+- [ ] hide method
+- [ ] hide members
+- [ ] define a class as root aggregate
+- [ ] color aggregate of 'main' class
+- [ ] create annotations (c.f. java version)
+- [ ] link
+- [x] glossary
+- [ ] glossary : default value

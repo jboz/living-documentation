@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,17 +23,16 @@
 package ch.ifocusit.livingdoc.plugin.mapping;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
-import ch.ifocusit.livingdoc.plugin.utils.AnchorUtil;
 import ch.ifocusit.livingdoc.plugin.utils.AnnotationUtil;
 import ch.ifocusit.plantuml.classdiagram.NamesMapper;
-import ch.ifocusit.plantuml.classdiagram.model.Link;
-import org.simpleflatmapper.csv.CsvParser;
+import org.apache.commons.csv.CSVFormat;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,10 +49,20 @@ public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesM
         this.annotation = annotation;
 
         if (file != null) {
-            mappings = CsvParser.mapTo(DomainObject.class)
-                    .stream(new FileReader(file))
+            mappings = CSVFormat.RFC4180.builder()
+                    .setHeader("id", "name", "description").setSkipHeaderRecord(true).build()
+                    .parse(new FileReader(file)).stream()
+                    .map(record -> new DomainObject()
+                            .setId(Integer.valueOf(record.get("id")))
+                            .setName(record.get("name"))
+                            .setDescription(record.get("description"))
+                    )
                     .collect(Collectors.toList());
         }
+    }
+
+    public List<DomainObject> getMappings() {
+        return Collections.unmodifiableList(mappings);
     }
 
     private Optional<String> getName(int id) {
@@ -76,7 +85,7 @@ public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesM
         return getName(id).orElse(NamesMapper.super.getFieldName(field));
     }
 
-/*    *//**
+    /*    *//**
      * Equilvalent to {@link DomainObject#getFullName()}
      *
      * @param field : java field to treat

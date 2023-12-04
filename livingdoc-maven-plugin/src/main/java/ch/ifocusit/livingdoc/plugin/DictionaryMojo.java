@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,25 +22,27 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
-import ch.ifocusit.livingdoc.plugin.glossary.JavaClass;
-import ch.ifocusit.livingdoc.plugin.utils.MustacheUtil;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.plugins.annotations.ResolutionScope;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractGlossaryMojo;
+import ch.ifocusit.livingdoc.plugin.glossary.JavaClass;
+import ch.ifocusit.livingdoc.plugin.utils.MustacheUtil;
+
 /**
  * Glossary of domain objects in a title/content representation.
  *
  * @author Julien Boz
  */
-@Mojo(name = "dictionary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM)
+@Mojo(name = "dictionary", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM, defaultPhase = LifecyclePhase.PROCESS_CLASSES)
 public class DictionaryMojo extends AbstractGlossaryMojo {
     private static final String DEFAULT_DICTIONARY_TEMPLATE_MUSTACHE = "/default_dictionary_template.mustache";
 
@@ -67,18 +69,16 @@ public class DictionaryMojo extends AbstractGlossaryMojo {
     }
 
     @Override
-    protected void executeMojo() throws Exception {
-        List<JavaClass> classes = getClasses()
-                .map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation,
-                        getClasses().collect(Collectors.toList()), this))
-                .sorted()
-                .collect(Collectors.toList());
+    protected void executeGlossaryMojo() throws Exception {
+        List<JavaClass> classes = getClasses().map(javaClass -> JavaClass.from(javaClass, this::hasAnnotation,
+                getClasses().collect(Collectors.toList()), this)).sorted().collect(Collectors.toList());
 
         Map<String, Object> scopes = new HashMap<>();
         scopes.put("classes", classes);
         scopes.put("withLink", dictionaryWithLink);
 
-        asciiDocBuilder.textLine(MustacheUtil.execute(dictionaryTemplate, DEFAULT_DICTIONARY_TEMPLATE_MUSTACHE, scopes));
+        asciiDocBuilder
+                .textLine(MustacheUtil.execute(dictionaryTemplate, DEFAULT_DICTIONARY_TEMPLATE_MUSTACHE, scopes));
 
         somethingWasGenerated = !classes.isEmpty();
     }

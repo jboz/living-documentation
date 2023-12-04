@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,6 +23,8 @@
 package ch.ifocusit.livingdoc.plugin.publish.model;
 
 import com.google.common.collect.Ordering;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,6 +35,8 @@ import java.util.List;
 /**
  * @author Julien Boz
  */
+@Getter
+@Setter
 public class Page implements Comparable<Page> {
 
     private String spaceKey;
@@ -41,64 +45,20 @@ public class Page implements Comparable<Page> {
     private Path file;
     private String title;
 
-    private List<Attachement> attachements = new ArrayList<>();
-
-    public String getSpaceKey() {
-        return spaceKey;
-    }
-
-    public void setSpaceKey(final String spaceKey) {
-        this.spaceKey = spaceKey;
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(final String parentId) {
-        this.parentId = parentId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(final String content) {
-        this.content = content;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    public Path getFile() {
-        return file;
-    }
-
-    public void setFile(final Path file) {
-        this.file = file;
-    }
+    private final List<Attachment> attachments = new ArrayList<>();
 
     public String getFileName() {
         return file.getFileName().toString();
     }
 
-    public List<Attachement> getAttachements() {
-        return attachements;
+    public void addAttachment(String name, String fileName) {
+        Attachment attachment = new Attachment();
+        attachment.name = name;
+        attachment.file = Paths.get(file.getParent().toFile().getAbsolutePath(), fileName);
+        attachments.add(attachment);
     }
 
-    public void addAttachement(String name, String fileName) {
-        Attachement attachement = new Attachement();
-        attachement.name = name;
-        attachement.file = Paths.get(file.getParent().toFile().getAbsolutePath(), fileName);
-        attachements.add(attachement);
-    }
-
-    public static class Attachement {
+    public static class Attachment {
         String name;
         Path file;
 
@@ -114,5 +74,15 @@ public class Page implements Comparable<Page> {
     @Override
     public int compareTo(final Page o) {
         return Ordering.from(Comparator.comparing(Page::getFileName)).compare(this, o);
+    }
+
+    @Override
+    public String toString() {
+        return "Page{" +
+                "spaceKey='" + spaceKey + '\'' +
+                ", parentId='" + parentId + '\'' +
+                ", title='" + title + '\'' +
+                ", file='" + file + '\'' +
+                '}';
     }
 }

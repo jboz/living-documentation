@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,15 +22,15 @@
  */
 package ch.ifocusit.telecom.test.helper;
 
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
 /**
  * @author Julien Boz
  */
 @RunWith(Cucumber.class)
-@CucumberOptions(strict = true,
+@CucumberOptions(
         features = {"classpath:features/"},
         glue = {"ch.ifocusit.telecom.glue"},
         plugin = {"json:target/cucumber/result.json"})

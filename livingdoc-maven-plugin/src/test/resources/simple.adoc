@@ -1,0 +1,72 @@
+
+=== A simple feature
+
+
+This is the feature description.
+
+
+==== Background
+
+
+
+[.step-list]
+* *Given* a simple background step.
+
+
+
+
+
+
+
+==== Apple
+
+
+
+[.step-list]
+* *Given* two apples
+
+
+* *When* I eat one apple
+
+
+* *Then* there is one apple left.
+
+
+
+
+
+
+==== Second scenario title
+
+Will add 5 to any number
+
+[.step-list]
+* *Given* a number <operand>
+
+
+* *When* I add it to 5
+
+
+* *Then* the result is <result>
+
+
+
+
+
+
+===== Examples
+
+
+|====
+| operand | result
+
+| 0 | 5
+| 1 | 6
+| 5 | 10
+|====
+
+
+
+
+
+

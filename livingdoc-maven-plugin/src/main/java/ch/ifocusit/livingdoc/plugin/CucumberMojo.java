@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -30,9 +30,7 @@ import com.github.cukedoctor.api.model.Feature;
 import com.github.cukedoctor.config.GlobalConfig;
 import com.github.cukedoctor.parser.FeatureParser;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
@@ -76,7 +74,7 @@ public class CucumberMojo extends AbstractDocsGeneratorMojo {
     }
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void executeMojo() throws MojoExecutionException {
         if (hideSummarySection != null) {
             System.setProperty("HIDE_SUMMARY_SECTION", Boolean.toString(hideSummarySection));
         }

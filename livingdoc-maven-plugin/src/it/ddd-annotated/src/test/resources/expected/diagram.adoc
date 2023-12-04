@@ -1,0 +1,53 @@
+:sectlinks:
+:sectanchors:
+= Classes Diagram
+
+[plantuml, target=diagram, format=svg, opts=interactive]
+----
+@startuml
+!pragma layout smetana
+
+
+abstract class "Accès" [[glossary.html#glossaryid-400{Accès}]] {
+  Téléphone : String [[[glossary.html#glossaryid-401{Téléphone}]]]
+  Prix : BigDecimal [[[glossary.html#glossaryid-402{Prix}]]]
+  Horodatage : ZonedDateTime [[[glossary.html#glossaryid-403{Horodatage}]]]
+}
+
+class "Appel téléphonique" [[glossary.html#glossaryid-500{Appel téléphonique}]] {
+  durée : Duration [[[glossary.html#glossaryid-501{durée}]]]
+}
+
+class "Client" [[glossary.html#glossaryid-300{Client}]] {
+  Nom : String [[[glossary.html#glossaryid-301{Nom}]]]
+}
+
+class "Contrat" [[glossary.html#glossaryid-200{Contrat}]] {
+  Identifiant : String [[[glossary.html#glossaryid-201{Identifiant}]]]
+  client : Customer [[[glossary.html#glossaryid-202{client}]]]
+  Date effet : LocalDate [[[glossary.html#glossaryid-203{Date effet}]]]
+}
+
+class "Facture" [[glossary.html#glossaryid-100{Facture}]] #wheat {
+  Mois de facture : YearMonth [[[glossary.html#glossaryid-101{Mois de facture}]]]
+  contrat : Contract [[[glossary.html#glossaryid-102{contrat}]]]
+  accès : Set<Access> [[[glossary.html#glossaryid-103{accès}]]]
+  état : PaymentState [[[glossary.html#glossaryid-104{état}]]]
+}
+
+enum "Paiement" [[glossary.html#glossaryid-700{Paiement}]] {
+  En attente [[[glossary.html#glossaryid-701{En attente}]]]
+  Payé [[[glossary.html#glossaryid-702{Payé}]]]
+}
+
+class "SMS" [[glossary.html#glossaryid-600{SMS}]]
+
+"Accès" <|-- "Appel téléphonique"
+"Accès" <|-- "SMS"
+"Contrat" --> "Client" : client
+"Facture" --> "*" "Accès" : accès
+"Facture" --> "Contrat" : contrat
+"Facture" --> "Paiement" : état
+
+@enduml
+----

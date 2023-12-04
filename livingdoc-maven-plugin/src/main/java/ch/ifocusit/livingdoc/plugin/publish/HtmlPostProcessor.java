@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,16 +22,16 @@
  */
 package ch.ifocusit.livingdoc.plugin.publish;
 
+import com.google.common.base.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.Options;
-import org.asciidoctor.internal.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -43,7 +43,6 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.getTitle;
 import static ch.ifocusit.livingdoc.plugin.utils.AsciidocUtil.isAdoc;
 import static java.util.Arrays.stream;
 import static java.util.regex.Pattern.DOTALL;
@@ -53,7 +52,7 @@ import static java.util.regex.Pattern.DOTALL;
  */
 public class HtmlPostProcessor {
 
-    private static final Pattern CDATA_PATTERN = Pattern.compile("<!\\[CDATA\\[.*?\\]\\]>", DOTALL);
+    private static final Pattern CDATA_PATTERN = Pattern.compile("<!\\[CDATA\\[.*?]]>", DOTALL);
     private static final Pattern ATTACHMENT_PATH_PATTERN = Pattern.compile("<ri:attachment ri:filename=\"(.*?)\"");
     private static final Pattern PAGE_TITLE_PATTERN = Pattern.compile("<ri:page ri:content-title=\"(.*?)\"");
 
@@ -71,16 +70,14 @@ public class HtmlPostProcessor {
      * @return a clean html with attachement derived
      */
     public String process(Path path, Map<String, String> attachmentCollector) throws IOException {
-
         // read input
-        String content = FileUtils.readFileToString(path.toFile(), Charset.defaultCharset());
-
+        String initialContent = FileUtils.readFileToString(path.toFile(), Charset.defaultCharset());
+        String processedContent = initialContent;
         if (isAdoc(path)) {
             // convert adoc to html
-            content = asciidoctor.convert(content, options);
+            processedContent = asciidoctor.convert(initialContent, options);
         }
-
-        return postProcessContent(content,
+        return postProcessContent(processedContent,
                 replaceCrossReferenceTargets(path),
                 collectAndReplaceAttachmentFileNames(attachmentCollector),
                 unescapeCdataHtmlContent()
@@ -107,7 +104,7 @@ public class HtmlPostProcessor {
     }
 
     private String replaceAll(String content, Pattern pattern, Function<MatchResult, String> replacer) {
-        StringBuffer replacedContent = new StringBuffer();
+        StringBuilder replacedContent = new StringBuilder();
         Matcher matcher = pattern.matcher(content);
 
         while (matcher.find()) {
@@ -119,26 +116,28 @@ public class HtmlPostProcessor {
         return replacedContent.toString();
     }
 
+    @SafeVarargs
     private String postProcessContent(String initialContent, Function<String, String>... postProcessors) {
         return stream(postProcessors).reduce(initialContent,
                 (accumulator, postProcessor) -> postProcessor.apply(accumulator), unusedCombiner());
     }
 
     public String getPageTitle(Path path) {
-        String pageContent = null;
+        String pageContent;
         try {
-            pageContent = IOUtils.readFull(new FileInputStream(path.toFile()));
-        } catch (FileNotFoundException e) {
+            pageContent = IOUtils.toString(new FileInputStream(path.toFile()), Charsets.UTF_8);
+        } catch (IOException e) {
             throw new IllegalStateException("Unable to read page title !", e);
         }
         try {
+            String title = "";
             if (isAdoc(path)) {
-                return getTitle(asciidoctor, pageContent)
-                        .orElseThrow(() -> new IllegalStateException("top-level heading or title meta information must be set"));
-
+                title = asciidoctor.load(pageContent, options).getStructuredDoctitle().getMain();
+            } else {
+                // try to read h1 tag
+                title = tagText(pageContent, "h1");
             }
-            // try to read h1 tag
-            return tagText(pageContent, "h1");
+            return StringEscapeUtils.unescapeHtml4(title);
         } catch (IllegalStateException e) {
             return FilenameUtils.removeExtension(path.getFileName().toString());
         }
@@ -163,7 +162,7 @@ public class HtmlPostProcessor {
         return (content) -> replaceAll(content, PAGE_TITLE_PATTERN, (matchResult) -> {
             String htmlTarget = matchResult.group(1);
             String referencedPageTitle = htmlTarget;
-            if (htmlTarget.indexOf(".") > -1) {
+            if (htmlTarget.contains(".")) {
                 Path referencedPagePath = pagePath.getParent().resolve(
                         Paths.get(htmlTarget.substring(0, htmlTarget.lastIndexOf('.')) + ".adoc"));
                 referencedPageTitle = getPageTitle(referencedPagePath);

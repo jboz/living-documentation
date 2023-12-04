@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -95,11 +95,7 @@ public class ConfluenceRestClient implements ConfluenceClient {
     public String addPageUnderAncestor(String spaceKey, String ancestorId, String title, String content) {
         HttpPost addPageUnderSpaceRequest = this.httpRequestFactory.addPageUnderAncestorRequest(spaceKey, ancestorId, title, content);
 
-        return sendRequestAndFailIfNot20x(addPageUnderSpaceRequest, (response) -> {
-            String contentId = extractIdFromJsonNode(parseJsonResponse(response));
-
-            return contentId;
-        });
+        return sendRequestAndFailIfNot20x(addPageUnderSpaceRequest, (response) -> extractIdFromJsonNode(parseJsonResponse(response)));
     }
 
     @Override
@@ -130,9 +126,7 @@ public class ConfluenceRestClient implements ConfluenceClient {
                 throw new MultipleResultsException();
             }
 
-            String contentId = extractIdFromJsonNode(jsonNode.withArray("results").elements().next());
-
-            return contentId;
+            return extractIdFromJsonNode(jsonNode.withArray("results").elements().next());
         });
     }
 
@@ -178,9 +172,7 @@ public class ConfluenceRestClient implements ConfluenceClient {
                 throw new MultipleResultsException();
             }
 
-            ConfluenceAttachment attachmentId = extractConfluenceAttachment(jsonNode.withArray("results").elements().next());
-
-            return attachmentId;
+            return extractConfluenceAttachment(jsonNode.withArray("results").elements().next());
         });
     }
 
@@ -188,11 +180,7 @@ public class ConfluenceRestClient implements ConfluenceClient {
     public ConfluencePage getPageWithContentAndVersionById(String contentId) {
         HttpGet pageByIdRequest = this.httpRequestFactory.getPageByIdRequest(contentId, "body.storage,version");
 
-        return sendRequestAndFailIfNot20x(pageByIdRequest, (response) -> {
-            ConfluencePage confluencePage = extractConfluencePageWithContent(parseJsonResponse(response));
-
-            return confluencePage;
-        });
+        return sendRequestAndFailIfNot20x(pageByIdRequest, (response) -> extractConfluencePageWithContent(parseJsonResponse(response)));
     }
 
     @Override
@@ -351,11 +339,7 @@ public class ConfluenceRestClient implements ConfluenceClient {
     public String getSpaceContentId(String spaceKey) {
         HttpGet getSpaceContentIdRequest = this.httpRequestFactory.getSpaceContentIdRequest(spaceKey);
 
-        return sendRequestAndFailIfNot20x(getSpaceContentIdRequest, (response) -> {
-            String spaceContentId = extractIdFromJsonNode(parseJsonResponse(response));
-
-            return spaceContentId;
-        });
+        return sendRequestAndFailIfNot20x(getSpaceContentIdRequest, (response) -> extractIdFromJsonNode(parseJsonResponse(response)));
     }
 
     @Override

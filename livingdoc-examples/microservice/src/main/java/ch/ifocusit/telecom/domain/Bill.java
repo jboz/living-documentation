@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -29,8 +29,7 @@ import ch.ifocusit.telecom.domain.access.CallAccess;
 import ch.ifocusit.telecom.domain.access.SmsAccess;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -48,8 +47,8 @@ import java.util.Set;
  */
 @RootAggregate
 @UbiquitousLanguage(id = 100)
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class Bill extends AbstractDomain {
 
     /**

@@ -6,6 +6,6 @@ image:https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/liv
 
 = Living documentation maven plugin
 
-A simple maven plugin that generate a very useful, business and developer oriented, living documenation of all your applications.
+A simple maven plugin that generate a very useful, business and developer oriented, living documenation from the code of the application.
 
 See *https://github.com/jboz/living-documentation* for more documentation.

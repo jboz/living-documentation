@@ -1,13 +1,14 @@
 ifndef::imagesdir[:imagesdir: images]
 
-image:https://travis-ci.org/jboz/living-documentation.svg?branch=master["Build Status", link="https://travis-ci.org/jboz/living-documentation"]
 image:https://img.shields.io/badge/PRs-welcome-brightgreen.svg["Make a pull request", link="http://makeapullrequest.com"]
 image:https://img.shields.io/github/license/jboz/living-documentation.svg[License]
 image:https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-maven-plugin/badge.svg?style=flat["Maven Central", link="https://maven-badges.herokuapp.com/maven-central/ch.ifocusit.livingdoc/livingdoc-maven-plugin"]
 
-Read CONTRIBUTING file to contrib and check the the backlog on the trello board : https://trello.com/b/pabtQSZG/living-documentation
+Read CONTRIBUTING file to contrib and check the backlog on the trello board : https://trello.com/b/pabtQSZG/living-documentation
 
 = Living documentation tools
+
+Here is the mono-repository of many tools that will help you to generate a living documentation of your code.
 
 This project is intended to provide some tools to allow a nice Living Documentation.
 
@@ -23,7 +24,7 @@ This java project is made of :
 . Some java https://github.com/jboz/living-documentation/tree/master/livingdoc-annotations[annotations] (like https://github.com/jboz/living-documentation/blob/master/livingdoc-annotations/src/main/java/ch/ifocusit/livingdoc/annotations/UbiquitousLanguage.java[UbiquitousLanguage] annotation), but not mandatory
 . A fully customizable https://github.com/jboz/living-documentation/tree/master/livingdoc-maven-plugin[maven plugin]
 
-== Generate a conception diagram (svg format with link supported !)
+== Generate a conception diagram (link supported)
 image::conception-diagram.png[Asciidoctor Diagram javaClasses diagram]
 
 == And a business glossary (with asciidoc syntax, also in table format)
@@ -32,8 +33,17 @@ like this example : https://github.com/jboz/living-documentation/tree/master/liv
 == Add gherkin description :
 You can also integrate gherkin files like this example : link:livingdoc-examples/microservice/images/example_microservice_index.html.png[Microservice example generated index file]
 
+If you want to separate gherkins files look at this example: link:livingdoc-examples/ddd/pom.xml[Domain Driven Design]
+
 == Also allow to publish generated docs to confluence :
-Publish specific HTML version to Altassian Conlluence Server.
+Publish specific HTML version to Altassian Confluence Server.
+
+If you want to upload content to confluence look at this example: link:livingdoc-examples/ddd/pom.xml[Domain Driven Design]
+
+Take care that you will have to use adoc format and let the publish goal to generate the html part.
+Asciidoctor will be tuned to generate link:https://confluence.atlassian.com/doc/confluence-storage-format-790796544.html[confluence storage format].
+The plantuml macro will be overrided to allow the use of the confluence link:https://marketplace.atlassian.com/apps/41025/plantuml-for-confluence[plantuml macro plugin].
+For that you have to use the `<diagramAsPlantumlMacro>true</diagramAsPlantumlMacro>` option.
 
 == With a light maven configuration :
 [source,xml]
@@ -64,3 +74,4 @@ Publish specific HTML version to Altassian Conlluence Server.
 
 See *https://github.com/jboz/living-documentation/tree/master/livingdoc-examples[livingdoc-examples]* for more uses cases.
 
+Coin des développeurs : https://github.com/jboz/living-documentation/blob/master/DEV.md[readme développeur]

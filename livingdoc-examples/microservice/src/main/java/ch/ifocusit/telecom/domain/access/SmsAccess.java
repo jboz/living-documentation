@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -23,10 +23,14 @@
 package ch.ifocusit.telecom.domain.access;
 
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * SMS type access.
  */
 @UbiquitousLanguage(id = 600)
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class SmsAccess extends Access {
 }

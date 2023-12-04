@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ch.ifocusit.livingdoc.example</groupId>
+    <artifactId>ddd-annotated</artifactId>
+    <version>@project.version@.test</version>
+    <packaging>jar</packaging>
+
+    <description>Living Documentation example in a DDD project with annotated java classes</description>
+
+    <organization>
+        <name>Focus IT</name>
+        <url>https://ifocusit.ch</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>19</maven.compiler.source>
+        <maven.compiler.target>19</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+
+        <!-- living doc deps -->
+        <dependency>
+            <groupId>ch.ifocusit.livingdoc</groupId>
+            <artifactId>livingdoc-annotations</artifactId>
+            <version>2.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>ch.ifocusit.livingdoc</groupId>
+                <artifactId>livingdoc-maven-plugin</artifactId>
+                <version>@project.version@</version>
+                <executions>
+                    <execution>
+                        <id>class-diagram</id>
+                        <goals>
+                            <goal>diagram</goal>
+                            <goal>glossary</goal>
+                            <goal>dictionary</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
+                    <onlyAnnotated>true</onlyAnnotated>
+                    <diagramType>plantuml</diagramType>
+                    <format>html</format>
+                    <interactive>true</interactive>
+                    <glossaryMapping>src/docs/business-glossary.csv</glossaryMapping>
+                    <excludes>
+                        <exclude>.*domain.common.*</exclude>
+                    </excludes>
+                    <diagramTitle>= Classes Diagram</diagramTitle>
+                    <dictionaryTitle>= Dictionary</dictionaryTitle>
+                    <glossaryTitle>= Glossary</glossaryTitle>
+                    <glossaryColumnsName>Id Glossaire|Nom de l'objet|Nom de l'attribut|Type|Description|Contraintes|Valeur par défaut</glossaryColumnsName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

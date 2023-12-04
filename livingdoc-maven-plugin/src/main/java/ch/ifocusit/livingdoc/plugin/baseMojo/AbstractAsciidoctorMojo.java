@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,23 +22,27 @@
  */
 package ch.ifocusit.livingdoc.plugin.baseMojo;
 
+import ch.ifocusit.livingdoc.plugin.publish.confluence.PlantumlMacroBlockProcessor;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.asciidoctor.Asciidoctor;
+import org.asciidoctor.Attributes;
 import org.asciidoctor.Options;
-import org.asciidoctor.OptionsBuilder;
+import org.asciidoctor.extension.JavaExtensionRegistry;
+import org.asciidoctor.extension.RubyExtensionRegistry;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 import static org.asciidoctor.SafeMode.UNSAFE;
@@ -46,10 +50,13 @@ import static org.asciidoctor.SafeMode.UNSAFE;
 /**
  * @author Julien Boz
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
 
     protected static final String TEMPLATES_OUTPUT = "${project.build.directory}/asciidoc-templates";
     private static final String TEMPLATES_CLASSPATH_PATTERN = "templates/*";
+
+    protected static final String PLANTUML_MACRO_NAME = "plantuml";
 
     public enum Format {
         asciidoc, adoc, html, plantuml
@@ -70,11 +77,28 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
     @Parameter(property = "livingdoc.asciidocTemplate", defaultValue = TEMPLATES_OUTPUT, readonly = true)
     private File asciidocTemplates;
 
+    /**
+     * Templates directories.
+     */
+    @Parameter(property = "livingdoc.newlineCharacter", defaultValue = "\r\n", readonly = true)
+    private String newlineCharacter;
+
+    @Override
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        System.setProperty("line.separator", "\r\n");
+        if (StringUtils.isNotBlank(newlineCharacter)) {
+            System.setProperty("line.separator", newlineCharacter);
+        }
+        this.executeMojo();
+    }
+
+    public abstract void executeMojo() throws MojoExecutionException, MojoFailureException;
+
     protected void write(AsciiDocBuilder asciiDocBuilder, Format format, String outputFilename) throws MojoExecutionException {
         generatedDocsDirectory.mkdirs();
         File output = getOutput(outputFilename, Format.adoc);
         try {
-            // write adco file
+            // write adoc file
             asciiDocBuilder.writeToFile(generatedDocsDirectory.getAbsolutePath(), FilenameUtils.removeExtension(outputFilename), StandardCharsets.UTF_8);
             if (Format.html.equals(format)) {
                 // convert adoc to html
@@ -90,9 +114,17 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
         return new File(generatedDocsDirectory, filename);
     }
 
-    protected Asciidoctor createAsciidoctor() {
+    public Asciidoctor createAsciidoctor() {
         Asciidoctor asciidoctor = Asciidoctor.Factory.create();
         asciidoctor.requireLibrary("asciidoctor-diagram");
+        JavaExtensionRegistry extensionRegistry = asciidoctor.javaExtensionRegistry();
+        // override plantuml macro
+        extensionRegistry.blockMacro(PLANTUML_MACRO_NAME, PlantumlMacroBlockProcessor.class);
+        // install gherkin macro
+        RubyExtensionRegistry rubyExtensionRegistry = asciidoctor.rubyExtensionRegistry();
+        rubyExtensionRegistry
+                .loadClass(this.getClass().getResourceAsStream("/com/github/domgold/doctools/asciidoctor/gherkin/gherkinblockmacro.rb"))
+                .blockMacro("gherkin", "GherkinBlockMacroProcessor");
         return asciidoctor;
     }
 
@@ -101,17 +133,16 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
 
         String imagesOutputDirectory = generatedDocsDirectory.getAbsolutePath();
 
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("imagesoutdir", imagesOutputDirectory);
-        attributes.put("outdir", imagesOutputDirectory);
-
-        return OptionsBuilder.options()
+        return Options.builder()
                 .backend("html5")
                 .safe(UNSAFE)
                 .baseDir(generatedDocsDirectory)
                 .templateDirs(asciidocTemplates)
-                .attributes(attributes)
-                .get();
+                .attributes(Attributes.builder()
+                        .attribute("imagesoutdir", imagesOutputDirectory)
+                        .attribute("outdir", imagesOutputDirectory)
+                        .build())
+                .build();
     }
 
     protected void extractTemplatesFromJar() {
@@ -120,7 +151,8 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
             Arrays.asList(new PathMatchingResourcePatternResolver().getResources(TEMPLATES_CLASSPATH_PATTERN))
                     .forEach(templateResource -> {
                         try {
-                            copyInputStreamToFile(templateResource.getInputStream(), new File(this.asciidocTemplates, templateResource.getFilename()));
+                            copyInputStreamToFile(templateResource.getInputStream(), new File(this.asciidocTemplates,
+                                    Objects.requireNonNull(templateResource.getFilename())));
                         } catch (IOException e) {
                             throw new RuntimeException("Could not write template to target file", e);
                         }

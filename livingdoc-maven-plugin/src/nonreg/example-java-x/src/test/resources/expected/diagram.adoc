@@ -1,0 +1,11 @@
+:sectlinks:
+:sectanchors:
+[plantuml, target=diagram, format=png]
+----
+@startuml
+!pragma layout smetana
+
+
+
+@enduml
+----

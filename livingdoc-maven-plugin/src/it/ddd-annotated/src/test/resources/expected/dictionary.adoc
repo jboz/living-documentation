@@ -1,0 +1,131 @@
+:sectlinks:
+:sectanchors:
+= Dictionary
+
+[[glossaryid-100]]
+== [small]#100# - Facture
+
+
+Facture Mensuelle générée par le système à la date anniversaire du contrat
+
+[[glossaryid-101]]
+== [small]#101# - anchor:glossaryid-101[]Bill.Mois de facture
+
+
+Mois concerné par la facture
+
+[[glossaryid-102]]
+== [small]#102# - anchor:glossaryid-102[]Bill.contrat
+
+
+Contrat concerné par la facture
+
+[[glossaryid-103]]
+== [small]#103# - anchor:glossaryid-103[]Bill.accès
+
+
+Accès aux services
+
+[[glossaryid-104]]
+== [small]#104# - anchor:glossaryid-104[]Bill.état
+
+
+Etat du paiement de la facture
+
+[[glossaryid-200]]
+== [small]#200# - Contrat
+
+
+Contrat de téléphonie liant la société à un client
+
+[[glossaryid-201]]
+== [small]#201# - anchor:glossaryid-201[]Contract.Identifiant
+
+
+Identifiant du contrat unique dans le système
+
+[[glossaryid-202]]
+== [small]#202# - anchor:glossaryid-202[]Contract.client
+
+
+Client du contrat
+
+[[glossaryid-203]]
+== [small]#203# - anchor:glossaryid-203[]Contract.Date effet
+
+
+Date à laquelle le contrat prend effet
+
+[[glossaryid-300]]
+== [small]#300# - Client
+
+
+Client du service lié par un contrat
+
+[[glossaryid-301]]
+== [small]#301# - anchor:glossaryid-301[]Customer.Nom
+
+
+Nom d'usage du client
+
+[[glossaryid-400]]
+== [small]#400# - Accès
+
+
+Utilisation du service de télécommunication
+
+[[glossaryid-401]]
+== [small]#401# - anchor:glossaryid-401[]Access.Téléphone
+
+
+Numéro de téléphone utilisé
+
+[[glossaryid-402]]
+== [small]#402# - anchor:glossaryid-402[]Access.Prix
+
+
+Montant de l'accès au service
+
+[[glossaryid-403]]
+== [small]#403# - anchor:glossaryid-403[]Access.Horodatage
+
+
+Timestamp de l'utilisation du service
+
+[[glossaryid-500]]
+== [small]#500# - Appel téléphonique
+
+
+
+
+[[glossaryid-501]]
+== [small]#501# - anchor:glossaryid-501[]CallAccess.durée
+
+
+Durée de l'appel téléphonique
+
+[[glossaryid-600]]
+== [small]#600# - SMS
+
+
+SMS
+
+[[glossaryid-700]]
+== [small]#700# - Paiement
+
+
+Etat de paiement de la fature
+
+[[glossaryid-701]]
+== [small]#701# - anchor:glossaryid-701[]PaymentState.En attente
+
+
+Le facture est en attente de paiement
+
+[[glossaryid-702]]
+== [small]#702# - anchor:glossaryid-702[]PaymentState.Payé
+
+
+La facture à été payé par le client
+
+

@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -31,6 +31,7 @@ import ch.ifocusit.plantuml.classdiagram.LinkMaker;
 import ch.ifocusit.plantuml.classdiagram.NamesMapper;
 import ch.ifocusit.plantuml.classdiagram.model.Link;
 import com.google.common.reflect.ClassPath;
+import lombok.Setter;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
@@ -42,49 +43,45 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import static ch.ifocusit.livingdoc.plugin.utils.FileUtils.read;
+import static ch.ifocusit.livingdoc.plugin.utils.StringUtil.defaultString;
 import static java.util.Arrays.stream;
 
 /**
  * @author Julien Boz
  */
+@SuppressWarnings("UnstableApiUsage")
+@Setter
 public abstract class AbstractClassDiagramBuilder implements LinkMaker, NamesMapper {
 
     private static final String TEST = "Test";
     private static final String IT = "IT";
     private static final String PACKAGE_INFO = "package-info";
 
-    protected final MavenProject project;
-    protected final String prefix;
-    protected final String[] excludes;
-    protected final File header;
-    protected final File footer;
-    protected final boolean diagramWithDependencies;
+    protected MavenProject project;
+    protected String prefix;
+    protected String singleClass;
+    protected String[] excludes;
+    protected String header;
+    protected String footer;
+    protected File startOptions;
+    protected File endOptions;
+    protected boolean diagramWithDependencies;
     protected String linkPage;
+    protected String diagramTitle;
+    private boolean diagramWithLink;
 
     protected NamesMapper namesMapper = this;
-    private Class<? extends Annotation> mappingAnnotation;
-
-    public AbstractClassDiagramBuilder(MavenProject project, String prefix, String[] excludes, File header, File footer,
-                                       boolean diagramWithDependencies, String linkPage) {
-        this.project = project;
-        this.prefix = prefix;
-        this.excludes = excludes;
-        this.header = header;
-        this.footer = footer;
-        this.diagramWithDependencies = diagramWithDependencies;
-        this.linkPage = linkPage;
-    }
 
     public abstract void filterOnAnnotation(Class<? extends Annotation> annotation);
 
-    public abstract String generate() throws MojoExecutionException;
+    public abstract String build() throws MojoExecutionException;
 
-    protected String readHeader() throws MojoExecutionException {
-        return read(header);
+    protected String[] readStartOptions() throws MojoExecutionException {
+        return read(startOptions);
     }
 
-    protected String readFooter() throws MojoExecutionException {
-        return read(footer);
+    protected String[] readEndOptions() throws MojoExecutionException {
+        return read(endOptions);
     }
 
     protected Predicate<ClassPath.ClassInfo> defaultFilter() {
@@ -98,10 +95,14 @@ public abstract class AbstractClassDiagramBuilder implements LinkMaker, NamesMap
 
     protected ClassPath initClassPath() throws MojoExecutionException {
         try {
-            return ClassPath.from(ClassLoaderUtil.getRuntimeClassLoader(project));
+            return ClassPath.from(getClassLoader());
         } catch (IOException e) {
             throw new MojoExecutionException("Unable to initialize classPath !", e);
         }
+    }
+
+    protected ClassLoader getClassLoader() throws MojoExecutionException {
+        return ClassLoaderUtil.getRuntimeClassLoader(project);
     }
 
     public void mapNames(File mappings) throws MojoExecutionException {
@@ -112,26 +113,32 @@ public abstract class AbstractClassDiagramBuilder implements LinkMaker, NamesMap
         }
     }
 
-    private Optional<Link> createLink(String label, Integer linkId, String defaultLinkId) {
+    private Optional<Link> createLink(Integer linkId, String defaultLinkId) {
         Link link = new Link();
-        link.setLabel(label);
         link.setUrl(AnchorUtil.formatLinkWithPage(linkPage, linkId, defaultLinkId));
+        link.setTooltip(defaultString(linkId, defaultLinkId));
         return Optional.of(link);
     }
 
     @Override
     public Optional<Link> getClassLink(Class aClass) {
+        if (!diagramWithLink) {
+            return Optional.empty();
+        }
         Integer id = AnnotationUtil.tryFind(aClass, UbiquitousLanguage.class).map(UbiquitousLanguage::id).orElse(null);
         String label = namesMapper.getClassName(aClass);
-        return createLink(label, id, label);
+        return createLink(id, label);
     }
 
     @Override
     public Optional<Link> getFieldLink(Field field) {
+        if (!diagramWithLink) {
+            return Optional.empty();
+        }
         String parentLabel = namesMapper.getClassName(field.getDeclaringClass());
         String label = namesMapper.getFieldName(field);
         Integer id = AnnotationUtil.tryFind(field, UbiquitousLanguage.class).map(UbiquitousLanguage::id).orElse(null);
         String defaultLinkId = AnchorUtil.glossaryLink(parentLabel, label);
-        return createLink(label, id, defaultLinkId);
+        return createLink(id, defaultLinkId);
     }
 }

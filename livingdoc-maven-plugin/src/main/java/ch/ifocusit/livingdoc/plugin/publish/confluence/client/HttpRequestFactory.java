@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -45,6 +45,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static ch.ifocusit.livingdoc.plugin.publish.confluence.client.HttpRequestFactory.PagePayloadBuilder.pagePayloadBuilder;
 import static ch.ifocusit.livingdoc.plugin.utils.AssertUtils.assertMandatoryParameter;
@@ -148,11 +149,7 @@ class HttpRequestFactory {
         assertMandatoryParameter(isNotBlank(title), "title");
 
         String encodedTitle;
-        try {
-            encodedTitle = URLEncoder.encode(title, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Could not encode title", e);
-        }
+        encodedTitle = URLEncoder.encode(title, StandardCharsets.UTF_8);
 
         String searchQuery = this.confluenceRestApiEndpoint + "/content?spaceKey=" + spaceKey + "&title=" + encodedTitle;
 
@@ -214,27 +211,22 @@ class HttpRequestFactory {
 
     public HttpGet getAttachmentsRequest(String contentId, Integer limit, Integer start, String expandOptions) {
         assertMandatoryParameter(isNotBlank(contentId), "contentId");
-        URIBuilder uriBuilder = new URIBuilder();
-        uriBuilder.setPath(this.confluenceRestApiEndpoint + "/content/" + contentId + "/child/attachment");
-
-        if (limit != null) {
-            uriBuilder.addParameter("limit", limit.toString());
-        }
-        if (start != null) {
-            uriBuilder.addParameter("start", start.toString());
-        }
-        if (isNotBlank(expandOptions)) {
-            uriBuilder.addParameter("expand", expandOptions);
-        }
-
-        HttpGet getAttachmentsRequest;
         try {
-            getAttachmentsRequest = new HttpGet(uriBuilder.build().toString());
+            URIBuilder uriBuilder = new URIBuilder(this.confluenceRestApiEndpoint + "/content/" + contentId + "/child/attachment");
+
+            if (limit != null) {
+                uriBuilder.addParameter("limit", limit.toString());
+            }
+            if (start != null) {
+                uriBuilder.addParameter("start", start.toString());
+            }
+            if (isNotBlank(expandOptions)) {
+                uriBuilder.addParameter("expand", expandOptions);
+            }
+            return new HttpGet(uriBuilder.build().toString());
         } catch (URISyntaxException e) {
             throw new RuntimeException("Invalid URL", e);
         }
-
-        return getAttachmentsRequest;
     }
 
     public HttpGet getAttachmentContentRequest(String relativeDownloadLink) {
@@ -309,7 +301,7 @@ class HttpRequestFactory {
     private static HttpEntity multipartEntity(String attachmentFileName, InputStream attachmentContent) {
         MultipartEntityBuilder multipartEntityBuilder = MultipartEntityBuilder.create();
         multipartEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        multipartEntityBuilder.setCharset(Charset.forName("UTF-8"));
+        multipartEntityBuilder.setCharset(StandardCharsets.UTF_8);
 
         InputStreamBody inputStreamBody;
         if (isNotBlank(attachmentFileName)) {

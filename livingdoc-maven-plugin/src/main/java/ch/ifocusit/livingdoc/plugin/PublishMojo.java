@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -29,41 +29,41 @@ import ch.ifocusit.livingdoc.plugin.publish.PublishProvider;
 import ch.ifocusit.livingdoc.plugin.publish.confluence.ConfluenceProvider;
 import ch.ifocusit.livingdoc.plugin.publish.model.Page;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.maven.artifact.Artifact;
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * @author Julien Boz
  */
-@Mojo(name = "publish")
+@Mojo(name = "publish", defaultPhase = LifecyclePhase.PACKAGE)
 public class PublishMojo extends AbstractAsciidoctorMojo {
 
     @Parameter(property = "livingdoc.publish")
-    private Publish publish = new Publish();
+    private final Publish publish = new Publish();
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void executeMojo() throws MojoExecutionException {
+        if (!Publish.Provider.confluence.equals(publish.getProvider())) {
+            throw new NotImplementedException("This publisher '" + publish.getProvider() + "' is not yet supported!");
+        }
         extractTemplatesFromJar();
         try {
-            PublishProvider provider;
-            switch (publish.getProvider()) {
-                default:
-                    provider = new ConfluenceProvider(publish.getEndpoint(), publish.getUsername(), publish.getPassword());
-            }
+            PublishProvider provider = new ConfluenceProvider(publish.getEndpoint(), publish.getUsername(), publish.getPassword());
 
-            List<Page> pages = readHtmlPages();
+            List<Page> pages = createHtmlPage();
             publish(provider, pages);
         } catch (Exception e) {
             throw new MojoExecutionException("Unexpected error", e);
@@ -72,16 +72,16 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
 
     /**
      * @return html pages
-     * @throws IOException
      */
-    private List<Page> readHtmlPages() throws IOException {
+    private List<Page> createHtmlPage() throws IOException {
 
         List<Page> pages = new ArrayList<>();
 
-        Files.walk(Paths.get(generatedDocsDirectory.getAbsolutePath()))
-                .filter(path -> FilenameUtils.isExtension(path.getFileName().toString(), new String[]{Format.adoc.name(), Format.asciidoc.name(), Format.html.name()}))
-                .forEach(path -> {
-                    try {
+        try (Stream<Path> paths = Files.walk(Paths.get(generatedDocsDirectory.getAbsolutePath()))) {
+            paths.filter(path -> FilenameUtils.isExtension(path.getFileName().toString(),
+                            Format.adoc.name(), Format.asciidoc.name(), Format.html.name()))
+                    .forEach(path -> {
+                        getLog().info("Publish goal - process " + path);
                         Map<String, String> attachmentCollector = new HashMap<>();
 
                         HtmlPostProcessor htmlProcessor = getPostProcessor();
@@ -91,16 +91,18 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
                         page.setParentId(publish.getAncestorId());
                         page.setTitle(htmlProcessor.getPageTitle(path));
                         page.setFile(path);
-                        String content = htmlProcessor.process(path, attachmentCollector);
-                        page.setContent(content);
+                        try {
+                            String content = htmlProcessor.process(path, attachmentCollector);
+                            page.setContent(content);
+                        } catch (IOException e) {
+                            throw new IllegalArgumentException("error in html processing of file", e);
+                        }
 
-                        attachmentCollector.forEach(page::addAttachement);
+                        attachmentCollector.forEach(page::addAttachment);
 
                         pages.add(page);
-                    } catch (IOException e) {
-                        throw new IllegalArgumentException("error reading file", e);
-                    }
-                });
+                    });
+        }
 
         return pages;
     }
@@ -109,16 +111,16 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
         return new HtmlPostProcessor(createAsciidoctor(), options());
     }
 
-    private void publish(PublishProvider provider, List<Page> pages) throws MalformedURLException {
+    private void publish(PublishProvider provider, List<Page> pages) {
 
         pages.stream().sorted().forEach(page -> {
             // check if parent exists
             // check if page exists
             if (provider.exists(page)) {
-                // upload page
+                getLog().info("Publish goal - update " + page);
                 provider.update(page);
             } else {
-                // upload page
+                getLog().info("Publish goal - insert " + page);
                 provider.insert(page);
             }
         });

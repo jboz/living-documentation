@@ -1,0 +1,81 @@
+:sectlinks:
+:sectanchors:
+= All classes diagram
+
+[plantuml, target=diagram-all, format=png]
+----
+@startuml
+!pragma layout smetana
+
+
+title All classes diagram
+
+abstract class "AbstractDomain"
+
+abstract class "Access" {
+  phoneNumber : String
+  price : BigDecimal
+  dateTime : ZonedDateTime
+}
+
+class "Bill" #wheat {
+  month : YearMonth
+  contract : Contract
+  accesses : Set<Access>
+  customerInformed : boolean
+}
+
+interface "BillRepository" {
+  add(Bill) : Bill
+  clear()
+  get(YearMonth) : Optional<Bill>
+  retreiveLastBill() : Optional<Bill>
+}
+
+class "BillingService" {
+  repository : BillRepository
+  getBill(String) : Optional<Bill>
+}
+
+class "CallAccess" {
+  duration : Duration
+}
+
+class "Contract" {
+  id : String
+  customer : Customer
+  effectDate : LocalDate
+}
+
+class "Customer" {
+  name : String
+  contracts : Set<Contract>
+}
+
+class "ListBillRepository" {
+  bills : List<Bill>
+  add(Bill) : Bill
+  clear()
+  get(YearMonth) : Optional<Bill>
+  retreiveLastBill() : Optional<Bill>
+}
+
+class "SmsAccess"
+
+"AbstractDomain" <|-- "Access"
+"AbstractDomain" <|-- "Bill"
+"AbstractDomain" <|-- "Contract"
+"AbstractDomain" <|-- "Customer"
+"Access" <|-- "CallAccess"
+"Access" <|-- "SmsAccess"
+"Bill" --> "*" "Access" : accesses
+"Bill" --> "Contract" : contract
+"BillRepository" --> "Bill" : use
+"BillRepository" <|-- "ListBillRepository"
+"BillingService" --> "Bill" : use
+"BillingService" --> "BillRepository" : repository
+"Contract" "*" <-> "Customer" : customer/contracts
+"ListBillRepository" --> "*" "Bill" : bills
+
+@enduml
+----

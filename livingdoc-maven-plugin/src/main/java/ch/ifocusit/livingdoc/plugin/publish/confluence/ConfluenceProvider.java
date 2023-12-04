@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -66,7 +66,7 @@ public class ConfluenceProvider implements PublishProvider {
             // remove all attachement
             client.getAttachments(contentId).forEach(attachment -> client.deleteAttachment(attachment.getId()));
             // add attachements
-            page.getAttachements().forEach(attachement ->
+            page.getAttachments().forEach(attachement ->
                     client.addAttachment(contentId, attachement.getName(), fileInputStream(attachement.getFile()))
             );
         } else {
@@ -81,7 +81,7 @@ public class ConfluenceProvider implements PublishProvider {
         String contentId = client.addPageUnderAncestor(page.getSpaceKey(), page.getParentId(), page.getTitle(), page.getContent());
 
         // add attachements
-        page.getAttachements().forEach(attachement ->
+        page.getAttachments().forEach(attachement ->
                 client.addAttachment(contentId, attachement.getName(), fileInputStream(attachement.getFile()))
         );
     }

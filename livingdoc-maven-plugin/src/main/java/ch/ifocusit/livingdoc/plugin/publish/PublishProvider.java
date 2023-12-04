@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2017 Focus IT
+ * Copyright (C) 2023 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -29,9 +29,9 @@ import ch.ifocusit.livingdoc.plugin.publish.model.Page;
  */
 public interface PublishProvider {
 
-    public boolean exists(Page page);
+    boolean exists(Page page);
 
-    public void update(Page page);
+    void update(Page page);
 
-    public void insert(Page page);
+    void insert(Page page);
 }

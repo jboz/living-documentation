@@ -5,8 +5,8 @@
 
     <parent>
         <groupId>ch.ifocusit.livingdoc.example</groupId>
-        <artifactId>examples-parent</artifactId>
-        <version>1.11-SNAPSHOT</version>
+        <artifactId>livingdoc-examples</artifactId>
+        <version>2.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>ddd</artifactId>
@@ -16,20 +16,18 @@
 
     <organization>
         <name>Focus IT</name>
-        <url>http://ifocusit.ch</url>
+        <url>https://ifocusit.ch</url>
     </organization>
 
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -38,39 +36,54 @@
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
+            <version>2.0.0.Final</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <!-- tag::plugin-livingdoc[] -->
+            <!-- tag::livingdoc[] -->
             <plugin>
                 <groupId>ch.ifocusit.livingdoc</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>class-diagram</id>
-                        <phase>package</phase>
+                        <id>all</id>
+                        <phase>package</phase><!-- default phase -->
                         <goals>
                             <goal>diagram</goal>
                             <goal>glossary</goal>
                             <goal>dictionary</goal>
+                            <goal>gherkin</goal>
+                            <goal>publish</goal>
                         </goals>
                     </execution>
                 </executions>
                 <configuration>
                     <packageRoot>ch.ifocusit.telecom.domain</packageRoot>
                     <interactive>true</interactive>
-                    <generatedDocsDirectory>${project.build.directory}</generatedDocsDirectory>
                     <excludes>
                         <exclude>.*domain.common.*</exclude>
                     </excludes>
                     <diagramTitle>= Classes Diagram</diagramTitle>
+                    <diagramLinkPage>Glossary</diagramLinkPage>
+                    <diagramAsPlantumlMacro>true</diagramAsPlantumlMacro><!-- this will result as the use of the plantuml macro in confluence: https://marketplace.atlassian.com/apps/41025/plantuml-for-confluence -->
                     <dictionaryTitle>= Dictionary</dictionaryTitle>
                     <glossaryTitle>= Glossary</glossaryTitle>
+                    <gherkinTitle>= Use Case - Invoice management - </gherkinTitle><!-- will be used as a prefix for the confluence page name -->
+                    <gerkinSeparateFeature>true</gerkinSeparateFeature><!-- set false to merge all feature into one page, default is true -->
+                    <format>adoc</format><!-- adoc output format is mandatory for confluence publisher because it doesn't allow to publish full html page -->
+                    <publish>
+                        <provider>confluence</provider><!-- actually only confluence is supported -->
+                        <endpoint>${CONFLUENCE_URL}</endpoint>
+                        <spaceKey>DOCPROD</spaceKey>
+                        <ancestorId>98369</ancestorId><!-- parent pageId -->
+                        <username>livingdoc</username>
+                        <password>livingdoc</password>
+                    </publish>
                 </configuration>
             </plugin>
-            <!-- end::plugin-livingdoc[] -->
+            <!-- end::livingdoc[] -->
         </plugins>
     </build>
 </project>
