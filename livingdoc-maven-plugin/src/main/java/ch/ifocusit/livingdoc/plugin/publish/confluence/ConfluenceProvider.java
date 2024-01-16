@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -59,16 +59,16 @@ public class ConfluenceProvider implements PublishProvider {
 
         // TODO check why content even upload
         if (!oldContent.equals(page.getContent())) {
-            client.updatePage(contentId, page.getParentId(), page.getTitle(), page.getContent(), existingPage.getVersion() + 1);
+            client.updatePage(contentId, page.getParentId(), page.getTitle(), page.getContent(),
+                    existingPage.getVersion() + 1);
 
             // TODO update attachement if possible
             // TODO remove attachement not present
             // remove all attachement
             client.getAttachments(contentId).forEach(attachment -> client.deleteAttachment(attachment.getId()));
             // add attachements
-            page.getAttachments().forEach(attachement ->
-                    client.addAttachment(contentId, attachement.getName(), fileInputStream(attachement.getFile()))
-            );
+            page.getAttachments().forEach(attachement -> client.addAttachment(contentId, attachement.getName(),
+                    fileInputStream(attachement.getFile())));
         } else {
             // TODO log INFO
             System.out.println("Page with title=" + page.getTitle() + " did not change.");
@@ -78,12 +78,12 @@ public class ConfluenceProvider implements PublishProvider {
     @Override
     public void insert(final Page page) {
         // post page to confluence.
-        String contentId = client.addPageUnderAncestor(page.getSpaceKey(), page.getParentId(), page.getTitle(), page.getContent());
+        String contentId = client.addPageUnderAncestor(page.getSpaceKey(), page.getParentId(), page.getTitle(),
+                page.getContent());
 
         // add attachements
-        page.getAttachments().forEach(attachement ->
-                client.addAttachment(contentId, attachement.getName(), fileInputStream(attachement.getFile()))
-        );
+        page.getAttachments().forEach(attachement -> client.addAttachment(contentId, attachement.getName(),
+                fileInputStream(attachement.getFile())));
     }
 
 }

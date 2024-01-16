@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -41,8 +41,7 @@ class RequestFailedException extends RuntimeException {
                 + response.getStatusLine().getReasonPhrase() + SPACE
                 + request.getRequestLine().getMethod() + SPACE
                 + request.getRequestLine().getUri() + SPACE
-                + failedResponseContent(response)
-        );
+                + failedResponseContent(response));
     }
 
     private static String failedResponseContent(HttpResponse response) {

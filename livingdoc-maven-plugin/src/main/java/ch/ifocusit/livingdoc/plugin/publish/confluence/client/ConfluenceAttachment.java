@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -57,15 +57,20 @@ public class ConfluenceAttachment {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         ConfluenceAttachment that = (ConfluenceAttachment) o;
 
-        if (this.version != that.version) return false;
-        if (!this.id.equals(that.id)) return false;
-        //noinspection SimplifiableIfStatement
-        if (!this.title.equals(that.title)) return false;
+        if (this.version != that.version)
+            return false;
+        if (!this.id.equals(that.id))
+            return false;
+        // noinspection SimplifiableIfStatement
+        if (!this.title.equals(that.title))
+            return false;
         return this.relativeDownloadLink.equals(that.relativeDownloadLink);
 
     }

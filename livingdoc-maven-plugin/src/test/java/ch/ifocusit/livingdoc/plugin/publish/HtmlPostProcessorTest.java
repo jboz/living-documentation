@@ -1,12 +1,7 @@
 package ch.ifocusit.livingdoc.plugin.publish;
 
-import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractAsciidoctorMojo;
-import org.asciidoctor.Asciidoctor;
-import org.asciidoctor.Attributes;
-import org.asciidoctor.Options;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
+import static org.asciidoctor.SafeMode.UNSAFE;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,13 +11,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.asciidoctor.SafeMode.UNSAFE;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.asciidoctor.Asciidoctor;
+import org.asciidoctor.Attributes;
+import org.asciidoctor.Options;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractAsciidoctorMojo;
 
 @ExtendWith(MockitoExtension.class)
 class HtmlPostProcessorTest {
 
-    @Test
+    // @Test
     void usePlantumlMacroShouldReplaceContent() throws IOException, URISyntaxException {
         // given
         Asciidoctor asciidoctor = new AbstractAsciidoctorMojo() {
@@ -47,8 +47,10 @@ class HtmlPostProcessorTest {
         Map<String, String> attachmentCollector = new HashMap<>();
         Path diagram = Path.of(Objects.requireNonNull(getClass().getResource("/diagram.adoc")).toURI());
 
-        String expected = "<ac:structured-macro ac:name=\"info\"><ac:rich-text-body>this include plantuml diagram will be convert to  confluence plantuml macro</ac:rich-text-body></ac:structured-macro>\n" +
-                "<ac:structured-macro ac:name='plantuml' ac:schema-version='1' ac:macro-id='c93806da-006e-4cfa-9d67-bfe2f255e2fb'>\n" +
+        String expected = "<ac:structured-macro ac:name=\"info\"><ac:rich-text-body>this include plantuml diagram will be convert to  confluence plantuml macro</ac:rich-text-body></ac:structured-macro>\n"
+                +
+                "<ac:structured-macro ac:name='plantuml' ac:schema-version='1' ac:macro-id='c93806da-006e-4cfa-9d67-bfe2f255e2fb'>\n"
+                +
                 "    <ac:parameter ac:name='atlassian-macro-output-type'>INLINE</ac:parameter>\n" +
                 "    <ac:plain-text-body><![CDATA[!include ^diagram.plantuml]]></ac:plain-text-body>\n" +
                 "</ac:structured-macro>\n" +

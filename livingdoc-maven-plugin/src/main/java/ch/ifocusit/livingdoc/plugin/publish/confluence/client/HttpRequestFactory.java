@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -58,7 +58,8 @@ import static org.apache.http.entity.ContentType.APPLICATION_OCTET_STREAM;
  */
 class HttpRequestFactory {
 
-    private final static Header APPLICATION_JSON_UTF8_HEADER = new BasicHeader("Content-Type", "application/json;charset=utf-8");
+    private final static Header APPLICATION_JSON_UTF8_HEADER = new BasicHeader("Content-Type",
+            "application/json;charset=utf-8");
     private static final String REST_API_CONTEXT = "/rest/api";
     private final String rootConfluenceUrl;
     private final String confluenceRestApiEndpoint;
@@ -115,7 +116,8 @@ class HttpRequestFactory {
         assertMandatoryParameter(isNotBlank(attachmentFileName), "attachmentFileName");
         assertMandatoryParameter(attachmentContent != null, "attachmentContent");
 
-        HttpPost attachmentPostRequest = new HttpPost(this.confluenceRestApiEndpoint + "/content/" + contentId + "/child/attachment");
+        HttpPost attachmentPostRequest = new HttpPost(
+                this.confluenceRestApiEndpoint + "/content/" + contentId + "/child/attachment");
         attachmentPostRequest.addHeader(new BasicHeader("X-Atlassian-Token", "no-check"));
 
         HttpEntity multipartEntity = multipartEntity(attachmentFileName, attachmentContent);
@@ -129,7 +131,8 @@ class HttpRequestFactory {
         assertMandatoryParameter(isNotBlank(attachmentId), "attachmentId");
         assertMandatoryParameter(attachmentContent != null, "attachmentContent");
 
-        HttpPost attachmentPostRequest = new HttpPost(this.confluenceRestApiEndpoint + "/content/" + contentId + "/child/attachment/" + attachmentId + "/data");
+        HttpPost attachmentPostRequest = new HttpPost(this.confluenceRestApiEndpoint + "/content/" + contentId
+                + "/child/attachment/" + attachmentId + "/data");
         attachmentPostRequest.addHeader(new BasicHeader("X-Atlassian-Token", "no-check"));
 
         HttpEntity multipartEntity = multipartEntity(null, attachmentContent);
@@ -151,7 +154,8 @@ class HttpRequestFactory {
         String encodedTitle;
         encodedTitle = URLEncoder.encode(title, StandardCharsets.UTF_8);
 
-        String searchQuery = this.confluenceRestApiEndpoint + "/content?spaceKey=" + spaceKey + "&title=" + encodedTitle;
+        String searchQuery = this.confluenceRestApiEndpoint + "/content?spaceKey=" + spaceKey + "&title="
+                + encodedTitle;
 
         return new HttpGet(searchQuery);
     }
@@ -212,7 +216,8 @@ class HttpRequestFactory {
     public HttpGet getAttachmentsRequest(String contentId, Integer limit, Integer start, String expandOptions) {
         assertMandatoryParameter(isNotBlank(contentId), "contentId");
         try {
-            URIBuilder uriBuilder = new URIBuilder(this.confluenceRestApiEndpoint + "/content/" + contentId + "/child/attachment");
+            URIBuilder uriBuilder = new URIBuilder(
+                    this.confluenceRestApiEndpoint + "/content/" + contentId + "/child/attachment");
 
             if (limit != null) {
                 uriBuilder.addParameter("limit", limit.toString());
@@ -245,7 +250,8 @@ class HttpRequestFactory {
         assertMandatoryParameter(isNotBlank(contentId), "contentId");
         assertMandatoryParameter(isNotBlank(key), "key");
 
-        return new HttpGet(this.confluenceRestApiEndpoint + "/content/" + contentId + "/property/" + key + "?expand=value");
+        return new HttpGet(
+                this.confluenceRestApiEndpoint + "/content/" + contentId + "/property/" + key + "?expand=value");
     }
 
     public HttpDelete deletePropertyByKeyRequest(String contentId, String key) {
@@ -314,7 +320,6 @@ class HttpRequestFactory {
 
         return multipartEntityBuilder.build();
     }
-
 
     static class PagePayloadBuilder {
 

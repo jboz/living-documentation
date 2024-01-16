@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -157,7 +157,8 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
     private boolean diagramUseExternalGraphviz;
 
     /**
-     * Generate a diagram based on a single class (full name) and all his dependencies.
+     * Generate a diagram based on a single class (full name) and all his
+     * dependencies.
      */
     @Parameter(property = "livingdoc.diagram.singleClassAndDependencies")
     protected String singleClassAndDependencies;
@@ -197,7 +198,9 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
                     asciiDocBuilder.textLine(PLANTUML_MACRO_NAME + "::" + getOutputFilename() + ".plantuml[]");
                 } else {
                     if (Objects.requireNonNull(diagramType) == DiagramType.plantuml) {
-                        asciiDocBuilder.textLine(String.format("[plantuml, target=%s, format=%s" + (interactive ? ", opts=interactive" : "") + "]", getOutputFilename(), diagramImageType));
+                        asciiDocBuilder.textLine(String.format(
+                                "[plantuml, target=%s, format=%s" + (interactive ? ", opts=interactive" : "") + "]",
+                                getOutputFilename(), diagramImageType));
                     }
                     asciiDocBuilder.textLine("----");
                     if (asIncludeFile) {
@@ -231,14 +234,18 @@ public class DiagramMojo extends AbstractDocsGeneratorMojo {
                     .map(s -> s.replaceAll("\n", "").replaceAll("\r", "").replaceAll(" ", ""))
                     .toArray(String[]::new));
             builder.setRootAggregateClassMatcher(rootAggregateClassMatcher);
-            builder.setRootAggregateColor(rootAggregateColor == null || rootAggregateColor.isEmpty() ? DEFAULT_ROOT_COLOR : rootAggregateColor);
+            builder.setRootAggregateColor(
+                    rootAggregateColor == null || rootAggregateColor.isEmpty() ? DEFAULT_ROOT_COLOR
+                            : rootAggregateColor);
             builder.setHeader(diagramHeader);
             builder.setStartOptions(diagramStartOptions);
             builder.setEndOptions(diagramEndOptions);
             builder.setFooter(diagramFooter);
             builder.setShowMethods(diagramShowMethods);
             builder.setShowFields(diagramShowFields);
-            builder.setDiagramWithDependencies(diagramWithDependencies == null ? StringUtils.isNotBlank(singleClassAndDependencies) : diagramWithDependencies);
+            builder.setDiagramWithDependencies(
+                    diagramWithDependencies == null ? StringUtils.isNotBlank(singleClassAndDependencies)
+                            : diagramWithDependencies);
             builder.setLinkPage(diagramLinkPage);
             builder.setDiagramTitle(diagramTitle);
 

@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -63,17 +63,17 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
     protected File glossaryMapping;
 
     // TODO active header/footer capabilities for all mojo
-//    /**
-//     * Header of the generated asciidoc file
-//     */
-//    @Parameter
-//    private File headerAsciidoc;
+    // /**
+    // * Header of the generated asciidoc file
+    // */
+    // @Parameter
+    // private File headerAsciidoc;
 
-//    /**
-//     * Footer of generated asciidoc file
-//     */
-//    @Parameter
-//    private File footerAsciidoc;
+    // /**
+    // * Footer of generated asciidoc file
+    // */
+    // @Parameter
+    // private File footerAsciidoc;
 
     /**
      * Indicate that only annotated classes/fields will be used.
@@ -99,7 +99,7 @@ public abstract class AbstractDocsGeneratorMojo extends AbstractAsciidoctorMojo 
      */
     protected void write(final String newContent, final File output) throws MojoExecutionException {
         try {
-            //noinspection ResultOfMethodCallIgnored
+            // noinspection ResultOfMethodCallIgnored
             output.getParentFile().mkdirs();
             IOUtils.write(newContent, new FileOutputStream(output), Charset.defaultCharset());
         } catch (IOException e) {

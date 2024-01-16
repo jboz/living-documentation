@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -93,7 +93,7 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
 
         final ClassPath classPath = initClassPath();
         final Set<ClassInfo> allClasses = classPath.getTopLevelClassesRecursive(prefix);
-        //noinspection rawtypes
+        // noinspection rawtypes
         List<Class> classes = allClasses.stream()
                 // apply filters
                 .filter(defaultFilter()).filter(additionalClassPredicate).map(classInfo -> {
@@ -150,7 +150,8 @@ public class PlantumlClassDiagramBuilder extends AbstractClassDiagramBuilder {
             return; // nothing to do
         }
         // create class predicate
-        additionalClassPredicate = additionalClassPredicate.and(classInfo -> classInfo.load().isAnnotationPresent(annotation));
+        additionalClassPredicate = additionalClassPredicate
+                .and(classInfo -> classInfo.load().isAnnotationPresent(annotation));
         // add field predicate
         fieldPredicate = attribut -> attribut.getField().isAnnotationPresent(annotation);
     }
