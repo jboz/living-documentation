@@ -127,7 +127,7 @@
         <dependency>
             <groupId>ch.ifocusit.asciidoctor</groupId>
             <artifactId>asciidoctor-gherkin-extension</artifactId>
-            <version>1.0.0</version>
+            <version>1.0</version>
         </dependency>
 
         <!-- tools -->
