@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ch.ifocusit.livingdoc</groupId>
@@ -11,7 +11,7 @@
     <name>Living Documentation annotations</name>
     <description>Annotations to help the generation of a nice living documentation by mark some part of the source code.</description>
     <url>https://github.com/jboz/living-documentation</url>
-    <inceptionYear>2023</inceptionYear>
+    <inceptionYear>2024</inceptionYear>
 
     <organization>
         <name>Focus IT</name>
@@ -61,7 +61,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.12.1</version>
             </plugin>
         </plugins>
     </build>
@@ -71,7 +71,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.5.0</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -90,7 +90,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.6.3</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -102,11 +102,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>3.2.5</version>
                 <configuration>
-                    <showSuccess>
-                        true
-                    </showSuccess>
+                    <showSuccess>true</showSuccess>
                 </configuration>
             </plugin>
         </plugins>
@@ -133,10 +131,10 @@
             </properties>
             <build>
                 <plugins>
-                    <plugin><!-- create source artifact -->
+                    <plugin>                        <!-- create source artifact -->
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.3.0</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -146,10 +144,10 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin><!-- create javadoc artifact -->
+                    <plugin>                        <!-- create javadoc artifact -->
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.5.0</version>
+                        <version>3.6.3</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -159,10 +157,10 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin><!-- Sign artifact -->
+                    <plugin>                        <!-- Sign artifact -->
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.1.0</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -173,9 +171,9 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin><!-- create project artifact -->
+                    <plugin>                        <!-- create project artifact -->
                         <artifactId>maven-release-plugin</artifactId>
-                        <version>3.0.0</version>
+                        <version>3.0.1</version>
                         <configuration>
                             <tagNameFormat>v@{project.version}</tagNameFormat>
                             <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
@@ -196,7 +194,7 @@
                             <updateReleaseInfo>true</updateReleaseInfo>
                         </configuration>
                     </plugin>
-                    <plugin><!-- Release dist files to maven central -->
+                    <plugin>                        <!-- Release dist files to maven central -->
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
                         <version>1.6.13</version>

@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,10 +22,21 @@
  */
 package ch.ifocusit.livingdoc.plugin;
 
-import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
-import ch.ifocusit.livingdoc.plugin.gherkin.StandaloneGherkinProcessor;
-import com.github.domgold.doctools.asciidoctor.gherkin.MapFormatter;
-import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
+import static java.nio.charset.Charset.defaultCharset;
+import static org.apache.commons.io.FileUtils.readFileToString;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -34,20 +45,11 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
-
-import static java.nio.charset.Charset.defaultCharset;
-import static org.apache.commons.io.FileUtils.readFileToString;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import ch.ifocusit.asciidoctor.gherkin.GherkinAsciidocBuilder;
+import ch.ifocusit.asciidoctor.gherkin.GherkinExtensionHelper;
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
+import io.cucumber.messages.types.Feature;
+import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 
 /**
  * @author Julien Boz
@@ -71,7 +73,8 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     private String gherkinOutputFilename;
 
     /**
-     * Page title or page title prefix when use in combinaison with {@link #gerkinSeparateFeature} option to true
+     * Page title or page title prefix when use in combinaison with
+     * {@link #gerkinSeparateFeature} option to true
      */
     @Parameter(property = "livingdoc.gherkin.title")
     private String gherkinTitle;
@@ -83,13 +86,15 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     private boolean gerkinSeparateFeature;
 
     /**
-     * Flag to indicate if generated asciidoc file must use the asciidoc gherkin macro (like include macro)
+     * Flag to indicate if generated asciidoc file must use the asciidoc gherkin
+     * macro (like include macro)
      */
     @Parameter(property = "livingdoc.gherkin.gherkinAsciidocMacro", defaultValue = "false")
     private boolean gherkinAsciidocMacro;
 
     /**
-     * Replace gherkin processor default template. Must be used with gherkinAsciidocPlugin option to false
+     * Replace gherkin processor default template. Must be used with
+     * gherkinAsciidocPlugin option to false
      */
     @Parameter(property = "livingdoc.gherkin.gherkinAsciidocTemplate")
     private File gherkinAsciidocTemplate;
@@ -123,8 +128,9 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
             if (gerkinSeparateFeature && StringUtils.isNotBlank(getTitle())) {
                 // read feature title
                 try {
-                    Map<String, Object> parsed = MapFormatter.parse(readFileToString(FileUtils.getFile(path), defaultCharset()));
-                    String title = StringUtils.defaultString(getTitle(), EMPTY) + " " + parsed.get("name");
+                    Feature feature = GherkinExtensionHelper
+                            .parse(readFileToString(FileUtils.getFile(path), defaultCharset()));
+                    String title = StringUtils.defaultString(getTitle(), EMPTY) + " " + feature.getName();
                     appendTitle(getDocBuilder(pageCount.get()), title);
                 } catch (IOException e) {
                     throw new IllegalStateException("Error reading " + path, e);
@@ -134,10 +140,10 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
                 getDocBuilder(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
             } else {
                 try {
-                    getDocBuilder(pageCount.get()).textLine(StandaloneGherkinProcessor.builder()
-                            .gherkinTemplate(gherkinAsciidocTemplate)
-                            .build()
-                            .process(readFileToString(FileUtils.getFile(path), defaultCharset())));
+                    getDocBuilder(pageCount.get()).textLine(
+                            gherkinBuilder(gherkinOptions)
+                                    .featureContent(readFileToString(FileUtils.getFile(path), defaultCharset()))
+                                    .build());
                 } catch (IOException e) {
                     throw new IllegalStateException("Error reading " + path, e);
                 }
@@ -164,6 +170,28 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
         }
     }
 
+    public static GherkinAsciidocBuilder gherkinBuilder(String input) throws IOException {
+        GherkinAsciidocBuilder builder = GherkinAsciidocBuilder.builder();
+
+        String[] optionsString = input.split(",");
+        for (String option : optionsString) {
+            String[] pair = option.split("=");
+            if (pair.length == 2) {
+                if ("withChildSeparator".equalsIgnoreCase(pair[0])) {
+                    builder.withChildSeparator(Boolean.valueOf(pair[1]));
+                } else if ("withKeyword".equalsIgnoreCase(pair[0])) {
+                    builder.withKeyword(Boolean.valueOf(pair[1]));
+                } else if ("withTitle".equalsIgnoreCase(pair[0])) {
+                    builder.withTitle(Boolean.valueOf(pair[1]));
+                } else if ("template".equalsIgnoreCase(pair[0])) {
+                    builder.templateContent(readFileToString(FileUtils.getFile(pair[1]), Charset.defaultCharset()));
+                }
+            }
+        }
+
+        return builder;
+    }
+
     private AsciiDocBuilder getDocBuilder(int index) {
         if (docBuilders.size() <= index) {
             docBuilders.add(createAsciiDocBuilder());
@@ -176,7 +204,7 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
                 .filter(path -> Files.exists(Paths.get(path)))
                 .flatMap(path -> {
                     try {
-                        //noinspection resource
+                        // noinspection resource
                         return Files.walk(Paths.get(path)).filter(p -> p.toString().endsWith(".feature"));
                     } catch (IOException e) {
                         throw new IllegalStateException(String.format("Error browsing %s", path), e);

@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -80,12 +80,12 @@ public class HtmlPostProcessor {
         return postProcessContent(processedContent,
                 replaceCrossReferenceTargets(path),
                 collectAndReplaceAttachmentFileNames(attachmentCollector),
-                unescapeCdataHtmlContent()
-        );
+                unescapeCdataHtmlContent());
     }
 
     private Function<String, String> unescapeCdataHtmlContent() {
-        return (content) -> replaceAll(content, CDATA_PATTERN, (matchResult) -> StringEscapeUtils.unescapeHtml4(matchResult.group()));
+        return (content) -> replaceAll(content, CDATA_PATTERN,
+                (matchResult) -> StringEscapeUtils.unescapeHtml4(matchResult.group()));
     }
 
     private String deriveAttachmentName(String path) {
@@ -150,7 +150,8 @@ public class HtmlPostProcessor {
             String substring = content.substring(0, content.indexOf(tagEnd));
             return substring.substring(content.indexOf(tagBegin) + tagBegin.length());
         } catch (StringIndexOutOfBoundsException e) {
-            throw new IllegalStateException("Unable to retrieve text of tag '" + tag + "' in content '" + content + "'", e);
+            throw new IllegalStateException("Unable to retrieve text of tag '" + tag + "' in content '" + content + "'",
+                    e);
         }
     }
 

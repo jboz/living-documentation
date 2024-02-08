@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -32,12 +32,15 @@ import java.util.Optional;
 public class AnnotationUtil {
 
     public static <T extends Annotation> Optional<T> tryFind(Field field, Class<T> annotationClass) {
-        return annotationClass == null ? Optional.empty() : field.isAnnotationPresent(annotationClass) ?
-                Optional.of(field.getAnnotation(annotationClass)) : Optional.empty();
+        return annotationClass == null ? Optional.empty()
+                : field.isAnnotationPresent(annotationClass) ? Optional.of(field.getAnnotation(annotationClass))
+                        : Optional.empty();
     }
 
     public static <T extends Annotation> Optional<T> tryFind(Class clazz, Class<T> annotationClass) {
-        return annotationClass == null ? Optional.empty() : clazz.isAnnotationPresent(annotationClass) ?
-                Optional.of(annotationClass.cast(clazz.getAnnotation(annotationClass))) : Optional.empty();
+        return annotationClass == null ? Optional.empty()
+                : clazz.isAnnotationPresent(annotationClass)
+                        ? Optional.of(annotationClass.cast(clazz.getAnnotation(annotationClass)))
+                        : Optional.empty();
     }
 }

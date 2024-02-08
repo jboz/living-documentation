@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -61,7 +61,8 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
         }
         extractTemplatesFromJar();
         try {
-            PublishProvider provider = new ConfluenceProvider(publish.getEndpoint(), publish.getUsername(), publish.getPassword());
+            PublishProvider provider = new ConfluenceProvider(publish.getEndpoint(), publish.getUsername(),
+                    publish.getPassword());
 
             List<Page> pages = createHtmlPage();
             publish(provider, pages);
@@ -79,7 +80,7 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
 
         try (Stream<Path> paths = Files.walk(Paths.get(generatedDocsDirectory.getAbsolutePath()))) {
             paths.filter(path -> FilenameUtils.isExtension(path.getFileName().toString(),
-                            Format.adoc.name(), Format.asciidoc.name(), Format.html.name()))
+                    Format.adoc.name(), Format.asciidoc.name(), Format.html.name()))
                     .forEach(path -> {
                         getLog().info("Publish goal - process " + path);
                         Map<String, String> attachmentCollector = new HashMap<>();

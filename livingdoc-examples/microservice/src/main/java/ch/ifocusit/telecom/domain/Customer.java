@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -48,5 +48,3 @@ public class Customer extends AbstractDomain {
 
     private Set<Contract> contracts = new HashSet<>();
 }
-
-

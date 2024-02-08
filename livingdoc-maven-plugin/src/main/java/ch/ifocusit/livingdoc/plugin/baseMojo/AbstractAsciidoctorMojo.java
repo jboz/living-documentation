@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,6 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin.baseMojo;
 
+import ch.ifocusit.asciidoctor.gherkin.GherkinExtensionRegistry;
 import ch.ifocusit.livingdoc.plugin.publish.confluence.PlantumlMacroBlockProcessor;
 import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 import org.apache.commons.io.FilenameUtils;
@@ -94,23 +95,27 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
 
     public abstract void executeMojo() throws MojoExecutionException, MojoFailureException;
 
-    protected void write(AsciiDocBuilder asciiDocBuilder, Format format, String outputFilename) throws MojoExecutionException {
+    protected void write(AsciiDocBuilder asciiDocBuilder, Format format, String outputFilename)
+            throws MojoExecutionException {
         generatedDocsDirectory.mkdirs();
         File output = getOutput(outputFilename, Format.adoc);
         try {
             // write adoc file
-            asciiDocBuilder.writeToFile(generatedDocsDirectory.getAbsolutePath(), FilenameUtils.removeExtension(outputFilename), StandardCharsets.UTF_8);
+            asciiDocBuilder.writeToFile(generatedDocsDirectory.getAbsolutePath(),
+                    FilenameUtils.removeExtension(outputFilename), StandardCharsets.UTF_8);
             if (Format.html.equals(format)) {
                 // convert adoc to html
                 createAsciidoctor().convertFile(output, options());
             }
         } catch (IOException e) {
-            throw new MojoExecutionException(String.format("Unable to convert asciidoc file '%s' to html !", output.getAbsolutePath()), e);
+            throw new MojoExecutionException(
+                    String.format("Unable to convert asciidoc file '%s' to html !", output.getAbsolutePath()), e);
         }
     }
 
     protected File getOutput(String filename, AbstractDocsGeneratorMojo.Format desiredExtension) {
-        filename = FilenameUtils.isExtension(filename, desiredExtension.name()) ? filename : filename + "." + desiredExtension;
+        filename = FilenameUtils.isExtension(filename, desiredExtension.name()) ? filename
+                : filename + "." + desiredExtension;
         return new File(generatedDocsDirectory, filename);
     }
 
@@ -121,10 +126,7 @@ public abstract class AbstractAsciidoctorMojo extends AbstractMojo {
         // override plantuml macro
         extensionRegistry.blockMacro(PLANTUML_MACRO_NAME, PlantumlMacroBlockProcessor.class);
         // install gherkin macro
-        RubyExtensionRegistry rubyExtensionRegistry = asciidoctor.rubyExtensionRegistry();
-        rubyExtensionRegistry
-                .loadClass(this.getClass().getResourceAsStream("/com/github/domgold/doctools/asciidoctor/gherkin/gherkinblockmacro.rb"))
-                .blockMacro("gherkin", "GherkinBlockMacroProcessor");
+        new GherkinExtensionRegistry().register(asciidoctor);
         return asciidoctor;
     }
 

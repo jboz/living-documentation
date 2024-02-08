@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -93,14 +93,17 @@ public class ConfluenceRestClient implements ConfluenceClient {
 
     @Override
     public String addPageUnderAncestor(String spaceKey, String ancestorId, String title, String content) {
-        HttpPost addPageUnderSpaceRequest = this.httpRequestFactory.addPageUnderAncestorRequest(spaceKey, ancestorId, title, content);
+        HttpPost addPageUnderSpaceRequest = this.httpRequestFactory.addPageUnderAncestorRequest(spaceKey, ancestorId,
+                title, content);
 
-        return sendRequestAndFailIfNot20x(addPageUnderSpaceRequest, (response) -> extractIdFromJsonNode(parseJsonResponse(response)));
+        return sendRequestAndFailIfNot20x(addPageUnderSpaceRequest,
+                (response) -> extractIdFromJsonNode(parseJsonResponse(response)));
     }
 
     @Override
     public void updatePage(String contentId, String ancestorId, String title, String content, int newVersion) {
-        HttpPut updatePageRequest = this.httpRequestFactory.updatePageRequest(contentId, ancestorId, title, content, newVersion);
+        HttpPut updatePageRequest = this.httpRequestFactory.updatePageRequest(contentId, ancestorId, title, content,
+                newVersion);
         sendRequestAndFailIfNot20x(updatePageRequest);
     }
 
@@ -132,7 +135,8 @@ public class ConfluenceRestClient implements ConfluenceClient {
 
     @Override
     public void addAttachment(String contentId, String attachmentFileName, InputStream attachmentContent) {
-        HttpPost addAttachmentRequest = this.httpRequestFactory.addAttachmentRequest(contentId, attachmentFileName, attachmentContent);
+        HttpPost addAttachmentRequest = this.httpRequestFactory.addAttachmentRequest(contentId, attachmentFileName,
+                attachmentContent);
         sendRequestAndFailIfNot20x(addAttachmentRequest, (response) -> {
             closeInputStream(attachmentContent);
 
@@ -142,7 +146,8 @@ public class ConfluenceRestClient implements ConfluenceClient {
 
     @Override
     public void updateAttachmentContent(String contentId, String attachmentId, InputStream attachmentContent) {
-        HttpPost updateAttachmentContentRequest = this.httpRequestFactory.updateAttachmentContentRequest(contentId, attachmentId, attachmentContent);
+        HttpPost updateAttachmentContentRequest = this.httpRequestFactory.updateAttachmentContentRequest(contentId,
+                attachmentId, attachmentContent);
         sendRequestAndFailIfNot20x(updateAttachmentContentRequest, (response) -> {
             closeInputStream(attachmentContent);
 
@@ -157,8 +162,10 @@ public class ConfluenceRestClient implements ConfluenceClient {
     }
 
     @Override
-    public ConfluenceAttachment getAttachmentByFileName(String contentId, String attachmentFileName) throws NotFoundException, MultipleResultsException {
-        HttpGet attachmentByFileNameRequest = this.httpRequestFactory.getAttachmentByFileNameRequest(contentId, attachmentFileName, "version");
+    public ConfluenceAttachment getAttachmentByFileName(String contentId, String attachmentFileName)
+            throws NotFoundException, MultipleResultsException {
+        HttpGet attachmentByFileNameRequest = this.httpRequestFactory.getAttachmentByFileNameRequest(contentId,
+                attachmentFileName, "version");
 
         return sendRequestAndFailIfNot20x(attachmentByFileNameRequest, (response) -> {
             JsonNode jsonNode = parseJsonResponse(response);
@@ -180,7 +187,8 @@ public class ConfluenceRestClient implements ConfluenceClient {
     public ConfluencePage getPageWithContentAndVersionById(String contentId) {
         HttpGet pageByIdRequest = this.httpRequestFactory.getPageByIdRequest(contentId, "body.storage,version");
 
-        return sendRequestAndFailIfNot20x(pageByIdRequest, (response) -> extractConfluencePageWithContent(parseJsonResponse(response)));
+        return sendRequestAndFailIfNot20x(pageByIdRequest,
+                (response) -> extractConfluencePageWithContent(parseJsonResponse(response)));
     }
 
     @Override
@@ -235,7 +243,8 @@ public class ConfluenceRestClient implements ConfluenceClient {
 
         try {
 
-            final String encodedCredentials = "Basic " + Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+            final String encodedCredentials = "Basic "
+                    + Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
             httpRequest.addHeader("Accept", "application/json");
             httpRequest.addHeader("Authorization", encodedCredentials);
 
@@ -313,7 +322,8 @@ public class ConfluenceRestClient implements ConfluenceClient {
 
     private List<ConfluencePage> getNextChildPages(String contentId, int limit, int start) {
         List<ConfluencePage> pages = new ArrayList<>(limit);
-        HttpGet getChildPagesByIdRequest = this.httpRequestFactory.getChildPagesByIdRequest(contentId, limit, start, "version");
+        HttpGet getChildPagesByIdRequest = this.httpRequestFactory.getChildPagesByIdRequest(contentId, limit, start,
+                "version");
 
         return sendRequestAndFailIfNot20x(getChildPagesByIdRequest, (response) -> {
             JsonNode jsonNode = parseJsonResponse(response);
@@ -325,11 +335,13 @@ public class ConfluenceRestClient implements ConfluenceClient {
 
     private List<ConfluenceAttachment> getNextAttachments(String contentId, int limit, int start) {
         List<ConfluenceAttachment> attachments = new ArrayList<>(limit);
-        HttpGet getAttachmentsRequest = this.httpRequestFactory.getAttachmentsRequest(contentId, limit, start, "version");
+        HttpGet getAttachmentsRequest = this.httpRequestFactory.getAttachmentsRequest(contentId, limit, start,
+                "version");
 
         return sendRequestAndFailIfNot20x(getAttachmentsRequest, (response) -> {
             JsonNode jsonNode = parseJsonResponse(response);
-            jsonNode.withArray("results").forEach(attachment -> attachments.add(extractConfluenceAttachment(attachment)));
+            jsonNode.withArray("results")
+                    .forEach(attachment -> attachments.add(extractConfluenceAttachment(attachment)));
 
             return attachments;
         });
@@ -339,7 +351,8 @@ public class ConfluenceRestClient implements ConfluenceClient {
     public String getSpaceContentId(String spaceKey) {
         HttpGet getSpaceContentIdRequest = this.httpRequestFactory.getSpaceContentIdRequest(spaceKey);
 
-        return sendRequestAndFailIfNot20x(getSpaceContentIdRequest, (response) -> extractIdFromJsonNode(parseJsonResponse(response)));
+        return sendRequestAndFailIfNot20x(getSpaceContentIdRequest,
+                (response) -> extractIdFromJsonNode(parseJsonResponse(response)));
     }
 
     @Override

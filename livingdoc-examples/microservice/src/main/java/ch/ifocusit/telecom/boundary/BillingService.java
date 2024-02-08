@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -56,8 +56,7 @@ public class BillingService {
     @GET
     @Path("/whoami")
     @Operation(summary = "Get user by user name", responses = {
-            @ApiResponse(description = "Facture",
-                    content = @Content(schema = @Schema(implementation = String.class)))
+            @ApiResponse(description = "Facture", content = @Content(schema = @Schema(implementation = String.class)))
     })
     public String whoami() {
         return "service facturation";
@@ -66,8 +65,7 @@ public class BillingService {
     @GET
     @Path("/{month}")
     @Operation(summary = "Facturation d'un mois", responses = {
-            @ApiResponse(description = "Facture",
-                    content = @Content(schema = @Schema(implementation = Bill.class))),
+            @ApiResponse(description = "Facture", content = @Content(schema = @Schema(implementation = Bill.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "404", description = "Bill not found")
     })
@@ -78,8 +76,7 @@ public class BillingService {
     @GET
     @Path("/last")
     @Operation(summary = "Facturation du dernier mois", responses = {
-            @ApiResponse(description = "Facture",
-                    content = @Content(schema = @Schema(implementation = Bill.class))),
+            @ApiResponse(description = "Facture", content = @Content(schema = @Schema(implementation = Bill.class))),
     })
     public Optional<Bill> lastBill() {
         return repository.getLastBill();

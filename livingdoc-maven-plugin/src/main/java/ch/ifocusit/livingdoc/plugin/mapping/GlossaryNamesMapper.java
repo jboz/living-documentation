@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2023 Focus IT
+ * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -55,8 +55,7 @@ public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesM
                     .map(record -> new DomainObject()
                             .setId(Integer.valueOf(record.get("id")))
                             .setName(record.get("name"))
-                            .setDescription(record.get("description"))
-                    )
+                            .setDescription(record.get("description")))
                     .collect(Collectors.toList());
         }
     }
@@ -75,9 +74,12 @@ public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesM
         return getName(id).orElse(NamesMapper.super.getClassName(aClass));
     }
 
-/*    public Optional<Link> getClassLink(Class aClass) {
-        return Optional.of(create(getClassName(aClass), aClass.getSimpleName(), AnnotationUtil.tryFind(aClass, annotation)));
-    }*/
+    /*
+     * public Optional<Link> getClassLink(Class aClass) {
+     * return Optional.of(create(getClassName(aClass), aClass.getSimpleName(),
+     * AnnotationUtil.tryFind(aClass, annotation)));
+     * }
+     */
 
     @Override
     public String getFieldName(Field field) {
@@ -86,24 +88,30 @@ public class GlossaryNamesMapper<A extends UbiquitousLanguage> implements NamesM
     }
 
     /*    *//**
-     * Equilvalent to {@link DomainObject#getFullName()}
-     *
-     * @param field : java field to treat
-     * @return fully classified field name (i.e. ParentClassName.fieldName string)
-     *//*
-    public String getFieldFullName(Field field) {
-        return AnchorUtil.glossaryLink(field.getDeclaringClass().getSimpleName(), field.getName());
-    }*/
+             * Equilvalent to {@link DomainObject#getFullName()}
+             *
+             * @param field : java field to treat
+             * @return fully classified field name (i.e. ParentClassName.fieldName string)
+             *//*
+                * public String getFieldFullName(Field field) {
+                * return AnchorUtil.glossaryLink(field.getDeclaringClass().getSimpleName(),
+                * field.getName());
+                * }
+                */
 
-/*    public Optional<Link> getFieldLink(Field field) {
-        String fieldLink = getFieldFullName(field);
-        return Optional.of(create(getFieldName(field), fieldLink, AnnotationUtil.tryFind(field, annotation)));
-    }
-
-    private Link create(String name, String fullName, Optional<A> annotation) {
-        Link link = new Link();
-        link.setLabel(name);
-        link.setUrl(AnchorUtil.formatLink(linkPage, annotation.map(a -> a.id() == -1 ? null : a.id()).orElse(null), fullName));
-        return link;
-    }*/
+    /*
+     * public Optional<Link> getFieldLink(Field field) {
+     * String fieldLink = getFieldFullName(field);
+     * return Optional.of(create(getFieldName(field), fieldLink,
+     * AnnotationUtil.tryFind(field, annotation)));
+     * }
+     * 
+     * private Link create(String name, String fullName, Optional<A> annotation) {
+     * Link link = new Link();
+     * link.setLabel(name);
+     * link.setUrl(AnchorUtil.formatLink(linkPage, annotation.map(a -> a.id() == -1
+     * ? null : a.id()).orElse(null), fullName));
+     * return link;
+     * }
+     */
 }
