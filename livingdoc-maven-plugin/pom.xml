@@ -5,7 +5,7 @@
 
     <groupId>ch.ifocusit.livingdoc</groupId>
     <artifactId>livingdoc-maven-plugin</artifactId>
-    <version>2.9-SNAPSHOT</version>
+    <version>2.10-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
 
     <name>Living Documentation maven plugin</name>
@@ -112,6 +112,11 @@
             <artifactId>compiler</artifactId>
             <version>0.9.11</version>
         </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>gherkin</artifactId>
+            <version>27.0.0</version>
+        </dependency>
 
         <!-- asciidoctor -->
         <dependency>
@@ -127,7 +132,7 @@
         <dependency>
             <groupId>ch.ifocusit.asciidoctor</groupId>
             <artifactId>asciidoctor-gherkin-extension</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
 
         <!-- tools -->

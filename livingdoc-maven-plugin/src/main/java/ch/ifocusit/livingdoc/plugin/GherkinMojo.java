@@ -4,19 +4,19 @@
  * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
+ * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * regarding copyright ownership. The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * with the License. You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -25,7 +25,6 @@ package ch.ifocusit.livingdoc.plugin;
 import static java.nio.charset.Charset.defaultCharset;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -34,9 +33,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -44,7 +43,6 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-
 import ch.ifocusit.asciidoctor.gherkin.GherkinAsciidocBuilder;
 import ch.ifocusit.asciidoctor.gherkin.GherkinExtensionHelper;
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractDocsGeneratorMojo;
@@ -54,27 +52,40 @@ import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 /**
  * @author Julien Boz
  */
-@Mojo(name = "gherkin", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM, defaultPhase = LifecyclePhase.PROCESS_TEST_RESOURCES)
+@Mojo(name = "gherkin", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM,
+        defaultPhase = LifecyclePhase.PROCESS_TEST_RESOURCES)
 public class GherkinMojo extends AbstractDocsGeneratorMojo {
 
     /**
-     * List of source directories to browse
+     * List of source directories to browse.
      */
     @Parameter(property = "livingdoc.gherkin.features", defaultValue = "${project.basedir}/src/test/resources/features")
     private List<String> features;
 
     /**
-     * Options like use a custom template (template=path_to_my_template.erb).
+     * Add or not the page title. Default true.
      */
-    @Parameter(property = "livingdoc.gherkin.options")
-    private String gherkinOptions;
+    @Parameter(property = "livingdoc.gherkin.withTitle")
+    private Boolean gherkinWithTitle;
+
+    /**
+     * Separate gherkin element with a line. Default false.
+     */
+    @Parameter(property = "livingdoc.gherkin.withChildSeparator", defaultValue = "false")
+    private boolean gherkinWithChildSeparator;
+
+    /**
+     * Append child element keyword before title (Scenario, Rule, Background, ...). Default false.
+     */
+    @Parameter(property = "livingdoc.gherkin.withKeyword", defaultValue = "false")
+    private boolean gherkinWithKeyword;
 
     @Parameter(property = "livingdoc.gherkin.output.filename", defaultValue = "gherkin", required = true)
     private String gherkinOutputFilename;
 
     /**
-     * Page title or page title prefix when use in combinaison with
-     * {@link #gerkinSeparateFeature} option to true
+     * Page title or page title prefix when use in combinaison with {@link #gerkinSeparateFeature}
+     * option to true
      */
     @Parameter(property = "livingdoc.gherkin.title")
     private String gherkinTitle;
@@ -86,15 +97,18 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     private boolean gerkinSeparateFeature;
 
     /**
-     * Flag to indicate if generated asciidoc file must use the asciidoc gherkin
-     * macro (like include macro)
+     * Flag to indicate if generated asciidoc file must use the asciidoc gherkin macro (like include
+     * macro).
      */
     @Parameter(property = "livingdoc.gherkin.gherkinAsciidocMacro", defaultValue = "false")
     private boolean gherkinAsciidocMacro;
 
     /**
-     * Replace gherkin processor default template. Must be used with
-     * gherkinAsciidocPlugin option to false
+     * Replace gherkin processor default template.
+     * Default is used from https://github.com/jboz/asciidoctor-gherkin-extension.
+     * 
+     * @see
+     *      https://github.com/jboz/asciidoctor-gherkin-extension/blob/main/src/main/resources/ch/ifocusit/asciidoctor/gherkin/default_template.erb
      */
     @Parameter(property = "livingdoc.gherkin.gherkinAsciidocTemplate")
     private File gherkinAsciidocTemplate;
@@ -116,6 +130,9 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
 
     @Override
     public void executeMojo() {
+        if (gherkinWithTitle == null) {
+            gherkinWithTitle = !gerkinSeparateFeature;
+        }
 
         if (!gerkinSeparateFeature) {
             appendTitle(getDocBuilder(pageCount.get()));
@@ -130,18 +147,19 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
                 try {
                     Feature feature = GherkinExtensionHelper
                             .parse(readFileToString(FileUtils.getFile(path), defaultCharset()));
-                    String title = StringUtils.defaultString(getTitle(), EMPTY) + " " + feature.getName();
+                    String title = Objects.toString(getTitle(), EMPTY) + " " + feature.getName();
                     appendTitle(getDocBuilder(pageCount.get()), title);
                 } catch (IOException e) {
                     throw new IllegalStateException("Error reading " + path, e);
                 }
             }
             if (gherkinAsciidocMacro) {
-                getDocBuilder(pageCount.get()).textLine(String.format("gherkin::%s[%s]", path, gherkinOptions));
+                getDocBuilder(pageCount.get()).textLine(String.format("gherkin::%s[withTitle=%s,withChildSeparator=%s,withKeyword=%s]",
+                        path, gherkinWithTitle, gherkinWithChildSeparator, gherkinWithKeyword));
             } else {
                 try {
                     getDocBuilder(pageCount.get()).textLine(
-                            gherkinBuilder(gherkinOptions)
+                            gherkinBuilder()
                                     .featureContent(readFileToString(FileUtils.getFile(path), defaultCharset()))
                                     .build());
                 } catch (IOException e) {
@@ -170,25 +188,15 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
         }
     }
 
-    public static GherkinAsciidocBuilder gherkinBuilder(String input) throws IOException {
+    public GherkinAsciidocBuilder gherkinBuilder() throws IOException {
         GherkinAsciidocBuilder builder = GherkinAsciidocBuilder.builder();
 
-        String[] optionsString = input.split(",");
-        for (String option : optionsString) {
-            String[] pair = option.split("=");
-            if (pair.length == 2) {
-                if ("withChildSeparator".equalsIgnoreCase(pair[0])) {
-                    builder.withChildSeparator(Boolean.valueOf(pair[1]));
-                } else if ("withKeyword".equalsIgnoreCase(pair[0])) {
-                    builder.withKeyword(Boolean.valueOf(pair[1]));
-                } else if ("withTitle".equalsIgnoreCase(pair[0])) {
-                    builder.withTitle(Boolean.valueOf(pair[1]));
-                } else if ("template".equalsIgnoreCase(pair[0])) {
-                    builder.templateContent(readFileToString(FileUtils.getFile(pair[1]), Charset.defaultCharset()));
-                }
-            }
+        builder.withChildSeparator(gherkinWithChildSeparator);
+        builder.withKeyword(gherkinWithKeyword);
+        builder.withTitle(gherkinWithTitle);
+        if (gherkinAsciidocTemplate != null) {
+            builder.templateContent(readFileToString(gherkinAsciidocTemplate, Charset.defaultCharset()));
         }
-
         return builder;
     }
 

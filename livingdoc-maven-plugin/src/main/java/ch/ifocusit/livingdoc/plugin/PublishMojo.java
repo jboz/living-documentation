@@ -4,36 +4,23 @@
  * Copyright (C) 2024 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
+ * or more contributor license agreements. See the NOTICE file
  * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * regarding copyright ownership. The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * with the License. You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 package ch.ifocusit.livingdoc.plugin;
-
-import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractAsciidoctorMojo;
-import ch.ifocusit.livingdoc.plugin.domain.Publish;
-import ch.ifocusit.livingdoc.plugin.publish.HtmlPostProcessor;
-import ch.ifocusit.livingdoc.plugin.publish.PublishProvider;
-import ch.ifocusit.livingdoc.plugin.publish.confluence.ConfluenceProvider;
-import ch.ifocusit.livingdoc.plugin.publish.model.Page;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.NotImplementedException;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -44,6 +31,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.NotImplementedException;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractAsciidoctorMojo;
+import ch.ifocusit.livingdoc.plugin.domain.Publish;
+import ch.ifocusit.livingdoc.plugin.publish.HtmlPostProcessor;
+import ch.ifocusit.livingdoc.plugin.publish.PublishProvider;
+import ch.ifocusit.livingdoc.plugin.publish.confluence.ConfluenceProvider;
+import ch.ifocusit.livingdoc.plugin.publish.model.Page;
 
 /**
  * @author Julien Boz
@@ -115,8 +114,6 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
     private void publish(PublishProvider provider, List<Page> pages) {
 
         pages.stream().sorted().forEach(page -> {
-            // check if parent exists
-            // check if page exists
             if (provider.exists(page)) {
                 getLog().info("Publish goal - update " + page);
                 provider.update(page);
