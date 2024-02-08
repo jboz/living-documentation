@@ -33,7 +33,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
@@ -143,15 +142,16 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
             getLog().info("Gherkin goal - read " + path);
 
             if (gerkinSeparateFeature && StringUtils.isNotBlank(getTitle())) {
-                // read feature title
                 try {
-                    Feature feature = GherkinExtensionHelper
-                            .parse(readFileToString(FileUtils.getFile(path), defaultCharset()));
-                    String title = Objects.toString(getTitle(), EMPTY) + " " + feature.getName();
+                    Feature feature = GherkinExtensionHelper.parse(readFileToString(FileUtils.getFile(path), defaultCharset()));
+                    String title = getTitle() + " " + feature.getName();
                     appendTitle(getDocBuilder(pageCount.get()), title);
                 } catch (IOException e) {
                     throw new IllegalStateException("Error reading " + path, e);
                 }
+            }
+            if (gherkinWithTitle) {
+                getDocBuilder(pageCount.get()).textLine(":leveloffset: +1");
             }
             if (gherkinAsciidocMacro) {
                 getDocBuilder(pageCount.get()).textLine(String.format("gherkin::%s[withTitle=%s,withChildSeparator=%s,withKeyword=%s]",
