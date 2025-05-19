@@ -22,10 +22,10 @@ jobs:
       annotations-status: ${{ steps.annotations-check.outputs.annotations-status }}
       plugin-status: ${{ steps.plugin-check.outputs.plugin-status }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Detect production files changes
         id: changes
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         with:
           filters: |
             annotations:
@@ -56,12 +56,12 @@ jobs:
     needs: check
     if: "needs.check.outputs.annotations-status == 'deploy' && !contains(github.event.head_commit.message, 'ci skip')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ssh-key: ${{ secrets.ACTION_BOT_SECRET_KEY }}
 
       - name: Set up java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 19
           distribution: adopt
@@ -99,12 +99,12 @@ jobs:
     needs: check
     if: "needs.check.outputs.plugin-status == 'deploy' && !contains(github.event.head_commit.message, 'ci skip')"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ssh-key: ${{ secrets.ACTION_BOT_SECRET_KEY }}
 
       - name: Set up java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: 19
           distribution: adopt
@@ -130,7 +130,7 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
       - name: Save artefacts for next jobs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: livingdoc-maven-plugin-artifact
           path: |
@@ -160,10 +160,10 @@ jobs:
     env:
       folder: livingdoc-examples
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.version }}
           distribution: adopt
@@ -178,7 +178,7 @@ jobs:
           echo ::set-env name=LIVINGDOC-MAVEN-PLUGIN_VERSION::$ARTIFACT_VERSION
 
       - name: Install livingdoc-maven-plugin artifact locally
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v5
         with:
           name: livingdoc-maven-plugin-artifact
           path: ${{ env.ARTIFACT_PATH }}
