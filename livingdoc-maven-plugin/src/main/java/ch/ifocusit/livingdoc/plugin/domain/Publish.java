@@ -29,6 +29,9 @@ public class Publish {
     @Parameter(property = "password")
     private String password;
 
+    @Parameter(property = "authorizationHeader")
+    private String authorizationHeader;
+
     public Provider getProvider() {
         return provider;
     }
@@ -51,5 +54,9 @@ public class Publish {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getAuthorizationHeader() {
+        return authorizationHeader;
     }
 }

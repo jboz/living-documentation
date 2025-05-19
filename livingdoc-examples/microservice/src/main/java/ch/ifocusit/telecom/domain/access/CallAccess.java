@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2024 Focus IT
+ * Copyright (C) 2025 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,11 +22,11 @@
  */
 package ch.ifocusit.telecom.domain.access;
 
+import java.time.Duration;
+
 import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.time.Duration;
 
 /**
  * Phone call type access.
