@@ -57,8 +57,6 @@ jobs:
     if: "needs.check.outputs.annotations-status == 'deploy' && !contains(github.event.head_commit.message, 'ci skip')"
     steps:
       - uses: actions/checkout@v4
-        with:
-          ssh-key: ${{ secrets.ACTION_BOT_SECRET_KEY }}
 
       - name: Set up java
         uses: actions/setup-java@v4
@@ -100,8 +98,6 @@ jobs:
     if: "needs.check.outputs.plugin-status == 'deploy' && !contains(github.event.head_commit.message, 'ci skip')"
     steps:
       - uses: actions/checkout@v4
-        with:
-          ssh-key: ${{ secrets.ACTION_BOT_SECRET_KEY }}
 
       - name: Set up java
         uses: actions/setup-java@v4
