@@ -10,7 +10,7 @@ Le projet [livingdoc-annotations](livingdoc-annotations) contient des annotation
 
 ### livingdoc-maven-plugin
 
-Le projet [livingdoc-maven-plugin](livingdoc-maven-plugin) contient le code pour la génération de diagramme depuis maven.
+Le projet [livingdoc-maven-plugin](livingdoc-maven-plugin) contient le code pour la génération de la documentation depuis maven.
 
 ### livingdoc-examples
 
@@ -29,8 +29,9 @@ PR obligatoire.
 ### generate image from html
 
 copy svg content into generated html
+
 ```bash
 yay -S wkhtmltox-bin
 cd sources/living-documentation/livingdoc-examples/microservice
-wkhtmltoimage --format png http://localhost:63342/living-documentation/livingdoc-examples/microservice/target/docs/index.html images/example_microservice_index.html.png 
+wkhtmltoimage --format png http://localhost:63342/living-documentation/livingdoc-examples/microservice/target/docs/index.html images/example_microservice_index.html.png
 ```
