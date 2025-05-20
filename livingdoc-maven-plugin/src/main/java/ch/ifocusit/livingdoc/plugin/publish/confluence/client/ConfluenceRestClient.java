@@ -64,14 +64,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ConfluenceRestClient implements ConfluenceClient {
 
-    private final String rootConfluenceUrl;
     private final CloseableHttpClient httpClient;
+    private final HttpRequestFactory httpRequestFactory;
+
+    private final String rootConfluenceUrl;
     private final String username;
     private final String password;
     private final String authorizationHeader;
     private final String authorizationToken;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final HttpRequestFactory httpRequestFactory;
 
     public ConfluenceRestClient(String rootConfluenceUrl, String username, String password,
             String authorizationHeader, String authorizationToken) {

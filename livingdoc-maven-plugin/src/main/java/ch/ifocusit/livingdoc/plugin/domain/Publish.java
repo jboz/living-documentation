@@ -32,6 +32,9 @@ public class Publish {
     @Parameter(property = "authorizationHeader")
     private String authorizationHeader;
 
+    @Parameter(property = "authorizationToken")
+    private String authorizationToken;
+
     public Provider getProvider() {
         return provider;
     }
@@ -58,5 +61,9 @@ public class Publish {
 
     public String getAuthorizationHeader() {
         return authorizationHeader;
+    }
+
+    public String getAuthorizationToken() {
+        return authorizationToken;
     }
 }

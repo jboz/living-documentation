@@ -63,7 +63,7 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
         extractTemplatesFromJar();
         try {
             PublishProvider provider = new ConfluenceProvider(publish.getEndpoint(), publish.getUsername(),
-                    publish.getPassword(), publish.getAuthorizationHeader());
+                    publish.getPassword(), publish.getAuthorizationHeader(), publish.getAuthorizationToken());
 
             List<Page> pages = createHtmlPage();
             publish(provider, pages);
