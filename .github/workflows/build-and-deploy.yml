@@ -59,7 +59,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v3
         with:
           java-version: 19
           distribution: adopt
@@ -67,7 +67,7 @@ jobs:
           server-id: ossrh
           server-username: OSS_SONATYPE_USERNAME
           server-password: OSS_SONATYPE_PASSWORD
-          gpg-private-key: MAVEN_GPG_PRIVATE_KEY
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Create maven release version
@@ -100,7 +100,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v3
         with:
           java-version: 19
           distribution: adopt
@@ -108,7 +108,7 @@ jobs:
           server-id: ossrh
           server-username: OSS_SONATYPE_USERNAME
           server-password: OSS_SONATYPE_PASSWORD
-          gpg-private-key: MAVEN_GPG_PRIVATE_KEY
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Create maven release version
