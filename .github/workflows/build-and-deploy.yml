@@ -1,8 +1,6 @@
 name: Build and Deploy
 
 on:
-  push:
-    branches: [master]
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -72,7 +70,7 @@ jobs:
           gpg-passphrase: GPG_PASSPHRASE
 
       - name: Create maven release version
-        if: ${{ github.event_name == 'push' }}
+        if: "contains(github.event.head_commit.message, 'releasing livingdoc-annotations')"
         working-directory: ./livingdoc-annotations
         run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
 
@@ -85,18 +83,18 @@ jobs:
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
 
       - name: Create next dev version
-        if: ${{ github.event_name == 'push' }}
+        if: "contains(github.event.head_commit.message, 'releasing livingdoc-annotations')"
         working-directory: ./livingdoc-annotations
         run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
 
       - name: Create a pull request for post release changes
-        if: ${{ github.event_name == 'push' }}
+        if: "contains(github.event.head_commit.message, 'releasing livingdoc-annotations')"
         uses: peter-evans/create-pull-request@v5
         with:
-          commit-message: "Post release - livingdoc-annotations - ci skip"
+          commit-message: "chore(auto): releasing livingdoc-annotations"
           branch: auto/post-release-changes-livingdoc-annotations
           delete-branch: true
-          title: "Post Release Changes - livingdoc-annotations"
+          title: "chore(auto) - releasing livingdoc-annotations"
           body: |
             This pull request contains automated post-release changes for the `livingdoc-annotations` project.
           labels: |
@@ -130,7 +128,7 @@ jobs:
           gpg-passphrase: GPG_PASSPHRASE
 
       - name: Create maven release version
-        if: ${{ github.event_name == 'push' }}
+        if: "contains(github.event.head_commit.message, 'releasing livingdoc-maven-plugin')"
         run: |
           mvn -f livingdoc-maven-plugin/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
           mvn -f livingdoc-examples/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
@@ -153,19 +151,19 @@ jobs:
           retention-days: 1
 
       - name: Create next dev version
-        if: ${{ github.event_name == 'push' }}
+        if: "contains(github.event.head_commit.message, 'releasing livingdoc-maven-plugin')"
         run: |
           mvn -f livingdoc-maven-plugin/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
           mvn -f livingdoc-examples/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
 
       - name: Create a pull request for post release changes
-        if: ${{ github.event_name == 'push' }}
+        if: "contains(github.event.head_commit.message, 'releasing livingdoc-maven-plugin')"
         uses: peter-evans/create-pull-request@v5
         with:
-          commit-message: "Post release - livingdoc-maven-plugin - ci skip"
+          commit-message: "chore(auto): releasing livingdoc-maven-plugin"
           delete-branch: true
           branch: auto/post-release-changes-livingdoc-maven-plugin
-          title: "Post Release Changes - livingdoc-maven-plugin"
+          title: "chore(auto) - releasing livingdoc-maven-plugin"
           body: |
             This pull request contains automated post-release changes for the `livingdoc-maven-plugin` project.
           labels: |
@@ -173,7 +171,7 @@ jobs:
             post-release
 
       - name: Enable Pull Request Automerge
-        if: ${{ github.event_name == 'push' }}
+        if: "github.event_name == 'push' && steps.cpr.outputs.pull-request-operation == 'created'"
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
