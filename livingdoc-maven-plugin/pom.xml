@@ -9,7 +9,7 @@
     <packaging>maven-plugin</packaging>
 
     <name>Living Documentation maven plugin</name>
-    <description>Maven plugin to generate a living documentation from your java sources. 
+    <description>Maven plugin to generate a living documentation from your java sources.
         Many goal: plantuml diagram, gherkin files integration, business glossary, ect...
     </description>
     <url>https://github.com/jboz/living-documentation</url>
@@ -452,6 +452,15 @@
                             <serverId>ossrh</serverId>
                             <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                             <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.7.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>central</publishingServerId>
                         </configuration>
                     </plugin>
                 </plugins>
