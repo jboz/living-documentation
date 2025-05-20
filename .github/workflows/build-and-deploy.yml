@@ -67,7 +67,7 @@ jobs:
           server-id: ossrh
           server-username: OSS_SONATYPE_USERNAME
           server-password: OSS_SONATYPE_PASSWORD
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-private-key: MAVEN_GPG_PRIVATE_KEY
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Create maven release version
@@ -108,7 +108,7 @@ jobs:
           server-id: ossrh
           server-username: OSS_SONATYPE_USERNAME
           server-password: OSS_SONATYPE_PASSWORD
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-private-key: MAVEN_GPG_PRIVATE_KEY
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Create maven release version
