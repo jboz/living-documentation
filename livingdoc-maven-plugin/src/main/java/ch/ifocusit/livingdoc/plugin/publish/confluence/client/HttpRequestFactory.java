@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2024 Focus IT
+ * Copyright (C) 2025 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,10 +22,17 @@
  */
 package ch.ifocusit.livingdoc.plugin.publish.confluence.client;
 
-import ch.ifocusit.livingdoc.plugin.publish.confluence.client.model.*;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static ch.ifocusit.livingdoc.plugin.publish.confluence.client.HttpRequestFactory.PagePayloadBuilder.*;
+import static ch.ifocusit.livingdoc.plugin.utils.AssertUtils.*;
+import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.http.entity.ContentType.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.HttpDelete;
@@ -39,18 +46,17 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.message.BasicHeader;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static ch.ifocusit.livingdoc.plugin.publish.confluence.client.HttpRequestFactory.PagePayloadBuilder.pagePayloadBuilder;
-import static ch.ifocusit.livingdoc.plugin.utils.AssertUtils.assertMandatoryParameter;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.http.entity.ContentType.APPLICATION_OCTET_STREAM;
+import ch.ifocusit.livingdoc.plugin.publish.confluence.client.model.Ancestor;
+import ch.ifocusit.livingdoc.plugin.publish.confluence.client.model.Body;
+import ch.ifocusit.livingdoc.plugin.publish.confluence.client.model.PagePayload;
+import ch.ifocusit.livingdoc.plugin.publish.confluence.client.model.PropertyPayload;
+import ch.ifocusit.livingdoc.plugin.publish.confluence.client.model.Space;
+import ch.ifocusit.livingdoc.plugin.publish.confluence.client.model.Storage;
+import ch.ifocusit.livingdoc.plugin.publish.confluence.client.model.Version;
 
 /**
  * @author Alain Sahli

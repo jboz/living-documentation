@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2024 Focus IT
+ * Copyright (C) 2025 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -31,12 +31,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+
 import ch.ifocusit.livingdoc.plugin.baseMojo.AbstractAsciidoctorMojo;
 import ch.ifocusit.livingdoc.plugin.domain.Publish;
 import ch.ifocusit.livingdoc.plugin.publish.HtmlPostProcessor;
@@ -61,7 +63,7 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
         extractTemplatesFromJar();
         try {
             PublishProvider provider = new ConfluenceProvider(publish.getEndpoint(), publish.getUsername(),
-                    publish.getPassword());
+                    publish.getPassword(), publish.getAuthorizationHeader(), publish.getAuthorizationToken());
 
             List<Page> pages = createHtmlPage();
             publish(provider, pages);

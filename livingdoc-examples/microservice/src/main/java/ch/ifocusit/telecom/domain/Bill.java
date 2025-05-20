@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2024 Focus IT
+ * Copyright (C) 2025 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,16 +22,16 @@
  */
 package ch.ifocusit.telecom.domain;
 
-import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
+import java.time.YearMonth;
+import java.util.HashSet;
+import java.util.Set;
+
 import ch.ifocusit.livingdoc.annotations.RootAggregate;
+import ch.ifocusit.livingdoc.annotations.UbiquitousLanguage;
 import ch.ifocusit.telecom.domain.access.Access;
 import ch.ifocusit.telecom.domain.common.AbstractDomain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.time.YearMonth;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * *Monthly* bill.

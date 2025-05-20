@@ -22,10 +22,10 @@ jobs:
       annotations-status: ${{ steps.annotations-check.outputs.annotations-status }}
       plugin-status: ${{ steps.plugin-check.outputs.plugin-status }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Detect production files changes
         id: changes
-        uses: dorny/paths-filter@v2
+        uses: dorny/paths-filter@v3
         with:
           filters: |
             annotations:
@@ -56,9 +56,7 @@ jobs:
     needs: check
     if: "needs.check.outputs.annotations-status == 'deploy' && !contains(github.event.head_commit.message, 'ci skip')"
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ssh-key: ${{ secrets.ACTION_BOT_SECRET_KEY }}
+      - uses: actions/checkout@v4
 
       - name: Set up java
         uses: actions/setup-java@v3
@@ -66,11 +64,11 @@ jobs:
           java-version: 19
           distribution: adopt
           cache: maven
-          server-id: ossrh
-          server-username: OSS_SONATYPE_USERNAME
-          server-password: OSS_SONATYPE_PASSWORD
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+          server-id: central
+          server-username: MAVEN_CENTRAL_USERNAME
+          server-password: MAVEN_CENTRAL_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
 
       - name: Create maven release version
         if: ${{ github.event_name == 'push' }}
@@ -79,11 +77,11 @@ jobs:
 
       - name: Deploy
         working-directory: ./livingdoc-annotations
-        run: mvn deploy -P release -DskipTests=true
+        run: mvn deploy -Prelease -DskipTests=true
         env:
-          OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
-          OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
 
       - name: Create and commit next dev version
         if: ${{ github.event_name == 'push' }}
@@ -99,9 +97,7 @@ jobs:
     needs: check
     if: "needs.check.outputs.plugin-status == 'deploy' && !contains(github.event.head_commit.message, 'ci skip')"
     steps:
-      - uses: actions/checkout@v3
-        with:
-          ssh-key: ${{ secrets.ACTION_BOT_SECRET_KEY }}
+      - uses: actions/checkout@v4
 
       - name: Set up java
         uses: actions/setup-java@v3
@@ -109,11 +105,11 @@ jobs:
           java-version: 19
           distribution: adopt
           cache: maven
-          server-id: ossrh
-          server-username: OSS_SONATYPE_USERNAME
-          server-password: OSS_SONATYPE_PASSWORD
-          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+          server-id: central
+          server-username: MAVEN_CENTRAL_USERNAME
+          server-password: MAVEN_CENTRAL_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
 
       - name: Create maven release version
         if: ${{ github.event_name == 'push' }}
@@ -123,14 +119,14 @@ jobs:
 
       - name: Deploy
         working-directory: ./livingdoc-maven-plugin
-        run: mvn --batch-mode --update-snapshots deploy -P release -X
+        run: mvn --batch-mode --update-snapshots deploy -Prelease -X
         env:
-          OSS_SONATYPE_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
-          OSS_SONATYPE_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
 
       - name: Save artefacts for next jobs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: livingdoc-maven-plugin-artifact
           path: |
@@ -156,11 +152,11 @@ jobs:
     if: "needs.check.outputs.plugin-status == 'deploy' && github.event_name == 'pull_request'"
     strategy:
       matrix:
-        version: [11, 15, 17]
+        version: [11, 15, 17, 19, 21]
     env:
       folder: livingdoc-examples
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up java
         uses: actions/setup-java@v3
@@ -178,7 +174,7 @@ jobs:
           echo ::set-env name=LIVINGDOC-MAVEN-PLUGIN_VERSION::$ARTIFACT_VERSION
 
       - name: Install livingdoc-maven-plugin artifact locally
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: livingdoc-maven-plugin-artifact
           path: ${{ env.ARTIFACT_PATH }}

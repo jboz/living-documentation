@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2024 Focus IT
+ * Copyright (C) 2025 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -51,8 +51,7 @@ import io.github.robwin.markup.builder.asciidoc.AsciiDocBuilder;
 /**
  * @author Julien Boz
  */
-@Mojo(name = "gherkin", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM,
-        defaultPhase = LifecyclePhase.PROCESS_TEST_RESOURCES)
+@Mojo(name = "gherkin", requiresDependencyResolution = ResolutionScope.RUNTIME_PLUS_SYSTEM, defaultPhase = LifecyclePhase.PROCESS_TEST_RESOURCES)
 public class GherkinMojo extends AbstractDocsGeneratorMojo {
 
     /**
@@ -74,7 +73,8 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     private boolean gherkinWithChildSeparator;
 
     /**
-     * Append child element keyword before title (Scenario, Rule, Background, ...). Default false.
+     * Append child element keyword before title (Scenario, Rule, Background, ...).
+     * Default false.
      */
     @Parameter(property = "livingdoc.gherkin.withKeyword", defaultValue = "false")
     private boolean gherkinWithKeyword;
@@ -83,7 +83,8 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     private String gherkinOutputFilename;
 
     /**
-     * Page title or page title prefix when use in combinaison with {@link #gerkinSeparateFeature}
+     * Page title or page title prefix when use in combinaison with
+     * {@link #gerkinSeparateFeature}
      * option to true
      */
     @Parameter(property = "livingdoc.gherkin.title")
@@ -96,7 +97,8 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
     private boolean gerkinSeparateFeature;
 
     /**
-     * Flag to indicate if generated asciidoc file must use the asciidoc gherkin macro (like include
+     * Flag to indicate if generated asciidoc file must use the asciidoc gherkin
+     * macro (like include
      * macro).
      */
     @Parameter(property = "livingdoc.gherkin.gherkinAsciidocMacro", defaultValue = "false")
@@ -143,7 +145,8 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
 
             if (gerkinSeparateFeature && StringUtils.isNotBlank(getTitle())) {
                 try {
-                    Feature feature = GherkinExtensionHelper.parse(readFileToString(FileUtils.getFile(path), defaultCharset()));
+                    Feature feature = GherkinExtensionHelper
+                            .parse(readFileToString(FileUtils.getFile(path), defaultCharset()));
                     String title = getTitle() + " " + feature.getName();
                     appendTitle(getDocBuilder(pageCount.get()), title);
                 } catch (IOException e) {
@@ -154,8 +157,9 @@ public class GherkinMojo extends AbstractDocsGeneratorMojo {
                 getDocBuilder(pageCount.get()).textLine(":leveloffset: +1");
             }
             if (gherkinAsciidocMacro) {
-                getDocBuilder(pageCount.get()).textLine(String.format("gherkin::%s[withTitle=%s,withChildSeparator=%s,withKeyword=%s]",
-                        path, gherkinWithTitle, gherkinWithChildSeparator, gherkinWithKeyword));
+                getDocBuilder(pageCount.get())
+                        .textLine(String.format("gherkin::%s[withTitle=%s,withChildSeparator=%s,withKeyword=%s]",
+                                path, gherkinWithTitle, gherkinWithChildSeparator, gherkinWithKeyword));
             } else {
                 try {
                     getDocBuilder(pageCount.get()).textLine(

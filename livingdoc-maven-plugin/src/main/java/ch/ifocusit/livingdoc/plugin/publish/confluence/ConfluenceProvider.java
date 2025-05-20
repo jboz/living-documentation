@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2024 Focus IT
+ * Copyright (C) 2025 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,23 +22,28 @@
  */
 package ch.ifocusit.livingdoc.plugin.publish.confluence;
 
+import static ch.ifocusit.livingdoc.plugin.utils.InputStreamUtils.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ch.ifocusit.livingdoc.plugin.publish.PublishProvider;
 import ch.ifocusit.livingdoc.plugin.publish.confluence.client.ConfluencePage;
 import ch.ifocusit.livingdoc.plugin.publish.confluence.client.ConfluenceRestClient;
 import ch.ifocusit.livingdoc.plugin.publish.confluence.client.NotFoundException;
 import ch.ifocusit.livingdoc.plugin.publish.model.Page;
 
-import static ch.ifocusit.livingdoc.plugin.utils.InputStreamUtils.fileInputStream;
-
 /**
  * @author Julien Boz
  */
 public class ConfluenceProvider implements PublishProvider {
+    private final Logger LOG = LoggerFactory.getLogger(ConfluenceProvider.class);
 
     final ConfluenceRestClient client;
 
-    public ConfluenceProvider(String endpoint, String username, String password) {
-        client = new ConfluenceRestClient(endpoint, username, password);
+    public ConfluenceProvider(String endpoint, String username, String password, String authorizationHeader,
+            String authorizationToken) {
+        client = new ConfluenceRestClient(endpoint, username, password, authorizationHeader, authorizationToken);
     }
 
     @Override
@@ -70,8 +75,7 @@ public class ConfluenceProvider implements PublishProvider {
             page.getAttachments().forEach(attachement -> client.addAttachment(contentId, attachement.getName(),
                     fileInputStream(attachement.getFile())));
         } else {
-            // TODO log INFO
-            System.out.println("Page with title=" + page.getTitle() + " did not change.");
+            LOG.info("Page with title=" + page.getTitle() + " did not change.");
         }
     }
 

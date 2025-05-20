@@ -9,11 +9,11 @@
     <packaging>maven-plugin</packaging>
 
     <name>Living Documentation maven plugin</name>
-    <description>Maven plugin to generate a living documentation from your java sources. 
+    <description>Maven plugin to generate a living documentation from your java sources.
         Many goal: plantuml diagram, gherkin files integration, business glossary, ect...
     </description>
     <url>https://github.com/jboz/living-documentation</url>
-    <inceptionYear>2024</inceptionYear>
+    <inceptionYear>2025</inceptionYear>
 
     <organization>
         <name>Focus IT</name>
@@ -85,7 +85,7 @@
         <dependency>
             <groupId>ch.ifocusit.livingdoc</groupId>
             <artifactId>livingdoc-annotations</artifactId>
-            <version>2.0</version>
+            <version>2.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -228,7 +228,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.12.1</version>
+                <version>3.14.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -239,7 +239,7 @@
                 <!-- taken from http://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.15.1</version>
                 <executions>
                     <execution>
                         <id>mojo-helpers</id>
@@ -258,7 +258,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.9.0</version>
                 <configuration>
                     <showVersion>true</showVersion>
                     <streamLogs>false</streamLogs>
@@ -282,12 +282,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
+                <version>3.5.3</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.7.1</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -315,7 +315,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.9.0</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -334,7 +334,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.6.3</version>
+                <version>3.11.2</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -346,7 +346,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>3.2.5</version>
+                <version>3.5.3</version>
                 <configuration>
                     <showSuccess>true</showSuccess>
                 </configuration>
@@ -354,32 +354,15 @@
         </plugins>
     </reporting>
 
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
     <profiles>
         <profile>
             <id>release</id>
-            <properties>
-                <gpg.executable>gpg2</gpg.executable>
-                <gpg.keyname>${env.GPG_KEYNAME}</gpg.keyname>
-                <gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
-                        <!-- create source artifact -->
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.3.0</version>
+                        <version>3.3.1</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -390,10 +373,9 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <!-- create javadoc artifact -->
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.6.3</version>
+                        <version>3.11.2</version>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -404,10 +386,9 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <!-- Sign artifact -->
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>3.2.7</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -415,13 +396,18 @@
                                 <goals>
                                     <goal>sign</goal>
                                 </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
                     <plugin>
-                        <!-- create project artifact -->
                         <artifactId>maven-release-plugin</artifactId>
-                        <version>3.0.1</version>
+                        <version>3.1.1</version>
                         <configuration>
                             <tagNameFormat>v@{project.version}</tagNameFormat>
                             <allowTimestampedSnapshots>true</allowTimestampedSnapshots>
@@ -437,21 +423,20 @@
                     </plugin>
                     <plugin>
                         <artifactId>maven-deploy-plugin</artifactId>
-                        <version>3.1.1</version>
+                        <version>3.1.4</version>
                         <configuration>
                             <updateReleaseInfo>true</updateReleaseInfo>
                         </configuration>
                     </plugin>
                     <plugin>
-                        <!-- Release dist files to maven central -->
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.13</version>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.7.0</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <serverId>ossrh</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                            <publishingServerId>central</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>published</waitUntil>
                         </configuration>
                     </plugin>
                 </plugins>

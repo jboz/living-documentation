@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2024 Focus IT
+ * Copyright (C) 2025 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,14 +22,15 @@
  */
 package ch.ifocusit.telecom.domain;
 
-import ch.ifocusit.telecom.domain.common.AbstractDomain;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+
+import ch.ifocusit.telecom.domain.common.AbstractDomain;
 
 /**
  * Customer of the telecom service

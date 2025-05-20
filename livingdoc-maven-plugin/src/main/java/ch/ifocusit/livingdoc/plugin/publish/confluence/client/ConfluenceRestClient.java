@@ -1,7 +1,7 @@
 /*
  * Living Documentation
  *
- * Copyright (C) 2024 Focus IT
+ * Copyright (C) 2025 Focus IT
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,23 +22,7 @@
  */
 package ch.ifocusit.livingdoc.plugin.publish.confluence.client;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.*;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicAuthCache;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.HttpContext;
+import static org.apache.commons.lang3.StringUtils.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -49,7 +33,29 @@ import java.util.Base64;
 import java.util.List;
 import java.util.function.Function;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicAuthCache;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.HttpContext;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Alain Sahli
@@ -58,19 +64,26 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public class ConfluenceRestClient implements ConfluenceClient {
 
-    private final String rootConfluenceUrl;
     private final CloseableHttpClient httpClient;
-    private final String username;
-    private final String password;
-    private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpRequestFactory httpRequestFactory;
 
-    public ConfluenceRestClient(String rootConfluenceUrl, String username, String password) {
+    private final String rootConfluenceUrl;
+    private final String username;
+    private final String password;
+    private final String authorizationHeader;
+    private final String authorizationToken;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public ConfluenceRestClient(String rootConfluenceUrl, String username, String password,
+            String authorizationHeader, String authorizationToken) {
 
         this.rootConfluenceUrl = rootConfluenceUrl;
         this.httpClient = httpClient();
         this.username = username;
         this.password = password;
+        this.authorizationHeader = authorizationHeader;
+        this.authorizationToken = authorizationToken;
 
         this.httpRequestFactory = new HttpRequestFactory(rootConfluenceUrl);
         configureObjectMapper();
@@ -242,11 +255,16 @@ public class ConfluenceRestClient implements ConfluenceClient {
         CloseableHttpResponse response = null;
 
         try {
-
-            final String encodedCredentials = "Basic "
-                    + Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+            if (isNotBlank(this.username) && this.password != null) {
+                final String encodedCredentials = "Basic "
+                        + Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
+                httpRequest.addHeader("Authorization", encodedCredentials);
+            } else if (authorizationHeader != null) {
+                httpRequest.addHeader("Authorization", authorizationHeader);
+            } else if (authorizationHeader != null) {
+                httpRequest.addHeader("Authorization", "Bearer " + authorizationToken);
+            }
             httpRequest.addHeader("Accept", "application/json");
-            httpRequest.addHeader("Authorization", encodedCredentials);
 
             response = this.httpClient.execute(httpRequest, httpContext());
 
