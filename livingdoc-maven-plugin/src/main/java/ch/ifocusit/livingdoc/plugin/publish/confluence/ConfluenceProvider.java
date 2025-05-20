@@ -41,8 +41,9 @@ public class ConfluenceProvider implements PublishProvider {
 
     final ConfluenceRestClient client;
 
-    public ConfluenceProvider(String endpoint, String username, String password, String authorizationHeader) {
-        client = new ConfluenceRestClient(endpoint, username, password, authorizationHeader);
+    public ConfluenceProvider(String endpoint, String username, String password, String authorizationHeader,
+            String authorizationToken) {
+        client = new ConfluenceRestClient(endpoint, username, password, authorizationHeader, authorizationToken);
     }
 
     @Override

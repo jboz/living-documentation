@@ -69,17 +69,19 @@ public class ConfluenceRestClient implements ConfluenceClient {
     private final String username;
     private final String password;
     private final String authorizationHeader;
+    private final String authorizationToken;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpRequestFactory httpRequestFactory;
 
     public ConfluenceRestClient(String rootConfluenceUrl, String username, String password,
-            String authorizationHeader) {
+            String authorizationHeader, String authorizationToken) {
 
         this.rootConfluenceUrl = rootConfluenceUrl;
         this.httpClient = httpClient();
         this.username = username;
         this.password = password;
         this.authorizationHeader = authorizationHeader;
+        this.authorizationToken = authorizationToken;
 
         this.httpRequestFactory = new HttpRequestFactory(rootConfluenceUrl);
         configureObjectMapper();
@@ -255,9 +257,10 @@ public class ConfluenceRestClient implements ConfluenceClient {
                 final String encodedCredentials = "Basic "
                         + Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
                 httpRequest.addHeader("Authorization", encodedCredentials);
-            }
-            if (authorizationHeader != null) {
+            } else if (authorizationHeader != null) {
                 httpRequest.addHeader("Authorization", authorizationHeader);
+            } else if (authorizationHeader != null) {
+                httpRequest.addHeader("Authorization", "Bearer " + authorizationToken);
             }
             httpRequest.addHeader("Accept", "application/json");
 
