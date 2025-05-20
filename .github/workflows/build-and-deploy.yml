@@ -1,6 +1,8 @@
 name: Build and Deploy
 
 on:
+  push:
+    branches: [master]
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -60,7 +62,7 @@ jobs:
       - name: Set up java
         uses: actions/setup-java@v3
         with:
-          java-version: 19
+          java-version: 21
           distribution: adopt
           cache: maven
           server-id: central
@@ -70,7 +72,7 @@ jobs:
           gpg-passphrase: GPG_PASSPHRASE
 
       - name: Create maven release version
-        if: "contains(github.event.head_commit.message, 'releasing livingdoc-annotations')"
+        if: ${{ github.event_name == 'push' }}
         working-directory: ./livingdoc-annotations
         run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
 
@@ -83,15 +85,15 @@ jobs:
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
 
       - name: Create next dev version
-        if: "contains(github.event.head_commit.message, 'releasing livingdoc-annotations')"
+        if: ${{ github.event_name == 'push' }}
         working-directory: ./livingdoc-annotations
         run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
 
       - name: Create a pull request for post release changes
-        if: "contains(github.event.head_commit.message, 'releasing livingdoc-annotations')"
+        if: ${{ github.event_name == 'push' }}
         uses: peter-evans/create-pull-request@v5
         with:
-          commit-message: "chore(auto): releasing livingdoc-annotations"
+          commit-message: "chore(auto): releasing livingdoc-annotations - ci skip"
           branch: auto/post-release-changes-livingdoc-annotations
           delete-branch: true
           title: "chore(auto) - releasing livingdoc-annotations"
@@ -102,7 +104,7 @@ jobs:
             post-release
 
       - name: Enable Pull Request Automerge
-        if: "github.event_name == 'push' && steps.cpr.outputs.pull-request-operation == 'created'"
+        if: steps.cpr.outputs.pull-request-operation == 'created'
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
@@ -118,7 +120,7 @@ jobs:
       - name: Set up java
         uses: actions/setup-java@v3
         with:
-          java-version: 19
+          java-version: 21
           distribution: adopt
           cache: maven
           server-id: central
@@ -128,7 +130,7 @@ jobs:
           gpg-passphrase: GPG_PASSPHRASE
 
       - name: Create maven release version
-        if: "contains(github.event.head_commit.message, 'releasing livingdoc-maven-plugin')"
+        if: ${{ github.event_name == 'push' }}
         run: |
           mvn -f livingdoc-maven-plugin/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
           mvn -f livingdoc-examples/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion} versions:commit
@@ -142,6 +144,7 @@ jobs:
           MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
 
       - name: Save artefacts for next jobs
+        if: ${{ github.event_name == 'pull_request' }}
         uses: actions/upload-artifact@v4
         with:
           name: livingdoc-maven-plugin-artifact
@@ -151,13 +154,13 @@ jobs:
           retention-days: 1
 
       - name: Create next dev version
-        if: "contains(github.event.head_commit.message, 'releasing livingdoc-maven-plugin')"
+        if: ${{ github.event_name == 'push' }}
         run: |
           mvn -f livingdoc-maven-plugin/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
           mvn -f livingdoc-examples/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
 
       - name: Create a pull request for post release changes
-        if: "contains(github.event.head_commit.message, 'releasing livingdoc-maven-plugin')"
+        if: ${{ github.event_name == 'push' }}
         uses: peter-evans/create-pull-request@v5
         with:
           commit-message: "chore(auto): releasing livingdoc-maven-plugin"
@@ -171,7 +174,7 @@ jobs:
             post-release
 
       - name: Enable Pull Request Automerge
-        if: "github.event_name == 'push' && steps.cpr.outputs.pull-request-operation == 'created'"
+        if: steps.cpr.outputs.pull-request-operation == 'created'
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
@@ -182,7 +185,7 @@ jobs:
     needs:
       - check
       - livingdoc-maven-plugin
-    if: "needs.check.outputs.plugin-status == 'deploy' && github.event_name == 'pull_request'"
+    if: "needs.check.outputs.plugin-status == 'deploy' && github.event_name == 'pull_request' && !contains(github.event.head_commit.message, 'ci skip')"
     strategy:
       matrix:
         version: [11, 15, 17, 19, 21]
