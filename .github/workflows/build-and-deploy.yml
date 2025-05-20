@@ -90,6 +90,7 @@ jobs:
         run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
 
       - name: Create a pull request for post release changes
+        id: cpr
         if: ${{ github.event_name == 'push' }}
         uses: peter-evans/create-pull-request@v5
         with:
@@ -157,6 +158,7 @@ jobs:
           mvn -f livingdoc-examples/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
 
       - name: Create a pull request for post release changes
+        id: cpr
         if: ${{ github.event_name == 'push' }}
         uses: peter-evans/create-pull-request@v5
         with:

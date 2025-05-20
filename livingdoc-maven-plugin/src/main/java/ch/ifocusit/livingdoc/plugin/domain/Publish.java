@@ -33,7 +33,7 @@ public class Publish {
     private String authorizationHeader;
 
     @Parameter(property = "authorizationToken")
-    private String authorizationToken;
+    private String token;
 
     public Provider getProvider() {
         return provider;
@@ -63,7 +63,7 @@ public class Publish {
         return authorizationHeader;
     }
 
-    public String getAuthorizationToken() {
-        return authorizationToken;
+    public String getToken() {
+        return token;
     }
 }
