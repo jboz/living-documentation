@@ -99,9 +99,6 @@ jobs:
           title: "chore(auto) - releasing livingdoc-annotations"
           body: |
             This pull request contains automated post-release changes for the `livingdoc-annotations` project.
-          labels: |
-            automated
-            post-release
 
       - name: Enable Pull Request Automerge
         if: steps.cpr.outputs.pull-request-operation == 'created'
@@ -163,15 +160,12 @@ jobs:
         if: ${{ github.event_name == 'push' }}
         uses: peter-evans/create-pull-request@v5
         with:
-          commit-message: "chore(auto): releasing livingdoc-maven-plugin"
+          commit-message: "chore(auto): releasing livingdoc-maven-plugin - ci skip"
           delete-branch: true
           branch: auto/post-release-changes-livingdoc-maven-plugin
           title: "chore(auto) - releasing livingdoc-maven-plugin"
           body: |
             This pull request contains automated post-release changes for the `livingdoc-maven-plugin` project.
-          labels: |
-            automated
-            post-release
 
       - name: Enable Pull Request Automerge
         if: steps.cpr.outputs.pull-request-operation == 'created'
