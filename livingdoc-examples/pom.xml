@@ -5,7 +5,7 @@
 
     <groupId>ch.ifocusit.livingdoc.example</groupId>
     <artifactId>livingdoc-examples</artifactId>
-    <version>2.13-SNAPSHOT</version>
+    <version>2.14-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Living Documentation example</name>
