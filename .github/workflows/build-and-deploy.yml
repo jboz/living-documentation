@@ -79,7 +79,7 @@ jobs:
         working-directory: ./livingdoc-annotations
         run: mvn deploy -Prelease -DskipTests=true
         env:
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Create and commit next dev version
         if: ${{ github.event_name == 'push' }}
@@ -119,7 +119,7 @@ jobs:
         working-directory: ./livingdoc-maven-plugin
         run: mvn --batch-mode --update-snapshots deploy -Prelease -X
         env:
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Save artefacts for next jobs
         uses: actions/upload-artifact@v4
