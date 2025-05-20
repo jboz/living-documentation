@@ -80,6 +80,8 @@ jobs:
         run: mvn deploy -Prelease -DskipTests=true
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
 
       - name: Create and commit next dev version
         if: ${{ github.event_name == 'push' }}
@@ -120,6 +122,8 @@ jobs:
         run: mvn --batch-mode --update-snapshots deploy -Prelease -X
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
 
       - name: Save artefacts for next jobs
         uses: actions/upload-artifact@v4
