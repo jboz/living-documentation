@@ -2,6 +2,9 @@ package ch.ifocusit.livingdoc.plugin.domain;
 
 import org.apache.maven.plugins.annotations.Parameter;
 
+import lombok.ToString;
+
+@ToString
 public class Publish {
 
     public enum Provider {

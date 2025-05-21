@@ -67,6 +67,7 @@ class HttpRequestFactory {
     private final static Header APPLICATION_JSON_UTF8_HEADER = new BasicHeader("Content-Type",
             "application/json;charset=utf-8");
     private static final String REST_API_CONTEXT = "/rest/api";
+
     private final String rootConfluenceUrl;
     private final String confluenceRestApiEndpoint;
 

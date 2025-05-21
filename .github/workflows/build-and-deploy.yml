@@ -89,24 +89,9 @@ jobs:
         working-directory: ./livingdoc-annotations
         run: mvn -f pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
 
-      - name: Create a pull request for post release changes
-        id: cpr
-        if: ${{ github.event_name == 'push' }}
-        uses: peter-evans/create-pull-request@v5
+      - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit-message: "chore(auto): releasing livingdoc-annotations - ci skip"
-          branch: auto/post-release-changes-livingdoc-annotations
-          delete-branch: true
-          title: "chore(auto) - releasing livingdoc-annotations"
-          body: |
-            This pull request contains automated post-release changes for the `livingdoc-annotations` project.
-
-      - name: Enable Pull Request Automerge
-        if: steps.cpr.outputs.pull-request-operation == 'created'
-        uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-          merge-method: squash
+          commit_message: Post release - livingdoc-annotations - ci skip
 
   livingdoc-maven-plugin:
     runs-on: ubuntu-latest
@@ -157,24 +142,9 @@ jobs:
           mvn -f livingdoc-maven-plugin/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
           mvn -f livingdoc-examples/pom.xml -q build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}-SNAPSHOT versions:commit
 
-      - name: Create a pull request for post release changes
-        id: cpr
-        if: ${{ github.event_name == 'push' }}
-        uses: peter-evans/create-pull-request@v5
+      - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit-message: "chore(auto): releasing livingdoc-maven-plugin - ci skip"
-          delete-branch: true
-          branch: auto/post-release-changes-livingdoc-maven-plugin
-          title: "chore(auto) - releasing livingdoc-maven-plugin"
-          body: |
-            This pull request contains automated post-release changes for the `livingdoc-maven-plugin` project.
-
-      - name: Enable Pull Request Automerge
-        if: steps.cpr.outputs.pull-request-operation == 'created'
-        uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-          merge-method: squash
+          commit_message: Post release - livingdoc-maven-plugin - ci skip
 
   tests_java_plugin:
     runs-on: ubuntu-latest

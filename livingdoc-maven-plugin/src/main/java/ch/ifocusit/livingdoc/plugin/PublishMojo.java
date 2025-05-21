@@ -58,7 +58,8 @@ public class PublishMojo extends AbstractAsciidoctorMojo {
     @Override
     public void executeMojo() throws MojoExecutionException {
         if (!Publish.Provider.confluence.equals(publish.getProvider())) {
-            throw new NotImplementedException("This publisher '" + publish.getProvider() + "' is not yet supported!");
+            throw new NotImplementedException("This publisher '" + publish.getProvider()
+                    + "' is not yet supported! Open pull request to discuss this feature.");
         }
         extractTemplatesFromJar();
         try {
