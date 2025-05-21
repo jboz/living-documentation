@@ -33,6 +33,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.function.Function;
 
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -258,13 +259,13 @@ public class ConfluenceRestClient implements ConfluenceClient {
             if (isNotBlank(this.username) && this.password != null) {
                 final String encodedCredentials = "Basic "
                         + Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
-                httpRequest.addHeader("Authorization", encodedCredentials);
+                httpRequest.addHeader(HttpHeaders.AUTHORIZATION, encodedCredentials);
             } else if (authorizationHeader != null) {
-                httpRequest.addHeader("Authorization", authorizationHeader);
-            } else if (authorizationHeader != null) {
-                httpRequest.addHeader("Authorization", "Bearer " + authorizationToken);
+                httpRequest.addHeader(HttpHeaders.AUTHORIZATION, authorizationHeader);
+            } else if (authorizationToken != null) {
+                httpRequest.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authorizationToken);
             }
-            httpRequest.addHeader("Accept", "application/json");
+            httpRequest.addHeader(HttpHeaders.ACCEPT, "application/json");
 
             response = this.httpClient.execute(httpRequest, httpContext());
 
@@ -282,11 +283,11 @@ public class ConfluenceRestClient implements ConfluenceClient {
     }
 
     private HttpContext httpContext() {
-        BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
         if (isNotBlank(this.username) && this.password != null) {
-            UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(this.username, this.password);
             HttpHost httpHost = HttpHost.create(this.rootConfluenceUrl);
             AuthScope authScope = new AuthScope(httpHost);
+            BasicCredentialsProvider basicCredentialsProvider = new BasicCredentialsProvider();
+            UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(this.username, this.password);
             basicCredentialsProvider.setCredentials(authScope, credentials);
 
             BasicAuthCache basicAuthCache = new BasicAuthCache();

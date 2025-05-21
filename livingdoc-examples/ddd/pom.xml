@@ -6,7 +6,7 @@
     <parent>
         <groupId>ch.ifocusit.livingdoc.example</groupId>
         <artifactId>livingdoc-examples</artifactId>
-        <version>2.14-SNAPSHOT</version>
+        <version>2.15-SNAPSHOT</version>
     </parent>
 
     <artifactId>ddd</artifactId>
@@ -49,7 +49,8 @@
                 <executions>
                     <execution>
                         <id>all</id>
-                        <phase>package</phase>                        <!-- default phase -->
+                        <!-- default phase -->
+                        <phase>package</phase>
                         <goals>
                             <goal>diagram</goal>
                             <goal>glossary</goal>
@@ -67,19 +68,25 @@
                     </excludes>
                     <diagramTitle>= Classes Diagram</diagramTitle>
                     <diagramLinkPage>Glossary</diagramLinkPage>
-                    <diagramAsPlantumlMacro>true</diagramAsPlantumlMacro>                    <!-- this will result as the use of the plantuml macro in confluence: https://marketplace.atlassian.com/apps/41025/plantuml-for-confluence -->
+                    <!-- this will result as the use of the plantuml macro in confluence: https://marketplace.atlassian.com/apps/41025/plantuml-for-confluence -->
+                    <diagramAsPlantumlMacro>true</diagramAsPlantumlMacro>
                     <dictionaryTitle>= Dictionary</dictionaryTitle>
                     <glossaryTitle>= Glossary</glossaryTitle>
-                    <gherkinTitle>= Use Case - Invoice management - </gherkinTitle>                    <!-- will be used as a prefix for the confluence page name -->
-                    <gerkinSeparateFeature>true</gerkinSeparateFeature>                    <!-- set false to merge all feature into one page, default is true -->
+                    <!-- will be used as a prefix for the confluence page name -->
+                    <gherkinTitle>= Use Case - Invoice management - </gherkinTitle>
+                    <!-- set false to merge all feature into one page, default is true -->
+                    <gerkinSeparateFeature>true</gerkinSeparateFeature>
                     <format>adoc</format>
                     <publish>
-                        <provider>confluence</provider>                        <!-- actually only confluence is supported -->
+                        <!-- actually only confluence is supported -->
+                        <provider>confluence</provider>
                         <endpoint>${CONFLUENCE_URL}</endpoint>
                         <spaceKey>DOCPROD</spaceKey>
-                        <ancestorId>98369</ancestorId>                        <!-- parent pageId -->
-                        <username>livingdoc</username>
-                        <password>livingdoc</password>
+                        <!-- parent pageId -->
+                        <ancestorId>360460</ancestorId>
+                        <!-- <username>${CONFLUENCE_USER}</username> -->
+                        <!-- <password>${CONFLUENCE_PASS}</password> -->
+                        <token>${CONFLUENCE_TOKEN}</token>
                     </publish>
                 </configuration>
             </plugin>
