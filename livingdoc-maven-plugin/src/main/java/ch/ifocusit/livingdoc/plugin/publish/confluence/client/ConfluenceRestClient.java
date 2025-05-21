@@ -58,6 +58,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ch.ifocusit.livingdoc.plugin.domain.Publish.Header;
+
 /**
  * @author Alain Sahli
  * @author Christian Stettler
@@ -71,19 +73,19 @@ public class ConfluenceRestClient implements ConfluenceClient {
     private final String rootConfluenceUrl;
     private final String username;
     private final String password;
-    private final String authorizationHeader;
+    private final Header[] headers;
     private final String authorizationToken;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public ConfluenceRestClient(String rootConfluenceUrl, String username, String password,
-            String authorizationHeader, String authorizationToken) {
+            Header[] headers, String authorizationToken) {
 
         this.rootConfluenceUrl = rootConfluenceUrl;
         this.httpClient = httpClient();
         this.username = username;
         this.password = password;
-        this.authorizationHeader = authorizationHeader;
+        this.headers = headers;
         this.authorizationToken = authorizationToken;
 
         this.httpRequestFactory = new HttpRequestFactory(rootConfluenceUrl);
@@ -260,10 +262,13 @@ public class ConfluenceRestClient implements ConfluenceClient {
                 final String encodedCredentials = "Basic "
                         + Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
                 httpRequest.addHeader(HttpHeaders.AUTHORIZATION, encodedCredentials);
-            } else if (authorizationHeader != null) {
-                httpRequest.addHeader(HttpHeaders.AUTHORIZATION, authorizationHeader);
             } else if (authorizationToken != null) {
                 httpRequest.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authorizationToken);
+            }
+            if (headers != null) {
+                for (Header header : headers) {
+                    httpRequest.addHeader(header.getName(), header.getValue());
+                }
             }
             httpRequest.addHeader(HttpHeaders.ACCEPT, "application/json");
 

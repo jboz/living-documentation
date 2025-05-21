@@ -27,6 +27,7 @@ import static ch.ifocusit.livingdoc.plugin.utils.InputStreamUtils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ch.ifocusit.livingdoc.plugin.domain.Publish.Header;
 import ch.ifocusit.livingdoc.plugin.publish.PublishProvider;
 import ch.ifocusit.livingdoc.plugin.publish.confluence.client.ConfluencePage;
 import ch.ifocusit.livingdoc.plugin.publish.confluence.client.ConfluenceRestClient;
@@ -41,9 +42,9 @@ public class ConfluenceProvider implements PublishProvider {
 
     final ConfluenceRestClient client;
 
-    public ConfluenceProvider(String endpoint, String username, String password, String authorizationHeader,
+    public ConfluenceProvider(String endpoint, String username, String password, Header[] headers,
             String authorizationToken) {
-        client = new ConfluenceRestClient(endpoint, username, password, authorizationHeader, authorizationToken);
+        client = new ConfluenceRestClient(endpoint, username, password, headers, authorizationToken);
     }
 
     @Override
