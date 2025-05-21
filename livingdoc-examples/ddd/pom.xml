@@ -84,9 +84,16 @@
                         <spaceKey>DOCPROD</spaceKey>
                         <!-- parent pageId -->
                         <ancestorId>360460</ancestorId>
+                        <token>${CONFLUENCE_TOKEN}</token>
+                        <!-- different way to authentify -->
                         <!-- <username>${CONFLUENCE_USER}</username> -->
                         <!-- <password>${CONFLUENCE_PASS}</password> -->
-                        <token>${CONFLUENCE_TOKEN}</token>
+                        <!-- <headers>
+                            <header>
+                                <name>x-user-token</name>
+                                <value>${CONFLUENCE_TOKEN}</value>
+                            </header>
+                        </headers> -->
                     </publish>
                 </configuration>
             </plugin>

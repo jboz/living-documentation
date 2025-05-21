@@ -32,11 +32,11 @@ public class Publish {
     @Parameter(property = "password")
     private String password;
 
-    @Parameter(property = "authorizationHeader")
-    private String authorizationHeader;
-
     @Parameter(property = "authorizationToken")
     private String token;
+
+    @Parameter(property = "headers")
+    private Header[] headers = new Header[0];
 
     public Provider getProvider() {
         return provider;
@@ -62,11 +62,27 @@ public class Publish {
         return password;
     }
 
-    public String getAuthorizationHeader() {
-        return authorizationHeader;
+    public Header[] getHeaders() {
+        return headers;
     }
 
     public String getToken() {
         return token;
+    }
+
+    public static class Header {
+        @Parameter(property = "name", required = true)
+        private String name;
+
+        @Parameter(property = "value", required = true)
+        private String value;
+
+        public String getName() {
+            return name;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 }
